@@ -1,24 +1,15 @@
 <template>
-  <router-link h-60 f-c-c to="/">
-    <icon-custom-logo text-36 color-primary></icon-custom-logo>
-    <h2
-      v-show="!appStore.collapsed"
-      ml-2
-      mr-8
-      max-w-150
-      flex-shrink-0
-      text-16
-      font-bold
-      color-primary
-    >
-      {{ title }}
-    </h2>
+  <router-link h-60 f-c-c px-10 to="/">
+    <img class="side-logo__image" src="/resource/netinfo-logo.png" alt="星网信通" />
   </router-link>
 </template>
 
-<script setup>
-import { useAppStore } from '@/store'
-const title = import.meta.env.VITE_TITLE
-
-const appStore = useAppStore()
-</script>
+<style scoped>
+.side-logo__image {
+  display: block;
+  width: 100%;
+  max-width: 170px;
+  height: 48px;
+  object-fit: contain;
+}
+</style>
