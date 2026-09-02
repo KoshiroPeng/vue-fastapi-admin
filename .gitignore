@@ -1,4 +1,5 @@
 __pycache__/
+*.py[cod]
 .idea/
 venv/
 .venv/
@@ -12,6 +13,22 @@ db.sqlite3
 db.sqlite3-journal
 db.sqlite3-shm
 db.sqlite3-wal
+*.sqlite3
+
+logs/
+*.log
+
+web/node_modules/
+web/dist/
+web/dist-ssr/
+web/stats.html
+web/coverage/
+web/*.local
+
+deploy/sample-picture/1.jpg
+deploy/sample-picture/2.jpg
+deploy/sample-picture/3.jpg
+deploy/sample-picture/group.jpg
 
 .DS_Store
 ._.DS_Store
