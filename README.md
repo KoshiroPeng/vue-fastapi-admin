@@ -1,244 +1,227 @@
-<p align="center">
-  <a href="https://github.com/mizhexiaoxiao/vue-fastapi-admin">
-    <img alt="Vue FastAPI Admin Logo" width="200" src="https://github.com/mizhexiaoxiao/vue-fastapi-admin/blob/main/deploy/sample-picture/logo.svg">
-  </a>
-</p>
+# vue-fastapi-admin
 
-<h1 align="center">vue-fastapi-admin</h1>
+基于 FastAPI、Vue 3、Naive UI 的前后端分离后台管理系统。项目提供用户、角色、菜单、部门、API 权限和审计日志等基础管理能力，适合作为内部管理系统的基础工程。
 
-[English](./README-en.md) | 简体中文
+当前仓库地址：
 
-基于 FastAPI + Vue3 + Naive UI 的现代化前后端分离开发平台，融合了 RBAC 权限管理、动态路由和 JWT 鉴权，助力中小型应用快速搭建，也可用于学习参考。
-
-### 特性
-- **最流行技术栈**：基于 Python 3.11 和 FastAPI 高性能异步框架，结合 Vue3 和 Vite 等前沿技术进行开发，同时使用高效的 npm 包管理器 pnpm。
-- **代码规范**：项目内置丰富的规范插件，确保代码质量和一致性，有效提高团队协作效率。
-- **动态路由**：后端动态路由，结合 RBAC（Role-Based Access Control）权限模型，提供精细的菜单路由控制。
-- **JWT鉴权**：使用 JSON Web Token（JWT）进行身份验证和授权，增强应用的安全性。
-- **细粒度权限控制**：实现按钮和接口级别的权限控制，确保不同用户或角色在界面操作和接口访问时具有不同的权限限制。
-
-### 在线预览
-- [http://47.111.145.81:3000](http://47.111.145.81:3000)
-- username: admin
-- password: 123456
-
-### 登录页
-
-![image](https://github.com/mizhexiaoxiao/vue-fastapi-admin/blob/main/deploy/sample-picture/login.jpg)
-### 工作台
-
-![image](https://github.com/mizhexiaoxiao/vue-fastapi-admin/blob/main/deploy/sample-picture/workbench.jpg)
-
-### 用户管理
-
-![image](https://github.com/mizhexiaoxiao/vue-fastapi-admin/blob/main/deploy/sample-picture/user.jpg)
-### 角色管理
-
-![image](https://github.com/mizhexiaoxiao/vue-fastapi-admin/blob/main/deploy/sample-picture/role.jpg)
-
-### 菜单管理
-
-![image](https://github.com/mizhexiaoxiao/vue-fastapi-admin/blob/main/deploy/sample-picture/menu.jpg)
-
-### API管理
-
-![image](https://github.com/mizhexiaoxiao/vue-fastapi-admin/blob/main/deploy/sample-picture/api.jpg)
-
-### 快速开始
-#### 方法一：dockerhub拉取镜像
-
-```sh
-docker pull mizhexiaoxiao/vue-fastapi-admin:latest 
-docker run -d --restart=always --name=vue-fastapi-admin -p 9999:80 mizhexiaoxiao/vue-fastapi-admin
+```text
+http://172.16.4.42:82/icp/fastapi-vue-admin.git
 ```
 
-#### 方法二：dockerfile构建镜像
-##### docker安装(版本17.05+)
+## 功能概览
 
-```sh
-yum install -y docker-ce
-systemctl start docker
-```
+- 用户管理：支持用户增删改查、重置密码、启用或停用用户。
+- 角色管理：支持角色维护，并可按角色分配菜单和接口权限。
+- 菜单管理：支持后台动态菜单和前端动态路由。
+- 部门管理：支持组织部门维护。
+- API 管理：支持扫描和维护后端接口权限。
+- 审计日志：记录接口访问行为，便于追踪操作。
+- 认证鉴权：使用 JWT 登录认证，并支持按钮级和接口级权限控制。
 
-##### 构建镜像
+## 技术栈
 
-```sh
-git clone https://github.com/mizhexiaoxiao/vue-fastapi-admin.git
-cd vue-fastapi-admin
-docker build --no-cache . -t vue-fastapi-admin
-```
+后端：
 
-##### 启动容器
-
-```sh
-docker run -d --restart=always --name=vue-fastapi-admin -p 9999:80 vue-fastapi-admin
-```
-
-##### 访问
-
-http://localhost:9999
-
-username：admin
-
-password：123456
-
-### 本地启动
-#### 后端
-启动项目需要以下环境：
 - Python 3.11
+- FastAPI
+- Tortoise ORM
+- Aerich
+- SQLite 默认数据库
+- Uvicorn
 
-#### 方法一（推荐）：使用 uv 安装依赖
-1. 安装 uv
-```sh
+前端：
+
+- Vue 3
+- Vite
+- Naive UI
+- Pinia
+- Vue Router
+- Axios
+- UnoCSS
+- pnpm
+
+## 环境要求
+
+- Python 3.11 或以上版本
+- Node.js 18.8.0 或以上版本
+- pnpm
+- Git
+
+Docker 部署需要 Docker 17.05 或以上版本。
+
+## 本地启动
+
+### 启动后端
+
+推荐使用 `uv` 管理后端依赖。
+
+```powershell
 pip install uv
-```
-
-2. 创建并激活虚拟环境
-```sh
 uv venv
-source .venv/bin/activate  # Linux/Mac
-# 或
-.\.venv\Scripts\activate  # Windows
-```
-
-3. 安装依赖
-```sh
-uv add pyproject.toml
-```
-
-4. 启动服务
-```sh
+.\.venv\Scripts\activate
+uv sync
 python run.py
 ```
 
-#### 方法二：使用 Pip 安装依赖
-1. 创建虚拟环境
-```sh
-python3 -m venv venv
+后端默认监听：
+
+```text
+http://localhost:9999
 ```
 
-2. 激活虚拟环境
-```sh
-source venv/bin/activate  # Linux/Mac
-# 或
-.\venv\Scripts\activate  # Windows
+接口文档地址：
+
+```text
+http://localhost:9999/docs
 ```
 
-3. 安装依赖
-```sh
+如果不用 `uv`，也可以使用 `pip` 安装依赖：
+
+```powershell
+python -m venv .venv
+.\.venv\Scripts\activate
 pip install -r requirements.txt -i https://pypi.tuna.tsinghua.edu.cn/simple
-```
-
-4. 启动服务
-```sh
 python run.py
 ```
 
-服务现在应该正在运行，访问 http://localhost:9999/docs 查看API文档
+### 启动前端
 
-#### 前端
-启动项目需要以下环境：
-- node v18.8.0+
-
-1. 进入前端目录
-```sh
+```powershell
 cd web
-```
-
-2. 安装依赖(建议使用pnpm: https://pnpm.io/zh/installation)
-```sh
-npm i -g pnpm # 已安装可忽略
-pnpm i # 或者 npm i
-```
-
-3. 启动
-```sh
+npm i -g pnpm
+pnpm install
 pnpm dev
 ```
 
-### 目录说明
+前端默认端口来自前端环境配置，当前为：
 
-```
-├── app                   // 应用程序目录
-│   ├── api               // API接口目录
-│   │   └── v1            // 版本1的API接口
-│   │       ├── apis      // API相关接口
-│   │       ├── base      // 基础信息接口
-│   │       ├── menus     // 菜单相关接口
-│   │       ├── roles     // 角色相关接口
-│   │       └── users     // 用户相关接口
-│   ├── controllers       // 控制器目录
-│   ├── core              // 核心功能模块
-│   ├── log               // 日志目录
-│   ├── models            // 数据模型目录
-│   ├── schemas           // 数据模式/结构定义
-│   ├── settings          // 配置设置目录
-│   └── utils             // 工具类目录
-├── deploy                // 部署相关目录
-│   └── sample-picture    // 示例图片目录
-└── web                   // 前端网页目录
-    ├── build             // 构建脚本和配置目录
-    │   ├── config        // 构建配置
-    │   ├── plugin        // 构建插件
-    │   └── script        // 构建脚本
-    ├── public            // 公共资源目录
-    │   └── resource      // 公共资源文件
-    ├── settings          // 前端项目配置
-    └── src               // 源代码目录
-        ├── api           // API接口定义
-        ├── assets        // 静态资源目录
-        │   ├── images    // 图片资源
-        │   ├── js        // JavaScript文件
-        │   └── svg       // SVG矢量图文件
-        ├── components    // 组件目录
-        │   ├── common    // 通用组件
-        │   ├── icon      // 图标组件
-        │   ├── page      // 页面组件
-        │   ├── query-bar // 查询栏组件
-        │   └── table     // 表格组件
-        ├── composables   // 可组合式功能块
-        ├── directives    // 指令目录
-        ├── layout        // 布局目录
-        │   └── components // 布局组件
-        ├── router        // 路由目录
-        │   ├── guard     // 路由守卫
-        │   └── routes    // 路由定义
-        ├── store         // 状态管理(pinia)
-        │   └── modules   // 状态模块
-        ├── styles        // 样式文件目录
-        ├── utils         // 工具类目录
-        │   ├── auth      // 认证相关工具
-        │   ├── common    // 通用工具
-        │   ├── http      // 封装axios
-        │   └── storage   // 封装localStorage和sessionStorage
-        └── views         // 视图/页面目录
-            ├── error-page // 错误页面
-            ├── login      // 登录页面
-            ├── profile    // 个人资料页面
-            ├── system     // 系统管理页面
-            └── workbench  // 工作台页面
+```text
+http://localhost:3100
 ```
 
-### 进群交流
-进群的条件是给项目一个star，小小的star是作者维护下去的动力。
+开发环境中，前端会把 `/api/v1` 请求代理到后端服务。
 
-你可以在群里提出任何疑问，我会尽快回复答疑。
+## 默认账号
 
-<img width="300" src="https://github.com/mizhexiaoxiao/vue-fastapi-admin/blob/main/deploy/sample-picture/group.jpg">
+首次启动后端时，系统会自动初始化数据库、菜单、接口权限、角色和默认管理员账号。
 
-## 打赏
-如果项目有帮助到你，可以请作者喝杯咖啡~
+```text
+用户名：admin
+密码：123456
+```
 
-<div style="display: flex">
-    <img src="https://github.com/mizhexiaoxiao/vue-fastapi-admin/blob/main/deploy/sample-picture/1.jpg" width="300">
-    <img src="https://github.com/mizhexiaoxiao/vue-fastapi-admin/blob/main/deploy/sample-picture/2.jpg" width="300">
-</div>
+请在正式环境中及时修改默认密码。
 
-## 定制开发
-如果有基于该项目的定制需求或其他合作，请添加下方微信，备注来意
+## Docker 部署
 
-<img width="300" src="https://github.com/mizhexiaoxiao/vue-fastapi-admin/blob/main/deploy/sample-picture/3.jpg">
+构建镜像：
 
-### Visitors Count
+```powershell
+docker build --no-cache . -t vue-fastapi-admin
+```
 
-<img align="left" src = "https://profile-counter.glitch.me/vue-fastapi-admin/count.svg" alt="Loading">
+启动容器：
+
+```powershell
+docker run -d --restart=always --name vue-fastapi-admin -p 9999:80 vue-fastapi-admin
+```
+
+访问地址：
+
+```text
+http://localhost:9999
+```
+
+Docker 镜像内会先构建前端静态资源，再通过 Nginx 提供前端页面，并把 `/api/` 请求转发给后端服务。
+
+## 常用命令
+
+后端常用命令：
+
+```powershell
+python run.py
+ruff check ./app
+black ./ --check
+isort ./ --profile black --check
+```
+
+前端常用命令：
+
+```powershell
+cd web
+pnpm dev
+pnpm build
+pnpm lint
+```
+
+## 项目结构
+
+```text
+├── app                  后端应用代码
+│   ├── api              API 路由
+│   ├── controllers      业务控制器
+│   ├── core             应用核心能力，例如中间件、异常处理、通用 CRUD
+│   ├── log              日志配置
+│   ├── models           数据模型
+│   ├── schemas          请求和响应数据结构
+│   ├── settings         后端配置
+│   └── utils            工具函数
+├── deploy               部署配置和示例图片
+├── web                  前端应用代码
+│   ├── build            Vite 构建配置
+│   ├── public           前端公共资源
+│   ├── settings         前端项目配置
+│   └── src              前端源码
+├── Dockerfile           Docker 镜像构建文件
+├── Makefile             后端开发辅助命令
+├── pyproject.toml       后端项目和依赖配置
+├── requirements.txt     后端 pip 依赖清单
+└── uv.lock              后端 uv 锁定文件
+```
+
+## 提交规则
+
+以下内容不应提交到 Git 仓库：
+
+- Python 虚拟环境，例如 `.venv/`
+- 前端依赖目录，例如 `node_modules/`
+- 本地 SQLite 数据库文件，例如 `db.sqlite3`
+- Python 缓存目录，例如 `__pycache__/`
+- 本地构建产物，例如前端 `dist/`
+- 本地迁移生成目录，例如 `migrations/`
+
+当前 `.gitignore` 已包含这些规则。
+
+## 配置注意事项
+
+- 后端默认使用 SQLite，数据库文件会在本地运行时生成。
+- 后端服务默认端口为 `9999`。
+- 前端开发服务默认端口为 `3100`。
+- 当前代码中存在默认 `SECRET_KEY`，正式环境建议改为通过环境变量注入。
+- 默认管理员密码仅适合初始化测试，正式环境必须修改。
+
+## 页面预览
+
+登录页：
+
+![登录页](deploy/sample-picture/login.jpg)
+
+工作台：
+
+![工作台](deploy/sample-picture/workbench.jpg)
+
+用户管理：
+
+![用户管理](deploy/sample-picture/user.jpg)
+
+角色管理：
+
+![角色管理](deploy/sample-picture/role.jpg)
+
+菜单管理：
+
+![菜单管理](deploy/sample-picture/menu.jpg)
+
+API 管理：
+
+![API 管理](deploy/sample-picture/api.jpg)
