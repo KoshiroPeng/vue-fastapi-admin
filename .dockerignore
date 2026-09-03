@@ -1,1 +1,17 @@
+.git
+.venv
+venv
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+.idea
+.vscode
+*.sqlite3
+db.sqlite3*
+migrations
 web/node_modules
+web/dist
+web/dist-ssr
+*.log
+

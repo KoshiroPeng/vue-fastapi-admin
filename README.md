@@ -5,7 +5,7 @@
 当前仓库地址：
 
 ```text
-http://172.16.4.42:82/icp/fastapi-vue-admin.git
+https://github.com/KoshiroPeng/vue-fastapi-admin.git
 ```
 
 ## 功能概览
