@@ -16,6 +16,7 @@ from app.core.exceptions import (
     HttpExcHandle,
     IntegrityError,
     IntegrityHandle,
+    NCEErrorHandle,
     RequestValidationError,
     RequestValidationHandle,
     ResponseValidationError,
@@ -25,14 +26,17 @@ from app.core.exceptions import (
 from app.log import logger
 from app.models.admin import Api, Menu, Role
 from app.schemas.menus import MenuType
+from app.services.nce.errors import NCEError
 from app.services.risk_control import RiskControlError
 from app.settings.config import settings
 
 from .middlewares import BackGroundTaskMiddleware, HttpAuditLogMiddleware
+from .request_context import RequestContextMiddleware
 
 
 def make_middlewares():
     middleware = [
+        Middleware(RequestContextMiddleware),
         Middleware(
             CORSMiddleware,
             allow_origins=settings.CORS_ORIGINS,
@@ -62,6 +66,7 @@ def register_exceptions(app: FastAPI):
     app.add_exception_handler(IntegrityError, IntegrityHandle)
     app.add_exception_handler(RequestValidationError, RequestValidationHandle)
     app.add_exception_handler(ResponseValidationError, ResponseValidationHandle)
+    app.add_exception_handler(NCEError, NCEErrorHandle)
     app.add_exception_handler(RiskControlError, RiskControlHandle)
 
 

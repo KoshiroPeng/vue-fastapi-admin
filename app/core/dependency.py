@@ -4,6 +4,7 @@ import jwt
 from fastapi import Depends, Header, HTTPException, Request
 
 from app.core.ctx import CTX_USER_ID
+from app.core.request_context import get_request_id
 from app.log import logger
 from app.models import Role, User
 from app.settings import settings
@@ -29,7 +30,7 @@ class AuthControl:
         except HTTPException:
             raise
         except Exception as exc:
-            logger.exception("event=authentication_backend_failed")
+            logger.exception("event=authentication_backend_failed request_id={}", get_request_id() or "-")
             raise HTTPException(status_code=500, detail="认证服务暂不可用") from exc
 
 

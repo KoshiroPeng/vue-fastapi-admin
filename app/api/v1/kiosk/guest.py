@@ -1,5 +1,6 @@
 from fastapi import APIRouter, Depends
 
+from app.core.request_context import get_request_id
 from app.log import logger
 from app.schemas.base import Success
 from app.schemas.kiosk import KioskCreateGuestRequest, KioskGuestResponse
@@ -26,7 +27,8 @@ async def create_kiosk_guest(
         )
     )
     logger.info(
-        "event=kiosk_guest_created kiosk_id={} request_id={} valid_minutes={} max_devices={}",
+        "event=kiosk_guest_created request_id={} kiosk_id={} operation_id={} valid_minutes={} max_devices={}",
+        get_request_id() or "-",
         context.kiosk_id,
         context.request_id,
         settings.KIOSK_GUEST_VALID_MINUTES,
@@ -34,7 +36,7 @@ async def create_kiosk_guest(
     )
     response = KioskGuestResponse(
         username=guest.username,
-        password=guest.password,
+        password=guest.password.get_secret_value(),
         validDurationMinutes=settings.KIOSK_GUEST_VALID_MINUTES,
         expireTime=guest.valid_until,
         maxDevices=guest.max_devices,

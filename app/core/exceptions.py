@@ -7,7 +7,9 @@ from fastapi.requests import Request
 from fastapi.responses import JSONResponse
 from tortoise.exceptions import DoesNotExist, IntegrityError
 
+from app.core.request_context import get_request_id
 from app.log import logger
+from app.services.nce.errors import NCEAuthenticationError, NCEBusinessError, NCEError, NCETimeoutError
 from app.services.risk_control import RateLimitExceeded, RiskControlError
 
 
@@ -55,9 +57,31 @@ async def ResponseValidationHandle(_: Request, exc: ResponseValidationError) -> 
     return JSONResponse(content=content, status_code=500)
 
 
+async def NCEErrorHandle(req: Request, exc: NCEError) -> JSONResponse:
+    status_code = 504 if isinstance(exc, NCETimeoutError) else 502
+    if isinstance(exc, NCEAuthenticationError):
+        message = "NCE 鉴权失败，请联系管理员检查接入配置"
+    elif isinstance(exc, NCEBusinessError):
+        message = "NCE 业务请求失败"
+    elif isinstance(exc, NCETimeoutError):
+        message = "NCE 响应超时，请稍后重试"
+    else:
+        message = "NCE 服务暂不可用"
+    logger.warning(
+        "event=nce_request_failed request_id={} path={} error_code={} status_code={}",
+        get_request_id() or "-",
+        req.url.path,
+        exc.code,
+        status_code,
+    )
+    content = {"code": status_code, "msg": message, "data": None, "error_code": exc.code}
+    return JSONResponse(content=content, status_code=status_code)
+
+
 async def RiskControlHandle(req: Request, exc: RiskControlError) -> JSONResponse:
     logger.warning(
-        "event=risk_control_rejected path={} error_code={} status_code={}",
+        "event=risk_control_rejected request_id={} path={} error_code={} status_code={}",
+        get_request_id() or "-",
         req.url.path,
         exc.error_code,
         exc.status_code,

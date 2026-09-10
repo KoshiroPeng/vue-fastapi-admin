@@ -708,8 +708,8 @@ NCE RADIUS 日志中登机牌、护照、取号机可能都表现为普通访客
 
 Mock 要求：
 - 只在开发和测试环境启用；
-- 通过环境变量开关控制；
-- Mock 返回结构尽量贴近真实接口；
+- 通过 `NCE_MOCK_ENABLED` 和 `NCE_MOCK_SCENARIO` 环境变量控制；场景固定为 `healthy`、`auth_failure`、`business_failure`、`timeout`、`unavailable`；
+- Mock 返回结构尽量贴近真实接口；Token 必须使用 Secret 类型，用户和 RADIUS 日志必须支持与真实客户端一致的分页/游标契约；
 - Postman 集合应提供测试环境变量模板；
 - 上生产前必须关闭 Mock。
 

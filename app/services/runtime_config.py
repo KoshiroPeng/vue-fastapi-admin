@@ -31,7 +31,7 @@ def build_runtime_config_summary(config: Settings) -> RuntimeConfigSummary:
         nce_base_url_configured=bool(config.NCE_BASE_URL),
         nce_portal_url_configured=bool(config.NCE_PORTAL_AUTH_BASE_URL),
         nce_credentials_configured=bool(config.NCE_USERNAME and config.NCE_PASSWORD),
-        nce_site_configured=bool(config.NCE_TENANT_ID and config.NCE_SITE_ID and config.NCE_USER_GROUP_ID),
+        nce_site_configured=bool(config.NCE_TENANT_ID and config.NCE_SITE_ID and config.NCE_GUEST_USER_GROUP_ID),
         redis_configured=bool(config.REDIS_URL),
         pii_hash_secret_configured=bool(config.PII_HASH_SECRET),
         kiosk_hmac_configured=bool(config.KIOSK_HMAC_SECRET),
