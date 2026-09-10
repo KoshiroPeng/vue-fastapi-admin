@@ -41,6 +41,7 @@ class Settings(BaseSettings):
     NCE_SITE_ID: str | None = None
     NCE_GUEST_USER_GROUP_ID: str | None = None
     NCE_TIMEOUT_MS: int = 2500
+    NCE_KICK_ENABLED: bool = False
 
     AUTH_SMS_ENABLED: bool = True
     AUTH_WECHAT_ENABLED: bool = True

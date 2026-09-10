@@ -181,6 +181,7 @@ const limitItems = computed(() => [
   { label: 'MAC 每分钟上限', value: config.value.rate_limit_per_mac, unit: '次' },
   { label: '取号机访客有效期', value: config.value.kiosk_guest_valid_minutes, unit: 'min' },
   { label: '取号机请求体上限', value: config.value.kiosk_max_body_bytes, unit: 'bytes' },
+  { label: 'NCE 踢线能力', value: config.value.nce_kick_enabled ? '已启用' : '已关闭', unit: '' },
 ])
 
 async function loadConfig() {

@@ -20,6 +20,7 @@ class RuntimeConfigSummary(BaseModel):
     pii_hash_secret_configured: bool
     kiosk_hmac_configured: bool
     nce_timeout_ms: int
+    nce_kick_enabled: bool
     auth_transaction_ttl_seconds: int
     nonce_ttl_seconds: int
     idempotency_ttl_seconds: int
@@ -48,6 +49,7 @@ def build_runtime_config_summary(config: Settings) -> RuntimeConfigSummary:
         pii_hash_secret_configured=bool(config.PII_HASH_SECRET),
         kiosk_hmac_configured=bool(config.KIOSK_HMAC_SECRET),
         nce_timeout_ms=config.NCE_TIMEOUT_MS,
+        nce_kick_enabled=config.NCE_KICK_ENABLED,
         auth_transaction_ttl_seconds=config.AUTH_TRANSACTION_TTL_SECONDS,
         nonce_ttl_seconds=config.NONCE_TTL_SECONDS,
         idempotency_ttl_seconds=config.IDEMPOTENCY_TTL_SECONDS,

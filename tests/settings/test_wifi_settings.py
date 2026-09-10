@@ -29,6 +29,7 @@ def test_runtime_config_summary_never_exposes_secrets() -> None:
     assert summary.nce_guest_user_group_id == "guest-group-visible-for-operations"
     assert summary.auth_methods["kiosk"] is True
     assert summary.auth_methods["passport"] is False
+    assert summary.nce_kick_enabled is False
     assert "nce-secret-value" not in serialized
     assert "kiosk-secret-value" not in serialized
     assert "pii-hash-secret-value" not in serialized

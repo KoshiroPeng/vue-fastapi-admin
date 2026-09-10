@@ -92,3 +92,4 @@ async def test_dashboard_router_reuses_existing_permission_dependency() -> None:
 
     assert response.status_code == 422
     assert "token" in response.text
+    assert all(not route.path.endswith("/online-users/kick") for route in dashboard_router.routes)
