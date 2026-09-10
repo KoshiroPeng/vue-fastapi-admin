@@ -8,8 +8,8 @@ class Settings(BaseSettings):
     model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8", extra="ignore")
 
     VERSION: str = "0.1.0"
-    APP_TITLE: str = "Vue FastAPI Admin"
-    PROJECT_NAME: str = "Vue FastAPI Admin"
+    APP_TITLE: str = "深圳机场WiFi管理台"
+    PROJECT_NAME: str = "深圳机场WiFi管理台"
     APP_DESCRIPTION: str = "Description"
 
     CORS_ORIGINS: typing.List = ["*"]

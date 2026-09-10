@@ -166,7 +166,7 @@ pnpm lint
 │   ├── schemas          请求和响应数据结构
 │   ├── settings         后端配置
 │   └── utils            工具函数
-├── deploy               部署配置和示例图片
+├── deploy               部署配置
 ├── web                  前端应用代码
 │   ├── build            Vite 构建配置
 │   ├── public           前端公共资源
@@ -199,29 +199,3 @@ pnpm lint
 - 前端开发服务默认端口为 `3100`。
 - 当前代码中存在默认 `SECRET_KEY`，正式环境建议改为通过环境变量注入。
 - 默认管理员密码仅适合初始化测试，正式环境必须修改。
-
-## 页面预览
-
-登录页：
-
-![登录页](deploy/sample-picture/login.jpg)
-
-工作台：
-
-![工作台](deploy/sample-picture/workbench.jpg)
-
-用户管理：
-
-![用户管理](deploy/sample-picture/user.jpg)
-
-角色管理：
-
-![角色管理](deploy/sample-picture/role.jpg)
-
-菜单管理：
-
-![菜单管理](deploy/sample-picture/menu.jpg)
-
-API 管理：
-
-![API 管理](deploy/sample-picture/api.jpg)

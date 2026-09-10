@@ -25,10 +25,5 @@ web/stats.html
 web/coverage/
 web/*.local
 
-deploy/sample-picture/1.jpg
-deploy/sample-picture/2.jpg
-deploy/sample-picture/3.jpg
-deploy/sample-picture/group.jpg
-
 .DS_Store
 ._.DS_Store
