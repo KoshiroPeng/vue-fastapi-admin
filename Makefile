@@ -69,9 +69,7 @@ format: ## Run code formatter
 
 .PHONY: test
 test: ## Run the test suite
-	$(eval include .env)
-	$(eval export $(sh sed 's/=.*//' .env))
-	pytest -vv -s --cache-clear ./
+	uv run python -m pytest
 
 .PHONY: clean-db
 clean-db: ## 删除migrations文件夹和db.sqlite3

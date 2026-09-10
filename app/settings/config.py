@@ -19,6 +19,30 @@ class Settings(BaseSettings):
 
     DEBUG: bool = True
 
+    # WiFi authentication gateway. Mock mode is the safe default until a real
+    # NCE test environment and its credentials have been approved.
+    NCE_MOCK_ENABLED: bool = True
+    NCE_MOCK_SCENARIO: typing.Literal["healthy", "unavailable"] = "healthy"
+    NCE_BASE_URL: str | None = None
+    NCE_PORTAL_AUTH_BASE_URL: str | None = None
+    NCE_USERNAME: str | None = None
+    NCE_PASSWORD: str | None = None
+    NCE_TENANT_ID: str | None = None
+    NCE_SITE_ID: str | None = None
+    NCE_USER_GROUP_ID: str | None = None
+    NCE_TIMEOUT_MS: int = 2500
+
+    REDIS_URL: str = "redis://127.0.0.1:6379/0"
+    AUTH_TRANSACTION_TTL_SECONDS: int = 300
+    RATE_LIMIT_WINDOW_SECONDS: int = 60
+    RATE_LIMIT_PER_IP: int = 30
+    RATE_LIMIT_PER_MAC: int = 5
+
+    KIOSK_HMAC_SECRET: str | None = None
+    KIOSK_ALLOWED_IPS: list[str] = ["127.0.0.1", "::1"]
+    KIOSK_CLOCK_SKEW_SECONDS: int = 300
+    KIOSK_GUEST_VALID_MINUTES: int = 1440
+
     PROJECT_ROOT: str = os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir))
     BASE_DIR: str = os.path.abspath(os.path.join(PROJECT_ROOT, os.pardir))
     LOGS_ROOT: str = os.path.join(BASE_DIR, "app/logs")

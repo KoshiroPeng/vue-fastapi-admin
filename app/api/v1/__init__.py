@@ -5,9 +5,11 @@ from app.core.dependency import DependPermission
 from .apis import apis_router
 from .auditlog import auditlog_router
 from .base import base_router
+from .dashboard import dashboard_router
 from .depts import depts_router
 from .menus import menus_router
 from .roles import roles_router
+from .runtime_config import runtime_config_router
 from .users import users_router
 
 v1_router = APIRouter()
@@ -19,3 +21,5 @@ v1_router.include_router(menus_router, prefix="/menu", dependencies=[DependPermi
 v1_router.include_router(apis_router, prefix="/api", dependencies=[DependPermission])
 v1_router.include_router(depts_router, prefix="/dept", dependencies=[DependPermission])
 v1_router.include_router(auditlog_router, prefix="/auditlog", dependencies=[DependPermission])
+v1_router.include_router(dashboard_router, prefix="/dashboard", dependencies=[DependPermission])
+v1_router.include_router(runtime_config_router, prefix="/runtime-config", dependencies=[DependPermission])
