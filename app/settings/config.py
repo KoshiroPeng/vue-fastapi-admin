@@ -42,6 +42,12 @@ class Settings(BaseSettings):
     NCE_GUEST_USER_GROUP_ID: str | None = None
     NCE_TIMEOUT_MS: int = 2500
 
+    AUTH_SMS_ENABLED: bool = True
+    AUTH_WECHAT_ENABLED: bool = True
+    AUTH_BOARDING_PASS_ENABLED: bool = True
+    AUTH_PASSPORT_ENABLED: bool = True
+    AUTH_KIOSK_ENABLED: bool = True
+
     REDIS_URL: str = "redis://127.0.0.1:6379/0"
     PII_HASH_SECRET: str | None = None
     AUTH_TRANSACTION_TTL_SECONDS: int = 300

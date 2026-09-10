@@ -11,8 +11,11 @@ def test_runtime_config_summary_never_exposes_secrets() -> None:
         NCE_MOCK_ENABLED=True,
         NCE_USERNAME="mock-operator",
         NCE_PASSWORD="nce-secret-value",
+        NCE_SITE_ID="site-visible-for-operations",
+        NCE_GUEST_USER_GROUP_ID="guest-group-visible-for-operations",
         KIOSK_HMAC_SECRET="kiosk-secret-value",
         PII_HASH_SECRET="pii-hash-secret-value",
+        AUTH_PASSPORT_ENABLED=False,
     )
 
     summary = build_runtime_config_summary(config)
@@ -22,9 +25,14 @@ def test_runtime_config_summary_never_exposes_secrets() -> None:
     assert summary.nce_credentials_configured is True
     assert summary.kiosk_hmac_configured is True
     assert summary.pii_hash_secret_configured is True
+    assert summary.nce_site_id == "site-visible-for-operations"
+    assert summary.nce_guest_user_group_id == "guest-group-visible-for-operations"
+    assert summary.auth_methods["kiosk"] is True
+    assert summary.auth_methods["passport"] is False
     assert "nce-secret-value" not in serialized
     assert "kiosk-secret-value" not in serialized
     assert "pii-hash-secret-value" not in serialized
+    assert "mock-operator" not in serialized
 
 
 def test_production_rejects_development_secret_and_wildcard_cors() -> None:

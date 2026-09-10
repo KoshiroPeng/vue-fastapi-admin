@@ -54,5 +54,13 @@ async def test_runtime_config_api_returns_only_safe_summary() -> None:
     assert response.status_code == 200
     data = response.json()["data"]
     assert data["nce_mode"] == "mock"
+    assert data["auth_methods"] == {
+        "sms": True,
+        "wechat": True,
+        "boarding_pass": True,
+        "passport": True,
+        "kiosk": True,
+    }
+    assert all(route.methods == {"GET"} for route in runtime_config_router.routes)
     assert "NCE_PASSWORD" not in response.text
     assert "KIOSK_HMAC_SECRET" not in response.text
