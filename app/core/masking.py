@@ -33,6 +33,15 @@ def hash_ip(value: str, secret: str) -> str:
     return _fingerprint("ip", normalized, secret)
 
 
+def mask_account(value: str) -> str:
+    sms_match = re.fullmatch(r"(sms_)(1\d{2})\d{4}(\d{4})", value, flags=re.IGNORECASE)
+    if sms_match:
+        return f"{sms_match.group(1)}{sms_match.group(2)}****{sms_match.group(3)}"
+    if len(value) <= 4:
+        return "*" * len(value)
+    return f"{value[:3]}****{value[-4:]}"
+
+
 def mask_mac(value: str) -> str:
     normalized = normalize_mac(value)
     octets = [normalized[index : index + 2] for index in range(0, 12, 2)]

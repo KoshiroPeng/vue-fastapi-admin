@@ -29,7 +29,7 @@ _SENSITIVE_KEY_PARTS = (
     "smscode",
     "verificationcode",
 )
-_SENSITIVE_EXACT_KEYS = {"phone", "mobile", "phonenumber", "token"}
+_SENSITIVE_EXACT_KEYS = {"phone", "mobile", "phonenumber", "token", "username"}
 
 
 def _is_sensitive_audit_key(key: str) -> bool:

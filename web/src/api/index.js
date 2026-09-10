@@ -39,4 +39,8 @@ export default {
   deleteDept: (params = {}) => request.delete('/dept/delete', { params }),
   // auditlog
   getAuditLogList: (params = {}) => request.get('/auditlog/list', { params }),
+  // WiFi operations
+  getWifiHealth: () => request.get('/dashboard/health'),
+  getWifiOnlineUsers: (params = {}) => request.get('/dashboard/online-users', { params }),
+  getWifiRadiusLogs: (data = {}) => request.post('/dashboard/radius-logs', data),
 }

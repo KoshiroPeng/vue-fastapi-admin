@@ -23,7 +23,7 @@ def test_audit_sanitizer_redacts_nested_credentials_and_pii() -> None:
         }
     )
 
-    assert sanitized["username"] == "operator"
+    assert sanitized["username"] == "***REDACTED***"
     assert sanitized["password"] == "***REDACTED***"
     assert sanitized["data"]["temporary_password"] == "***REDACTED***"
     assert sanitized["data"]["idDigest"] == "***REDACTED***"
