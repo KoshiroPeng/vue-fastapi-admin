@@ -116,6 +116,18 @@ async def test_mock_radius_logs_use_opaque_cursor() -> None:
     assert second.next_cursor is None
     assert {item.id for item in first.items}.isdisjoint(item.id for item in second.items)
 
+    filtered = await client.query_radius_logs(
+        NCERadiusLogQuery(
+            site_id="mock-site",
+            start_time=start,
+            end_time=start + timedelta(days=1),
+            user_name="kiosk_mock",
+            terminal_ip="10.85.73.10",
+            terminal_mac="AA-BB-CC-DD-EE-03",
+        )
+    )
+    assert [item.id for item in filtered.items] == ["radius-003"]
+
     with pytest.raises(NCEBusinessError, match="无效的 NCE Mock 游标"):
         await client.query_radius_logs(
             NCERadiusLogQuery(

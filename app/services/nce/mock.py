@@ -5,6 +5,7 @@ from collections.abc import Callable
 from datetime import datetime, timedelta, timezone
 from enum import Enum
 
+from app.core.masking import normalize_mac
 from app.core.request_context import get_request_id
 from app.log import logger
 
@@ -101,6 +102,9 @@ class MockNCEClient:
             for item in self._radius_logs()
             if query.start_time <= item.authenticated_at <= query.end_time
             and (query.auth_result == "all" or item.auth_result_code == (0 if query.auth_result == "success" else 1))
+            and (query.user_name is None or query.user_name.casefold() in item.user_name.casefold())
+            and (query.terminal_ip is None or query.terminal_ip == item.terminal_ip)
+            and (query.terminal_mac is None or query.terminal_mac == normalize_mac(item.terminal_mac))
             and (query.fail_reason_code is None or item.fail_reason_code == query.fail_reason_code)
             and (query.user_type_code is None or item.user_type_code == query.user_type_code)
             and (query.auth_type_code is None or item.auth_type_code == query.auth_type_code)

@@ -53,6 +53,28 @@ async def test_radius_logs_api_returns_masked_cursor_page(app: FastAPI) -> None:
 
 
 @pytest.mark.asyncio
+async def test_radius_logs_api_applies_sensitive_filters(app: FastAPI) -> None:
+    start = datetime(2026, 9, 10, 0, 0, tzinfo=timezone.utc)
+    async with httpx.AsyncClient(transport=httpx.ASGITransport(app=app), base_url="http://test") as client:
+        response = await client.post(
+            "/api/v1/dashboard/radius-logs",
+            json={
+                "start_time": start.isoformat(),
+                "end_time": (start + timedelta(days=1)).isoformat(),
+                "user_name": "kiosk_mock",
+                "terminal_ip": "10.85.73.10",
+                "terminal_mac": "AA-BB-CC-DD-EE-03",
+            },
+        )
+
+    assert response.status_code == 200
+    items = response.json()["data"]["items"]
+    assert [item["id"] for item in items] == ["radius-003"]
+    assert "10.85.73.10" not in response.text
+    assert "AA-BB-CC-DD-EE-03" not in response.text
+
+
+@pytest.mark.asyncio
 async def test_dashboard_router_reuses_existing_permission_dependency() -> None:
     protected_app = FastAPI()
     protected_app.include_router(

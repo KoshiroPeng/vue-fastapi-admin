@@ -1,7 +1,9 @@
 from datetime import datetime, timedelta
 from typing import Literal
 
-from pydantic import BaseModel, ConfigDict, Field, model_validator
+from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
+
+from app.core.masking import normalize_mac
 
 
 class OnlineUserItem(BaseModel):
@@ -32,11 +34,19 @@ class RadiusLogRequest(BaseModel):
     start_time: datetime
     end_time: datetime
     auth_result: Literal["success", "failure", "all"] = "all"
+    user_name: str | None = Field(default=None, max_length=128)
+    terminal_ip: str | None = Field(default=None, max_length=64)
+    terminal_mac: str | None = Field(default=None, max_length=32)
     fail_reason_code: int | None = Field(default=None, ge=0)
     user_type_code: int | None = None
     auth_type_code: int | None = None
     page_size: int = Field(default=101, ge=1, le=101)
     cursor: str | None = Field(default=None, max_length=256)
+
+    @field_validator("terminal_mac")
+    @classmethod
+    def normalize_terminal_mac(cls, value: str | None) -> str | None:
+        return normalize_mac(value) if value else None
 
     @model_validator(mode="after")
     def validate_time_range(self) -> "RadiusLogRequest":
