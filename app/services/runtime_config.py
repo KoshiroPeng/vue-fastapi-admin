@@ -13,9 +13,12 @@ class RuntimeConfigSummary(BaseModel):
     nce_credentials_configured: bool
     nce_site_configured: bool
     redis_configured: bool
+    pii_hash_secret_configured: bool
     kiosk_hmac_configured: bool
     nce_timeout_ms: int
     auth_transaction_ttl_seconds: int
+    nonce_ttl_seconds: int
+    idempotency_ttl_seconds: int
     kiosk_guest_valid_minutes: int
 
 
@@ -30,8 +33,11 @@ def build_runtime_config_summary(config: Settings) -> RuntimeConfigSummary:
         nce_credentials_configured=bool(config.NCE_USERNAME and config.NCE_PASSWORD),
         nce_site_configured=bool(config.NCE_TENANT_ID and config.NCE_SITE_ID and config.NCE_USER_GROUP_ID),
         redis_configured=bool(config.REDIS_URL),
+        pii_hash_secret_configured=bool(config.PII_HASH_SECRET),
         kiosk_hmac_configured=bool(config.KIOSK_HMAC_SECRET),
         nce_timeout_ms=config.NCE_TIMEOUT_MS,
         auth_transaction_ttl_seconds=config.AUTH_TRANSACTION_TTL_SECONDS,
+        nonce_ttl_seconds=config.NONCE_TTL_SECONDS,
+        idempotency_ttl_seconds=config.IDEMPOTENCY_TTL_SECONDS,
         kiosk_guest_valid_minutes=config.KIOSK_GUEST_VALID_MINUTES,
     )

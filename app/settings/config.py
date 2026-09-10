@@ -33,15 +33,21 @@ class Settings(BaseSettings):
     NCE_TIMEOUT_MS: int = 2500
 
     REDIS_URL: str = "redis://127.0.0.1:6379/0"
+    PII_HASH_SECRET: str | None = None
     AUTH_TRANSACTION_TTL_SECONDS: int = 300
+    NONCE_TTL_SECONDS: int = 300
+    IDEMPOTENCY_TTL_SECONDS: int = 300
     RATE_LIMIT_WINDOW_SECONDS: int = 60
     RATE_LIMIT_PER_IP: int = 30
     RATE_LIMIT_PER_MAC: int = 5
 
     KIOSK_HMAC_SECRET: str | None = None
+    TRUSTED_PROXY_IPS: list[str] = ["127.0.0.1", "::1"]
     KIOSK_ALLOWED_IPS: list[str] = ["127.0.0.1", "::1"]
     KIOSK_CLOCK_SKEW_SECONDS: int = 300
     KIOSK_GUEST_VALID_MINUTES: int = 1440
+    KIOSK_MAX_BODY_BYTES: int = 8192
+    WIFI_SSID: str = "Airport-Free-WiFi"
 
     PROJECT_ROOT: str = os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir))
     BASE_DIR: str = os.path.abspath(os.path.join(PROJECT_ROOT, os.pardir))

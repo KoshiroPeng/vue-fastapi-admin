@@ -876,21 +876,36 @@ Mock 要求：
 - **Path**: `POST /api/v1/kiosk/create-guest`
 - **Headers**:
   - `Content-Type: application/json`
-  - `X-Kiosk-Key: <Kiosk_Secret_Token>`
+  - `X-Kiosk-Id`: 取号机唯一编号
+  - `X-Timestamp`: Unix 秒级时间戳，默认允许正负 300 秒时钟偏差
+  - `X-Nonce`: 8 至 128 字符的单次随机数
+  - `X-Signature`: HMAC-SHA256 小写十六进制签名
+  - `Idempotency-Key`: 8 至 128 字符的请求幂等键
 - **Request Body**:
 ```json
 {
-  "kioskId": "KIOSK-T3-001",
   "idType": "ID_CARD",
-  "idDigest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-  "requestTime": "2026-09-04T10:15:30+08:00"
+  "idDigest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
 }
 ```
+- **签名原文**：客户端必须对实际发送的原始请求体计算 SHA-256，并按以下顺序使用换行符 `\n` 拼接。服务端使用取号机共享密钥计算 HMAC-SHA256，并通过常量时间比较校验签名。
+```text
+POST
+/api/v1/kiosk/create-guest
+{X-Kiosk-Id}
+{X-Timestamp}
+{X-Nonce}
+{Idempotency-Key}
+{SHA256(rawRequestBody)}
+```
+- **联调测试向量**：测试密钥 `test-kiosk-secret`，时间戳 `1789027200`，Nonce `nonce-001`，幂等键 `request-001`，请求体必须是无额外空格的 `{"idType":"ID_CARD","idDigest":"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"}`；预期签名为 `f71670fd3f13031403e985ebd7deb4c9ffe38be184a0474181046c63c338888e`。该测试密钥严禁用于生产。
+- **反向代理要求**：只有 `TRUSTED_PROXY_IPS` 中的直接代理节点可以提供 `X-Forwarded-For`；Nginx 必须覆盖该请求头而不是透传客户端自带值。IP 白名单和限流均使用解析后的原始客户端地址。取号机接口请求体上限为 8KB，Nginx 与应用层均执行限制。
+- **安全处理顺序**：IP 白名单检查 → HMAC 验签 → 时间戳校验 → IP 摘要限流 → Nonce 防重放 → 幂等键占位 → NCE 访客创建。原始 `idDigest`、Nonce 和幂等键不得写入 Redis 或日志。
 - **Response Body**:
 ```json
 {
   "code": 200,
-  "success": true,
+  "msg": "OK",
   "data": {
     "username": "kiosk_98fc1c14",
     "password": "88482026",
@@ -901,6 +916,7 @@ Mock 要求：
   }
 }
 ```
+- **错误语义**：签名无效或时间戳过期返回 401；来源 IP 不在白名单返回 403；Nonce 重放或幂等键冲突返回 409；超过频率限制返回 429 并携带 `Retry-After`。
 
 ---
 

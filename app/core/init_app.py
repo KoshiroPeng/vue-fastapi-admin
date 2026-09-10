@@ -20,10 +20,12 @@ from app.core.exceptions import (
     RequestValidationHandle,
     ResponseValidationError,
     ResponseValidationHandle,
+    RiskControlHandle,
 )
 from app.log import logger
 from app.models.admin import Api, Menu, Role
 from app.schemas.menus import MenuType
+from app.services.risk_control import RiskControlError
 from app.settings.config import settings
 
 from .middlewares import BackGroundTaskMiddleware, HttpAuditLogMiddleware
@@ -44,6 +46,7 @@ def make_middlewares():
             methods=["GET", "POST", "PUT", "DELETE"],
             exclude_paths=[
                 "/api/v1/base/access_token",
+                "/api/v1/kiosk/",
                 "/docs",
                 "/openapi.json",
             ],
@@ -58,6 +61,7 @@ def register_exceptions(app: FastAPI):
     app.add_exception_handler(IntegrityError, IntegrityHandle)
     app.add_exception_handler(RequestValidationError, RequestValidationHandle)
     app.add_exception_handler(ResponseValidationError, ResponseValidationHandle)
+    app.add_exception_handler(RiskControlError, RiskControlHandle)
 
 
 def register_routers(app: FastAPI, prefix: str = "/api"):
