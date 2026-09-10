@@ -4,6 +4,7 @@ from fastapi import FastAPI
 from tortoise import Tortoise
 
 from app.core.exceptions import SettingNotFound
+from app.core.redis import redis_manager
 from app.core.init_app import (
     init_data,
     make_middlewares,
@@ -19,9 +20,13 @@ except ImportError:
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    await init_data()
-    yield
-    await Tortoise.close_connections()
+    await redis_manager.connect()
+    try:
+        await init_data()
+        yield
+    finally:
+        await Tortoise.close_connections()
+        await redis_manager.close()
 
 
 def create_app() -> FastAPI:
