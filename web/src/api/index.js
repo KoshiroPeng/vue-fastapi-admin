@@ -41,6 +41,7 @@ export default {
   getAuditLogList: (params = {}) => request.get('/auditlog/list', { params }),
   // WiFi operations
   getWifiHealth: () => request.get('/dashboard/health'),
+  getWifiStatistics: (params = {}) => request.get('/dashboard/statistics', { params }),
   getWifiRuntimeConfig: () => request.get('/runtime-config/summary'),
   getWifiOnlineUsers: (params = {}) => request.get('/dashboard/online-users', { params }),
   getWifiRadiusLogs: (data = {}) => request.post('/dashboard/radius-logs', data),

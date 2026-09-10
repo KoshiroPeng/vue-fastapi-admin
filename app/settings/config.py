@@ -59,6 +59,7 @@ class Settings(BaseSettings):
     RATE_LIMIT_PER_MAC: int = 5
     DASHBOARD_ONLINE_CACHE_TTL_SECONDS: int = 5
     DASHBOARD_RADIUS_CACHE_TTL_SECONDS: int = 10
+    DASHBOARD_STATISTICS_CACHE_TTL_SECONDS: int = 30
 
     KIOSK_HMAC_SECRET: str | None = None
     TRUSTED_PROXY_IPS: list[str] = ["127.0.0.1", "::1"]

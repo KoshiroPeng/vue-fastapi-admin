@@ -6,7 +6,12 @@ from fastapi import FastAPI
 
 from app.api.v1.dashboard import dashboard_router
 from app.core.dependency import DependPermission
-from app.services.dashboard import DashboardProxy, get_dashboard_proxy
+from app.services.dashboard import (
+    DashboardProxy,
+    DashboardStatisticsService,
+    get_dashboard_proxy,
+    get_dashboard_statistics,
+)
 from app.services.nce.mock import MockNCEClient
 
 
@@ -15,7 +20,21 @@ def app() -> FastAPI:
     application = FastAPI()
     application.include_router(dashboard_router, prefix="/api/v1/dashboard")
     application.dependency_overrides[get_dashboard_proxy] = lambda: DashboardProxy(MockNCEClient())
+    application.dependency_overrides[get_dashboard_statistics] = lambda: DashboardStatisticsService(MockNCEClient())
     return application
+
+
+@pytest.mark.asyncio
+async def test_statistics_api_returns_daily_mock_aggregation(app: FastAPI) -> None:
+    async with httpx.AsyncClient(transport=httpx.ASGITransport(app=app), base_url="http://test") as client:
+        response = await client.get("/api/v1/dashboard/statistics", params={"date": "2026-09-10"})
+
+    assert response.status_code == 200
+    data = response.json()["data"]
+    assert data["total_authentications"] == 4
+    assert data["success_rate"] == 50.0
+    assert data["online_users"] == 3
+    assert len(data["hourly_trend"]) == 24
 
 
 @pytest.mark.asyncio

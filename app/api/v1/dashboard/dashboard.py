@@ -1,8 +1,15 @@
+from datetime import date, datetime, timedelta, timezone
+
 from fastapi import APIRouter, Depends, HTTPException, Query
 
 from app.schemas.base import Success
 from app.schemas.dashboard import RadiusLogRequest
-from app.services.dashboard import DashboardProxy, get_dashboard_proxy
+from app.services.dashboard import (
+    DashboardProxy,
+    DashboardStatisticsService,
+    get_dashboard_proxy,
+    get_dashboard_statistics,
+)
 from app.services.health import DependencyHealth, get_redis_health
 from app.services.nce import NCEClient, NCERadiusLogQuery, NCEUserQuery, get_nce_client
 from app.settings import settings
@@ -22,6 +29,18 @@ async def get_external_service_health(
             "redis": redis_health.model_dump(mode="json"),
         }
     )
+
+
+@router.get("/statistics", summary="查询 WiFi 每日认证统计")
+async def get_daily_statistics(
+    target_date: date | None = Query(default=None, alias="date"),
+    statistics: DashboardStatisticsService = Depends(get_dashboard_statistics),
+) -> Success:
+    if not settings.NCE_MOCK_ENABLED and not settings.NCE_SITE_ID:
+        raise HTTPException(status_code=503, detail="NCE_SITE_ID 尚未配置")
+    china_today = (datetime.now(timezone.utc) + timedelta(hours=8)).date()
+    result = await statistics.get_daily_statistics(target_date or china_today)
+    return Success(data=result.model_dump(mode="json"))
 
 
 @router.get("/online-users", summary="查询 NCE 实时在线用户")

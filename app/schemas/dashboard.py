@@ -28,6 +28,30 @@ class OnlineUserPage(BaseModel):
     page_size: int = Field(ge=1, le=200)
 
 
+class HourlyTrendPoint(BaseModel):
+    model_config = ConfigDict(frozen=True)
+
+    hour: int = Field(ge=0, le=23)
+    total: int = Field(ge=0)
+    success: int = Field(ge=0)
+    failure: int = Field(ge=0)
+
+
+class DailyStatistics(BaseModel):
+    model_config = ConfigDict(frozen=True)
+
+    date: str
+    total_authentications: int = Field(ge=0)
+    success_count: int = Field(ge=0)
+    failure_count: int = Field(ge=0)
+    success_rate: float = Field(ge=0, le=100)
+    online_users: int = Field(ge=0)
+    average_auth_duration_ms: int | None = Field(default=None, ge=0)
+    method_distribution: dict[str, int]
+    failure_reasons: dict[int, int]
+    hourly_trend: list[HourlyTrendPoint]
+
+
 class RadiusLogRequest(BaseModel):
     model_config = ConfigDict(frozen=True)
 

@@ -4,8 +4,6 @@ from aerich import Command
 from fastapi import FastAPI
 from fastapi.middleware import Middleware
 from fastapi.middleware.cors import CORSMiddleware
-from tortoise.expressions import Q
-
 from app.api import api_router
 from app.controllers.api import api_controller
 from app.controllers.user import UserCreate, user_controller
@@ -23,6 +21,7 @@ from app.core.exceptions import (
     ResponseValidationHandle,
     RiskControlHandle,
 )
+from app.core.wifi_menu import init_wifi_menus
 from app.log import logger
 from app.models.admin import Api, Menu, Role
 from app.schemas.menus import MenuType
@@ -192,11 +191,11 @@ async def init_menus():
             redirect="",
         )
 
+    await init_wifi_menus()
+
 
 async def init_apis():
-    apis = await api_controller.model.exists()
-    if not apis:
-        await api_controller.refresh_api()
+    await api_controller.refresh_api()
 
 
 async def init_db():
@@ -218,27 +217,17 @@ async def init_db():
 
 
 async def init_roles():
-    roles = await Role.exists()
-    if not roles:
-        admin_role = await Role.create(
-            name="管理员",
-            desc="管理员角色",
-        )
-        user_role = await Role.create(
-            name="普通用户",
-            desc="普通用户角色",
-        )
+    admin_role, _ = await Role.get_or_create(name="管理员", defaults={"desc": "管理员角色"})
+    user_role, user_created = await Role.get_or_create(name="普通用户", defaults={"desc": "普通用户角色"})
 
-        # 分配所有API给管理员角色
-        all_apis = await Api.all()
-        await admin_role.apis.add(*all_apis)
-        # 分配所有菜单给管理员和普通用户
-        all_menus = await Menu.all()
-        await admin_role.menus.add(*all_menus)
-        await user_role.menus.add(*all_menus)
+    # 管理员角色在每次启动时同步新增菜单和 API；普通角色不自动获得 WiFi 权限。
+    all_apis = await Api.all()
+    all_menus = await Menu.all()
+    await admin_role.apis.add(*all_apis)
+    await admin_role.menus.add(*all_menus)
 
-        # 为普通用户分配基本API
-        basic_apis = await Api.filter(Q(method__in=["GET"]) | Q(tags="基础模块"))
+    if user_created:
+        basic_apis = await Api.filter(tags="基础模块")
         await user_role.apis.add(*basic_apis)
 
 
