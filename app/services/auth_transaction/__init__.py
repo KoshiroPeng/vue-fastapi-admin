@@ -8,6 +8,7 @@ from .factory import get_auth_transaction_store
 from .memory import InMemoryAuthTransactionStore
 from .models import AuthMethod, AuthStatus, AuthTransaction
 from .redis_store import RedisAuthTransactionStore
+from .service import AuthTransactionService
 from .store import AuthTransactionStore
 
 __all__ = [
@@ -17,6 +18,7 @@ __all__ = [
     "AuthTransactionAlreadyConsumed",
     "AuthTransactionNotConsumable",
     "AuthTransactionNotFound",
+    "AuthTransactionService",
     "AuthTransactionStore",
     "InMemoryAuthTransactionStore",
     "InvalidAuthStatusTransition",

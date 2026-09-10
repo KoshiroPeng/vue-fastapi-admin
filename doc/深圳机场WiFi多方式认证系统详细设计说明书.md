@@ -371,7 +371,7 @@ sequenceDiagram
 ```
 
 #### 3.4.2 图像与隐私安全设计（零落盘）
-1. **内存流转发**：FastAPI 接收 `UploadFile` 使用 `SpooledTemporaryFile`，在内存中完成大小限制检查（最大 4MB），直接将字节流推送给 OCR 接口，**严禁将图片写入磁盘保存**。
+1. **内存流转发**：FastAPI 使用 `Request.stream()` 接收 `image/jpeg` 或 `image/png` 原始请求体，在读取过程中执行最大 4MB 限制并直接交给 OCR 客户端；不使用可能超过阈值后落盘的 `UploadFile` / `SpooledTemporaryFile`，**严禁将图片写入磁盘保存**。
 2. **校验边界说明**：此接口仅对护照机读码（MRZ, Machine Readable Zone）进行格式与校验码算法检查（Check Digit 算法校验），确认证件格式有效，不代表公安/边检人证核验或护照防伪验真。
 
 ---
@@ -850,11 +850,12 @@ Mock 要求：
 
 #### 6.6.3 护照拍照上传识别认证接口
 - **Path**: `POST /api/v1/portal/passport/verify`
-- **Headers**: `Content-Type: multipart/form-data`
-- **Request Form-Data**:
-  - `file`: 护照拍摄图像二进制流（JPG/PNG，最大 4MB）
-  - `clientMac`: `AA-BB-CC-DD-EE-FF`
-  - `clientIp`: `10.128.34.56`
+- **Headers**:
+  - `Content-Type: image/jpeg` 或 `image/png`
+  - `X-Client-MAC: AA-BB-CC-DD-EE-FF`
+  - `X-Client-IP: 10.128.34.56`
+  - `X-SSID: Airport-Free-WiFi`（可选）
+- **Request Body**：原始护照图像二进制流，最大 4MB。后端使用 `Request.stream()` 受控读取并同步执行 MIME/文件头校验，不使用 `UploadFile` 或 multipart 临时文件，从实现上避免 `SpooledTemporaryFile` 超阈值落盘。无论成功或失败，内存缓冲区均立即清空。
 - **Response Body (成功)**:
 ```json
 {

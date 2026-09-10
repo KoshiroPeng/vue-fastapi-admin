@@ -45,4 +45,29 @@ export default {
   getWifiRuntimeConfig: () => request.get('/runtime-config/summary'),
   getWifiOnlineUsers: (params = {}) => request.get('/dashboard/online-users', { params }),
   getWifiRadiusLogs: (data = {}) => request.post('/dashboard/radius-logs', data),
+  // Passenger Portal
+  verifyBoardingPass: (data = {}) =>
+    request.post('/portal/boarding-pass/verify', data, { noNeedToken: true }),
+  verifyPassport: (file, context = {}) =>
+    request.post('/portal/passport/verify', file, {
+      noNeedToken: true,
+      headers: {
+        'Content-Type': file.type,
+        'X-Client-IP': context.clientIp,
+        'X-Client-MAC': context.clientMac,
+        'X-SSID': context.ssid,
+      },
+    }),
+  startWechatAuth: (data = {}) =>
+    request.post('/portal/wechat/auth/start', data, { noNeedToken: true }),
+  mockCompleteWechatAuth: (authTxId) =>
+    request.post('/portal/wechat/auth/mock-complete', null, {
+      params: { auth_tx_id: authTxId },
+      noNeedToken: true,
+    }),
+  getWechatAuthStatus: (authTxId) =>
+    request.get('/portal/wechat/auth/status', {
+      params: { auth_tx_id: authTxId },
+      noNeedToken: true,
+    }),
 }

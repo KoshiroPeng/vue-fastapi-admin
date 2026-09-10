@@ -44,6 +44,18 @@ def test_production_rejects_development_secret_and_wildcard_cors() -> None:
         Settings(
             _env_file=None,
             APP_ENV="production",
+            DEBUG=False,
+            NCE_MOCK_ENABLED=False,
+            BOARDING_PASS_MOCK_ENABLED=False,
+            OCR_MOCK_ENABLED=False,
             SECRET_KEY="a-production-secret-that-is-at-least-32-characters",
             CORS_ORIGINS=["*"],
+        )
+
+    with pytest.raises(ValidationError, match="Mock"):
+        Settings(
+            _env_file=None,
+            APP_ENV="production",
+            DEBUG=False,
+            SECRET_KEY="a-production-secret-that-is-at-least-32-characters",
         )

@@ -1,4 +1,5 @@
 import shutil
+from datetime import datetime
 
 from aerich import Command
 from fastapi import FastAPI
@@ -25,6 +26,7 @@ from app.core.wifi_menu import init_wifi_menus
 from app.log import logger
 from app.models.admin import Api, Menu, Role
 from app.schemas.menus import MenuType
+from app.services.external_call_log import ExternalCallLogService
 from app.services.nce.errors import NCEError
 from app.services.risk_control import RiskControlError
 from app.settings.config import settings
@@ -233,6 +235,13 @@ async def init_roles():
 
 async def init_data():
     await init_db()
+    if settings.PII_HASH_SECRET:
+        deleted = await ExternalCallLogService(settings.PII_HASH_SECRET).cleanup(
+            settings.EXTERNAL_CALL_LOG_RETENTION_DAYS,
+            datetime.now(),
+        )
+        if deleted:
+            logger.info("event=external_call_log_cleanup deleted={}", deleted)
     await init_superuser()
     await init_menus()
     await init_apis()

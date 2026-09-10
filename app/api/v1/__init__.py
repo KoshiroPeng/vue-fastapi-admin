@@ -9,6 +9,7 @@ from .dashboard import dashboard_router
 from .depts import depts_router
 from .kiosk import kiosk_router
 from .menus import menus_router
+from .portal import portal_router
 from .roles import roles_router
 from .runtime_config import runtime_config_router
 from .users import users_router
@@ -25,3 +26,4 @@ v1_router.include_router(auditlog_router, prefix="/auditlog", dependencies=[Depe
 v1_router.include_router(dashboard_router, prefix="/dashboard", dependencies=[DependPermission])
 v1_router.include_router(runtime_config_router, prefix="/runtime-config", dependencies=[DependPermission])
 v1_router.include_router(kiosk_router, prefix="/kiosk")
+v1_router.include_router(portal_router, prefix="/portal")

@@ -48,6 +48,13 @@ class Settings(BaseSettings):
     AUTH_BOARDING_PASS_ENABLED: bool = True
     AUTH_PASSPORT_ENABLED: bool = True
     AUTH_KIOSK_ENABLED: bool = True
+    BOARDING_PASS_MOCK_ENABLED: bool = True
+    OCR_MOCK_ENABLED: bool = True
+    BOARDING_PASS_GUEST_VALID_MINUTES: int = 480
+    PASSPORT_GUEST_VALID_MINUTES: int = 480
+    PASSPORT_MAX_IMAGE_BYTES: int = 4 * 1024 * 1024
+    WECHAT_CALLBACK_SECRET: str | None = None
+    WECHAT_CALLBACK_CLOCK_SKEW_SECONDS: int = 300
 
     REDIS_URL: str = "redis://127.0.0.1:6379/0"
     PII_HASH_SECRET: str | None = None
@@ -60,6 +67,7 @@ class Settings(BaseSettings):
     DASHBOARD_ONLINE_CACHE_TTL_SECONDS: int = 5
     DASHBOARD_RADIUS_CACHE_TTL_SECONDS: int = 10
     DASHBOARD_STATISTICS_CACHE_TTL_SECONDS: int = 30
+    EXTERNAL_CALL_LOG_RETENTION_DAYS: int = 30
 
     KIOSK_HMAC_SECRET: str | None = None
     TRUSTED_PROXY_IPS: list[str] = ["127.0.0.1", "::1"]
@@ -152,6 +160,10 @@ class Settings(BaseSettings):
             return self
         if self.SECRET_KEY == self.DEVELOPMENT_SECRET_KEY or len(self.SECRET_KEY) < 32:
             raise ValueError("生产环境必须通过 SECRET_KEY 注入至少 32 字符的独立密钥")
+        if self.DEBUG:
+            raise ValueError("生产环境必须设置 DEBUG=false")
+        if self.NCE_MOCK_ENABLED or self.BOARDING_PASS_MOCK_ENABLED or self.OCR_MOCK_ENABLED:
+            raise ValueError("生产环境禁止启用 Mock 外部服务")
         if "*" in self.CORS_ORIGINS:
             raise ValueError("生产环境 CORS_ORIGINS 禁止使用通配符")
         if self.BOOTSTRAP_ADMIN_ENABLED and not self.BOOTSTRAP_ADMIN_PASSWORD:

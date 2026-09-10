@@ -108,6 +108,13 @@ export const basicRoutes = [
     isHidden: true,
   },
   {
+    name: 'PassengerPortal',
+    path: '/portal',
+    component: () => import('@/views/portal/index.vue'),
+    isHidden: true,
+    meta: { title: '机场免费 WiFi 认证' },
+  },
+  {
     name: 'Login',
     path: '/login',
     component: () => import('@/views/login/index.vue'),
