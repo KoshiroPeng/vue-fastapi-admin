@@ -15,6 +15,37 @@ from app.models.admin import AuditLog, User
 
 from .bgtask import BgTasks
 
+_REDACTED = "***REDACTED***"
+_SENSITIVE_KEY_PARTS = (
+    "password",
+    "passwd",
+    "accesstoken",
+    "refreshtoken",
+    "authorization",
+    "secret",
+    "cookie",
+    "iddigest",
+    "documentlast4",
+    "smscode",
+    "verificationcode",
+)
+_SENSITIVE_EXACT_KEYS = {"phone", "mobile", "phonenumber", "token"}
+
+
+def _is_sensitive_audit_key(key: str) -> bool:
+    normalized = re.sub(r"[^a-z0-9]", "", key.lower())
+    return normalized in _SENSITIVE_EXACT_KEYS or any(part in normalized for part in _SENSITIVE_KEY_PARTS)
+
+
+def sanitize_for_audit(value: Any, key: str | None = None) -> Any:
+    if key is not None and _is_sensitive_audit_key(key):
+        return _REDACTED
+    if isinstance(value, dict):
+        return {str(item_key): sanitize_for_audit(item_value, str(item_key)) for item_key, item_value in value.items()}
+    if isinstance(value, (list, tuple)):
+        return [sanitize_for_audit(item) for item in value]
+    return value
+
 
 class SimpleBaseMiddleware:
     def __init__(self, app: ASGIApp) -> None:
@@ -166,8 +197,8 @@ class HttpAuditLogMiddleware(BaseHTTPMiddleware):
             data: dict = await self.get_request_log(request=request, response=response)
             data["response_time"] = process_time
 
-            data["request_args"] = request.state.request_args
-            data["response_body"] = await self.get_response_body(request, response)
+            data["request_args"] = sanitize_for_audit(request.state.request_args)
+            data["response_body"] = sanitize_for_audit(await self.get_response_body(request, response))
             await AuditLog.create(**data)
 
         return response

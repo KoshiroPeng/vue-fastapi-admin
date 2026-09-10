@@ -1,23 +1,27 @@
 import os
 import typing
 
+from pydantic import model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8", extra="ignore")
 
+    DEVELOPMENT_SECRET_KEY: typing.ClassVar[str] = "development-only-secret-key-change-before-production"
+
     VERSION: str = "0.1.0"
     APP_TITLE: str = "深圳机场WiFi管理台"
     PROJECT_NAME: str = "深圳机场WiFi管理台"
     APP_DESCRIPTION: str = "Description"
 
-    CORS_ORIGINS: typing.List = ["*"]
+    CORS_ORIGINS: list[str] = ["http://localhost:3100"]
     CORS_ALLOW_CREDENTIALS: bool = True
     CORS_ALLOW_METHODS: typing.List = ["*"]
     CORS_ALLOW_HEADERS: typing.List = ["*"]
 
     DEBUG: bool = True
+    APP_ENV: typing.Literal["development", "test", "production"] = "development"
 
     # WiFi authentication gateway. Mock mode is the safe default until a real
     # NCE test environment and its credentials have been approved.
@@ -52,7 +56,11 @@ class Settings(BaseSettings):
     PROJECT_ROOT: str = os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir))
     BASE_DIR: str = os.path.abspath(os.path.join(PROJECT_ROOT, os.pardir))
     LOGS_ROOT: str = os.path.join(BASE_DIR, "app/logs")
-    SECRET_KEY: str = "3488a63e1765035d386f05409663f55c83bfae3b3c61a932744b20ad14244dcf"  # openssl rand -hex 32
+    SECRET_KEY: str = DEVELOPMENT_SECRET_KEY
+    BOOTSTRAP_ADMIN_ENABLED: bool = False
+    BOOTSTRAP_ADMIN_USERNAME: str = "admin"
+    BOOTSTRAP_ADMIN_EMAIL: str = "admin@admin.com"
+    BOOTSTRAP_ADMIN_PASSWORD: str | None = None
     JWT_ALGORITHM: str = "HS256"
     JWT_ACCESS_TOKEN_EXPIRE_MINUTES: int = 60 * 24 * 7  # 7 day
     TORTOISE_ORM: dict = {
@@ -121,6 +129,18 @@ class Settings(BaseSettings):
         "timezone": "Asia/Shanghai",  # Timezone setting
     }
     DATETIME_FORMAT: str = "%Y-%m-%d %H:%M:%S"
+
+    @model_validator(mode="after")
+    def validate_production_security(self) -> "Settings":
+        if self.APP_ENV != "production":
+            return self
+        if self.SECRET_KEY == self.DEVELOPMENT_SECRET_KEY or len(self.SECRET_KEY) < 32:
+            raise ValueError("生产环境必须通过 SECRET_KEY 注入至少 32 字符的独立密钥")
+        if "*" in self.CORS_ORIGINS:
+            raise ValueError("生产环境 CORS_ORIGINS 禁止使用通配符")
+        if self.BOOTSTRAP_ADMIN_ENABLED and not self.BOOTSTRAP_ADMIN_PASSWORD:
+            raise ValueError("启用管理员初始化时必须配置 BOOTSTRAP_ADMIN_PASSWORD")
+        return self
 
 
 settings = Settings()

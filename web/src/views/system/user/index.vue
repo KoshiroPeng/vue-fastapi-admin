@@ -6,7 +6,6 @@ import {
   NCheckboxGroup,
   NForm,
   NFormItem,
-  NImage,
   NInput,
   NSpace,
   NSwitch,
@@ -204,40 +203,56 @@ const columns = [
             default: () => h('div', {}, '确定删除该用户吗?'),
           }
         ),
-        !row.is_superuser && h(
-          NPopconfirm,
-          {
-            onPositiveClick: async () => {
-              try {
-                await api.resetPassword({ user_id: row.id });
-                $message.success('密码已成功重置为123456');
-                await $table.value?.handleSearch();
-              } catch (error) {
-                $message.error('重置密码失败: ' + error.message);
-              }
+        !row.is_superuser &&
+          h(
+            NPopconfirm,
+            {
+              onPositiveClick: async () => {
+                try {
+                  const result = await api.resetPassword({ user_id: row.id })
+                  const temporaryPassword = result.data?.temporary_password
+                  $dialog.success({
+                    title: '密码重置成功',
+                    content: () =>
+                      h('div', {}, [
+                        h('p', {}, '以下临时密码仅展示一次，请通过安全渠道交付给用户：'),
+                        h(
+                          'code',
+                          {
+                            style: 'display:block;margin-top:12px;font-size:16px;user-select:all;',
+                          },
+                          temporaryPassword
+                        ),
+                      ]),
+                    positiveText: '我已保存',
+                  })
+                  await $table.value?.handleSearch()
+                } catch (error) {
+                  $message.error('重置密码失败: ' + error.message)
+                }
+              },
+              onNegativeClick: () => {},
             },
-            onNegativeClick: () => {},
-          },
-          {
-            trigger: () =>
-              withDirectives(
-                h(
-                  NButton,
-                  {
-                    size: 'small',
-                    type: 'warning',
-                    style: 'margin-right: 8px;',
-                  },
-                  {
-                    default: () => '重置密码',
-                    icon: renderIcon('material-symbols:lock-reset', { size: 16 }),
-                  }
+            {
+              trigger: () =>
+                withDirectives(
+                  h(
+                    NButton,
+                    {
+                      size: 'small',
+                      type: 'warning',
+                      style: 'margin-right: 8px;',
+                    },
+                    {
+                      default: () => '重置密码',
+                      icon: renderIcon('material-symbols:lock-reset', { size: 16 }),
+                    }
+                  ),
+                  [[vPermission, 'post/api/v1/user/reset_password']]
                 ),
-                [[vPermission, 'post/api/v1/user/reset_password']]
-              ),
-            default: () => h('div', {}, '确定重置用户密码为123456吗?'),
-          }
-        ),
+              default: () => h('div', {}, '确定生成新的随机临时密码吗?'),
+            }
+          ),
       ]
     },
   },

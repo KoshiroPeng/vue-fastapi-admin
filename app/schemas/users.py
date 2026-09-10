@@ -19,7 +19,7 @@ class BaseUser(BaseModel):
 class UserCreate(BaseModel):
     email: EmailStr = Field(example="admin@qq.com")
     username: str = Field(example="admin")
-    password: str = Field(example="123456")
+    password: str = Field(min_length=12, max_length=128, json_schema_extra={"example": "ChangeMe-2026"})
     is_active: Optional[bool] = True
     is_superuser: Optional[bool] = False
     role_ids: Optional[List[int]] = []
@@ -40,5 +40,5 @@ class UserUpdate(BaseModel):
 
 
 class UpdatePassword(BaseModel):
-    old_password: str = Field(description="旧密码")
-    new_password: str = Field(description="新密码")
+    old_password: str = Field(min_length=1, max_length=128, description="旧密码")
+    new_password: str = Field(min_length=12, max_length=128, description="新密码")

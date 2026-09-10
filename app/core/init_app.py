@@ -47,6 +47,7 @@ def make_middlewares():
             exclude_paths=[
                 "/api/v1/base/access_token",
                 "/api/v1/kiosk/",
+                "/api/v1/portal/",
                 "/docs",
                 "/openapi.json",
             ],
@@ -70,16 +71,23 @@ def register_routers(app: FastAPI, prefix: str = "/api"):
 
 async def init_superuser():
     user = await user_controller.model.exists()
-    if not user:
-        await user_controller.create_user(
-            UserCreate(
-                username="admin",
-                email="admin@admin.com",
-                password="123456",
-                is_active=True,
-                is_superuser=True,
-            )
+    if user:
+        return
+    if not settings.BOOTSTRAP_ADMIN_ENABLED:
+        logger.warning("event=bootstrap_admin_skipped reason=disabled")
+        return
+    if not settings.BOOTSTRAP_ADMIN_PASSWORD:
+        raise RuntimeError("BOOTSTRAP_ADMIN_ENABLED=true 时必须配置 BOOTSTRAP_ADMIN_PASSWORD")
+    await user_controller.create_user(
+        UserCreate(
+            username=settings.BOOTSTRAP_ADMIN_USERNAME,
+            email=settings.BOOTSTRAP_ADMIN_EMAIL,
+            password=settings.BOOTSTRAP_ADMIN_PASSWORD,
+            is_active=True,
+            is_superuser=True,
         )
+    )
+    logger.info("event=bootstrap_admin_created username={}", settings.BOOTSTRAP_ADMIN_USERNAME)
 
 
 async def init_menus():

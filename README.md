@@ -109,16 +109,18 @@ http://localhost:3100
 
 开发环境中，前端会把 `/api/v1` 请求代理到后端服务。
 
-## 默认账号
+## 初始化管理员
 
-首次启动后端时，系统会自动初始化数据库、菜单、接口权限、角色和默认管理员账号。
+系统不再内置默认管理员密码。仅在用户表为空且明确配置以下环境变量时创建初始管理员：
 
 ```text
-用户名：admin
-密码：123456
+BOOTSTRAP_ADMIN_ENABLED=true
+BOOTSTRAP_ADMIN_USERNAME=admin
+BOOTSTRAP_ADMIN_EMAIL=admin@example.invalid
+BOOTSTRAP_ADMIN_PASSWORD=<至少 12 位的独立强密码>
 ```
 
-请在正式环境中及时修改默认密码。
+管理员创建后应关闭 `BOOTSTRAP_ADMIN_ENABLED`，并通过受控 Secret 管理生产密码。已有数据库用户不受该开关影响。
 
 ## Docker 部署
 
@@ -205,5 +207,6 @@ pnpm lint
 - 后端默认使用 SQLite，数据库文件会在本地运行时生成。
 - 后端服务默认端口为 `9999`。
 - 前端开发服务默认端口为 `3100`。
-- 当前代码中存在默认 `SECRET_KEY`，正式环境建议改为通过环境变量注入。
-- 默认管理员密码仅适合初始化测试，正式环境必须修改。
+- `APP_ENV=production` 时必须通过环境变量注入至少 32 字符的独立 `SECRET_KEY`。
+- 生产环境禁止使用通配符 CORS 来源。
+- 初始管理员创建默认关闭，启用时必须提供独立强密码。

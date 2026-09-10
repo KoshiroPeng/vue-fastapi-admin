@@ -1,3 +1,6 @@
+import pytest
+from pydantic import ValidationError
+
 from app.services.runtime_config import build_runtime_config_summary
 from app.settings.config import Settings
 
@@ -22,3 +25,16 @@ def test_runtime_config_summary_never_exposes_secrets() -> None:
     assert "nce-secret-value" not in serialized
     assert "kiosk-secret-value" not in serialized
     assert "pii-hash-secret-value" not in serialized
+
+
+def test_production_rejects_development_secret_and_wildcard_cors() -> None:
+    with pytest.raises(ValidationError, match="SECRET_KEY"):
+        Settings(_env_file=None, APP_ENV="production")
+
+    with pytest.raises(ValidationError, match="CORS"):
+        Settings(
+            _env_file=None,
+            APP_ENV="production",
+            SECRET_KEY="a-production-secret-that-is-at-least-32-characters",
+            CORS_ORIGINS=["*"],
+        )

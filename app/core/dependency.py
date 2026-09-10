@@ -4,6 +4,7 @@ import jwt
 from fastapi import Depends, Header, HTTPException, Request
 
 from app.core.ctx import CTX_USER_ID
+from app.log import logger
 from app.models import Role, User
 from app.settings import settings
 
@@ -12,23 +13,24 @@ class AuthControl:
     @classmethod
     async def is_authed(cls, token: str = Header(..., description="token验证")) -> Optional["User"]:
         try:
-            if token == "dev":
-                user = await User.filter().first()
-                user_id = user.id
-            else:
-                decode_data = jwt.decode(token, settings.SECRET_KEY, algorithms=settings.JWT_ALGORITHM)
-                user_id = decode_data.get("user_id")
+            decode_data = jwt.decode(token, settings.SECRET_KEY, algorithms=[settings.JWT_ALGORITHM])
+            user_id = decode_data.get("user_id")
+            if not isinstance(user_id, int):
+                raise HTTPException(status_code=401, detail="无效的Token")
             user = await User.filter(id=user_id).first()
-            if not user:
-                raise HTTPException(status_code=401, detail="Authentication failed")
-            CTX_USER_ID.set(int(user_id))
+            if not user or not user.is_active:
+                raise HTTPException(status_code=401, detail="认证失败")
+            CTX_USER_ID.set(user_id)
             return user
-        except jwt.DecodeError:
-            raise HTTPException(status_code=401, detail="无效的Token")
-        except jwt.ExpiredSignatureError:
-            raise HTTPException(status_code=401, detail="登录已过期")
-        except Exception as e:
-            raise HTTPException(status_code=500, detail=f"{repr(e)}")
+        except jwt.ExpiredSignatureError as exc:
+            raise HTTPException(status_code=401, detail="登录已过期") from exc
+        except jwt.InvalidTokenError as exc:
+            raise HTTPException(status_code=401, detail="无效的Token") from exc
+        except HTTPException:
+            raise
+        except Exception as exc:
+            logger.exception("event=authentication_backend_failed")
+            raise HTTPException(status_code=500, detail="认证服务暂不可用") from exc
 
 
 class PermissionControl:

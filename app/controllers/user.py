@@ -7,7 +7,7 @@ from app.core.crud import CRUDBase
 from app.models.admin import User
 from app.schemas.login import CredentialsSchema
 from app.schemas.users import UserCreate, UserUpdate
-from app.utils.password import get_password_hash, verify_password
+from app.utils.password import generate_password, get_password_hash, verify_password
 
 from .role import role_controller
 
@@ -49,12 +49,14 @@ class UserController(CRUDBase[User, UserCreate, UserUpdate]):
             role_obj = await role_controller.get(id=role_id)
             await user.roles.add(role_obj)
 
-    async def reset_password(self, user_id: int):
+    async def reset_password(self, user_id: int) -> str:
         user_obj = await self.get(id=user_id)
         if user_obj.is_superuser:
             raise HTTPException(status_code=403, detail="不允许重置超级管理员密码")
-        user_obj.password = get_password_hash(password="123456")
+        temporary_password = generate_password()
+        user_obj.password = get_password_hash(password=temporary_password)
         await user_obj.save()
+        return temporary_password
 
 
 user_controller = UserController()
