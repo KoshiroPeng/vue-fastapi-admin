@@ -33,7 +33,6 @@ https://github.com/KoshiroPeng/vue-fastapi-admin.git
 - Python 3.11
 - FastAPI
 - Tortoise ORM
-- Aerich
 - MySQL 8.0
 - Uvicorn
 
@@ -71,8 +70,7 @@ uv venv
 uv sync
 Copy-Item deploy/.env.example .env
 # 编辑 .env，配置 MYSQL_HOST、MYSQL_PORT、MYSQL_USER、MYSQL_PASSWORD 和 MYSQL_DATABASE
-python -c "from aerich.cli import main; main()" upgrade
-python -m scripts.bootstrap
+# 首次启动前在 MySQL 客户端中执行 deploy/init.sql
 python run.py
 ```
 
@@ -114,67 +112,87 @@ http://localhost:3100
 
 开发环境中，前端会把 `/api/v1` 请求代理到后端服务。
 
-## 初始化管理员
+## 服务器部署
 
-系统不再内置默认管理员密码。仅在用户表为空且明确配置以下环境变量时创建初始管理员：
+现场部署使用宿主机安装的 MySQL、Redis 和 Nginx。Docker Compose 只运行两个 FastAPI 容器，分别映射到宿主机 `19001` 和 `19002`。Nginx 直接托管前端静态文件，并通过 upstream 将 API 请求分发到一台或多台服务器上的 FastAPI 实例。
 
-```text
-BOOTSTRAP_ADMIN_ENABLED=true
-BOOTSTRAP_ADMIN_USERNAME=admin
-BOOTSTRAP_ADMIN_EMAIL=admin@example.invalid
-BOOTSTRAP_ADMIN_PASSWORD=<至少 12 位的独立强密码>
-```
+### 准备配置
 
-管理员创建后应关闭 `BOOTSTRAP_ADMIN_ENABLED`，并通过受控 Secret 管理生产密码。已有数据库用户不受该开关影响。
-
-## Docker 部署
-
-部署由独立 Nginx 网关、多个 FastAPI 后端实例、Redis 和外部 MySQL 8.0 组成。Nginx 提供前端静态资源，并通过 Docker DNS 将 `/api/` 请求分发到健康的后端实例。部署时先由一次性 `migrate` 服务执行版本化迁移和基础数据初始化，再启动默认两个后端实例，最后启动网关。
-
-先在服务器创建日志目录并准备运行配置：
+先安装 MySQL 8.0、Redis 7.x、Nginx 和 Docker，然后创建运行目录：
 
 ```bash
-mkdir -p /srv/vue-fastapi-admin/logs/app /srv/vue-fastapi-admin/logs/nginx /etc/vue-fastapi-admin
+mkdir -p /srv/vue-fastapi-admin/logs/app /srv/vue-fastapi-admin/web /etc/vue-fastapi-admin
 cp deploy/.env.example /etc/vue-fastapi-admin/app.env
+chown root:root /etc/vue-fastapi-admin/app.env
+chmod 600 /etc/vue-fastapi-admin/app.env
 ```
 
-编辑 `/etc/vue-fastapi-admin/app.env`，至少设置 MySQL 连接、部署环境、`SECRET_KEY`、CORS 来源、各业务密钥和初始管理员。配置文件不得放入镜像或提交到仓库。
+先在 MySQL 中创建数据库和最小权限业务账号，再在 `/etc/vue-fastapi-admin/app.env` 中明文填写 MySQL、Redis、`SECRET_KEY`、CORS 来源和业务密钥。该文件只保存在服务器，不得提交到仓库。两台应用服务器必须连接同一套 MySQL 和 Redis。
 
-从旧版 SQLite 一次性迁移数据时，先执行数据库迁移建立 MySQL 表结构，再运行：
+`APP_BIND_IP=0.0.0.0` 允许另一台服务器上的 Nginx 访问后端端口。防火墙必须限制 `19001`、`19002` 只允许 Nginx 服务器访问。`APP_DOCKER_SUBNET` 必须与现场已有网段不冲突。
+
+### 初始化数据库
+
+首次部署时，使用 MySQL 管理账号在数据库服务器执行全量初始化 SQL：
 
 ```bash
-python -m scripts.migrate_sqlite_to_mysql --source /path/to/db.sqlite3
+mysql -u root -p < deploy/init.sql
 ```
 
-脚本默认拒绝覆盖非空 MySQL。确认需要清空业务表并重新导入时，必须显式增加 `--replace`。
+`init.sql` 面向全新数据库，包含完整表结构、索引、菜单、API 权限、角色和初始管理员。初始账号为 `admin / 123456`，首次登录后必须立即修改密码。该脚本不会删除或覆盖已有表，不得在已经投入使用的数据库中重复执行。
 
-可直接访问 Docker Hub 时执行：
+### 启动后端
+
+每台应用服务器执行：
 
 ```bash
-docker compose --env-file /etc/vue-fastapi-admin/app.env -f deploy/compose.yaml up -d --build
+docker compose --env-file /etc/vue-fastapi-admin/app.env -f deploy/compose.yaml \
+  up -d --build app-1 app-2
 ```
 
-使用华为云 SWR 镜像源时执行：
+使用华为云 SWR Python 镜像源时执行：
 
 ```bash
-NODE_IMAGE=swr.cn-north-4.myhuaweicloud.com/ddn-k8s/docker.io/node:18-alpine \
 PYTHON_IMAGE=swr.cn-north-4.myhuaweicloud.com/ddn-k8s/docker.io/python:3.11-slim \
-NGINX_IMAGE=swr.cn-north-4.myhuaweicloud.com/ddn-k8s/docker.io/nginx:1.27-alpine \
-REDIS_IMAGE=swr.cn-north-4.myhuaweicloud.com/ddn-k8s/docker.io/redis:7.2-alpine \
-docker compose --env-file /etc/vue-fastapi-admin/app.env -f deploy/compose.yaml up -d --build
+docker compose --env-file /etc/vue-fastapi-admin/app.env -f deploy/compose.yaml \
+  up -d --build app-1 app-2
 ```
 
-默认访问地址为 `http://服务器地址:18082`。可以通过 `APP_PORT` 调整宿主机端口，通过 `APP_REPLICAS` 调整后端副本数。每个副本默认运行一个 Uvicorn worker，避免副本数和进程数叠加后超过 MySQL 连接池预算。
+两个容器各运行一个 Uvicorn worker。修改副本数量时应增加明确的服务和端口映射，并重新核算 MySQL 最大连接数，不使用动态宿主机端口。
+
+### 部署前端和 Nginx
+
+在构建机编译前端，并将产物放到 Nginx 静态目录：
+
+```bash
+cd web
+pnpm install --frozen-lockfile
+pnpm build
+install -d -m 0755 /srv/vue-fastapi-admin/web
+cp -a dist/. /srv/vue-fastapi-admin/web/
+cd ..
+```
+
+编辑 `deploy/web.conf`：保留 Nginx 所在服务器的两个本地 upstream；取得第二台应用服务器 IP 后，替换 `SECOND_APP_SERVER_IP` 并取消对应两行注释。然后安装配置：
+
+```bash
+cp deploy/proxy_params.conf /etc/nginx/proxy_params.conf
+cp deploy/web.conf /etc/nginx/conf.d/vue-fastapi-admin.conf
+nginx -t
+systemctl reload nginx
+```
 
 部署健康检查：
 
 ```bash
-curl -fsS http://127.0.0.1:18082/health/live
-curl -fsS http://127.0.0.1:18082/health/ready
+curl -fsS http://127.0.0.1:19001/health/ready
+curl -fsS http://127.0.0.1:19002/health/ready
+curl -fsS http://127.0.0.1/health/live
+curl -fsS http://127.0.0.1/health/ready
 docker compose --env-file /etc/vue-fastapi-admin/app.env -f deploy/compose.yaml ps -a
 ```
 
-`/health/live` 只检查 Nginx 入口进程，`/health/ready` 会穿过 Nginx 并检查后端、MySQL 和 Redis。应用实例日志按容器主机名写入 `/srv/vue-fastapi-admin/logs/app`，Nginx 日志写入 `/srv/vue-fastapi-admin/logs/nginx`。确认初始管理员创建成功后，应关闭 `BOOTSTRAP_ADMIN_ENABLED`、清除配置中的初始密码，并重新创建应用容器。
+后两个地址分别检查 Nginx 进程和完整的 Nginx、FastAPI、MySQL、Redis 链路。应用日志按容器主机名写入 `/srv/vue-fastapi-admin/logs/app`，Nginx 日志使用宿主机 `/var/log/nginx`。
 
 ## 常用命令
 
@@ -213,8 +231,9 @@ pnpm lint
 │   ├── compose.yaml     Docker Compose 编排
 │   ├── Dockerfile       应用镜像构建文件
 │   ├── entrypoint.sh    容器启动脚本
+│   ├── init.sql         MySQL 全量初始化脚本
 │   ├── proxy_params.conf Nginx 反向代理公共参数
-│   └── web.conf         Nginx 配置
+│   └── web.conf         宿主机 Nginx 配置
 ├── logs                 本地运行日志（日志文件不提交）
 ├── web                  前端应用代码
 │   ├── build            Vite 构建配置
@@ -242,11 +261,12 @@ pnpm lint
 ## 配置注意事项
 
 - 后端使用 MySQL 8.0，连接信息由 `MYSQL_*` 环境变量注入。
-- `migrations/` 是数据库版本的一部分，必须提交到仓库；应用实例启动时不会自动生成迁移。
+- 数据库通过 `deploy/init.sql` 初始化；应用启动时只连接数据库，不创建表或基础数据。
 - 后端服务默认端口为 `9999`。
-- Compose 默认运行两个独立后端容器，只有 Nginx 网关暴露宿主机端口。
-- `EDGE_SUBNET` 和 `GATEWAY_IP` 必须属于同一未占用网段；后端只信任该网关传入的客户端地址。
+- Compose 默认运行两个独立后端容器，宿主机端口默认为 `19001` 和 `19002`。
+- `APP_DOCKER_SUBNET` 必须与现场网段不冲突；`TRUSTED_PROXY_IPS` 必须包含本机 Docker 网关和 Nginx 主机地址。
+- MySQL、Redis、Nginx 均由宿主机运维，不属于 Docker Compose 服务。
 - 前端开发服务默认端口为 `3100`。
 - `APP_ENV=production` 时必须通过环境变量注入至少 32 字符的独立 `SECRET_KEY`。
 - 生产环境禁止使用通配符 CORS 来源。
-- 初始管理员创建默认关闭，启用时必须提供独立强密码。
+- 全量 SQL 中的初始管理员密码只用于首次登录，部署后必须立即修改。

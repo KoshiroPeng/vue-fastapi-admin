@@ -33,6 +33,13 @@ jobs:
         working-directory: ./web
         run: pnpm build
 
+      - name: Upload Frontend Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: vue-fastapi-admin-web
+          path: web/dist
+          if-no-files-found: error
+
   backend-check:
     name: Check Backend & Dependencies
     runs-on: ubuntu-latest
@@ -87,9 +94,6 @@ jobs:
       - name: Run Backend Tests
         run: python -m pytest -q
 
-      - name: Apply Database Migrations
-        run: python -c "from aerich.cli import main; main()" upgrade
-
       - name: Validate Backend Startup & Lifespan
         run: |
           python -c "
@@ -102,12 +106,9 @@ jobs:
           "
 
   docker-build:
-    name: Build Docker Image (${{ matrix.target }})
+    name: Build Backend Docker Image
     needs: [web-build, backend-check]
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        target: [backend, gateway]
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
@@ -120,6 +121,6 @@ jobs:
         with:
           context: .
           file: ./deploy/Dockerfile
-          target: ${{ matrix.target }}
+          target: backend
           push: false
-          tags: vue-fastapi-admin-${{ matrix.target }}:latest
+          tags: vue-fastapi-admin-backend:latest

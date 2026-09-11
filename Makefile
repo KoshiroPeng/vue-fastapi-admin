@@ -70,19 +70,3 @@ format: ## Run code formatter
 .PHONY: test
 test: ## Run the test suite
 	uv run python -m pytest
-
-.PHONY: clean-sqlite
-clean-sqlite: ## 删除本地 SQLite 数据文件，不删除版本化迁移
-	rm -f db.sqlite3 db.sqlite3-shm db.sqlite3-wal
-
-.PHONY: migrate
-migrate: ## 运行aerich migrate命令生成迁移文件
-	aerich migrate
-
-.PHONY: upgrade
-upgrade: ## 运行aerich upgrade命令应用迁移
-	aerich upgrade
-
-.PHONY: migrate-sqlite-data
-migrate-sqlite-data: ## 将本地 SQLite 数据迁移到已建表的 MySQL
-	python -m scripts.migrate_sqlite_to_mysql

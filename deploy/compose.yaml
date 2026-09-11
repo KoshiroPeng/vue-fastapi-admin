@@ -1,101 +1,45 @@
 name: vue-fastapi-admin
 
-x-backend-image: &backend-image vue-fastapi-admin-backend:${APP_IMAGE_TAG:-latest}
+x-app: &app
+  image: vue-fastapi-admin-backend:${APP_IMAGE_TAG:-latest}
+  build:
+    context: ..
+    dockerfile: deploy/Dockerfile
+    target: backend
+    args:
+      PYTHON_IMAGE: ${PYTHON_IMAGE:-python:3.11-slim}
+      PIP_INDEX_URL: ${PIP_INDEX_URL:-https://pypi.org/simple}
+  restart: unless-stopped
+  env_file:
+    - ${APP_ENV_FILE:-/etc/vue-fastapi-admin/app.env}
+  environment:
+    UVICORN_WORKERS: ${UVICORN_WORKERS:-1}
+  volumes:
+    - ${APP_LOG_DIR:-/srv/vue-fastapi-admin/logs/app}:/opt/vue-fastapi-admin/logs:z
+  networks:
+    - backend
+  healthcheck:
+    test: ["CMD", "curl", "-fsS", "http://127.0.0.1:9999/health/ready"]
+    interval: 15s
+    timeout: 5s
+    retries: 10
+    start_period: 30s
 
 services:
-  redis:
-    image: ${REDIS_IMAGE:-redis:7.2-alpine}
-    restart: unless-stopped
-    command: ["redis-server", "--appendonly", "yes"]
-    volumes:
-      - redis-data:/data
-    networks:
-      - data
-    healthcheck:
-      test: ["CMD", "redis-cli", "ping"]
-      interval: 5s
-      timeout: 3s
-      retries: 10
-
-  migrate:
-    image: *backend-image
-    build:
-      context: ..
-      dockerfile: deploy/Dockerfile
-      target: backend
-      args:
-        PYTHON_IMAGE: ${PYTHON_IMAGE:-python:3.11-slim}
-        PIP_INDEX_URL: ${PIP_INDEX_URL:-https://pypi.org/simple}
-    entrypoint: ["sh", "deploy/migrate.sh"]
-    restart: "no"
-    env_file:
-      - ${APP_ENV_FILE:-/etc/vue-fastapi-admin/app.env}
-    networks:
-      - data
-
-  app:
-    image: *backend-image
-    restart: unless-stopped
-    env_file:
-      - ${APP_ENV_FILE:-/etc/vue-fastapi-admin/app.env}
-    environment:
-      REDIS_URL: redis://redis:6379/0
-      TRUSTED_PROXY_IPS: '["${GATEWAY_IP:-10.77.0.254}"]'
-      UVICORN_WORKERS: ${UVICORN_WORKERS:-1}
-    volumes:
-      - ${APP_LOG_DIR:-/srv/vue-fastapi-admin/logs/app}:/opt/vue-fastapi-admin/logs:z
-    networks:
-      - edge
-      - data
-    depends_on:
-      redis:
-        condition: service_healthy
-      migrate:
-        condition: service_completed_successfully
-    deploy:
-      replicas: ${APP_REPLICAS:-2}
-    healthcheck:
-      test: ["CMD", "curl", "-fsS", "http://127.0.0.1:9999/health/ready"]
-      interval: 15s
-      timeout: 5s
-      retries: 10
-      start_period: 30s
-
-  gateway:
-    image: vue-fastapi-admin-gateway:${APP_IMAGE_TAG:-latest}
-    build:
-      context: ..
-      dockerfile: deploy/Dockerfile
-      target: gateway
-      args:
-        NODE_IMAGE: ${NODE_IMAGE:-node:18-alpine}
-        NGINX_IMAGE: ${NGINX_IMAGE:-nginx:1.27-alpine}
-    restart: unless-stopped
+  app-1:
+    <<: *app
     ports:
-      - "${APP_PORT:-18082}:80"
-    volumes:
-      - ${NGINX_LOG_DIR:-/srv/vue-fastapi-admin/logs/nginx}:/var/log/nginx:z
-    networks:
-      edge:
-        ipv4_address: ${GATEWAY_IP:-10.77.0.254}
-    depends_on:
-      app:
-        condition: service_healthy
-    healthcheck:
-      test: ["CMD", "wget", "-qO-", "http://127.0.0.1/health/ready"]
-      interval: 15s
-      timeout: 5s
-      retries: 10
-      start_period: 15s
+      - "${APP_BIND_IP:-0.0.0.0}:${APP_PORT_1:-19001}:9999"
+
+  app-2:
+    <<: *app
+    ports:
+      - "${APP_BIND_IP:-0.0.0.0}:${APP_PORT_2:-19002}:9999"
 
 networks:
-  edge:
+  backend:
     driver: bridge
     ipam:
       config:
-        - subnet: ${EDGE_SUBNET:-10.77.0.0/24}
-  data:
-    driver: bridge
-
-volumes:
-  redis-data:
+        - subnet: ${APP_DOCKER_SUBNET:-10.78.0.0/24}
+          gateway: ${APP_DOCKER_GATEWAY:-10.78.0.1}
