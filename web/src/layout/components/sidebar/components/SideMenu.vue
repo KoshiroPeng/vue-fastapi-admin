@@ -35,6 +35,7 @@ watch(curRoute, async () => {
 
 function resolvePath(basePath, path) {
   if (isExternal(path)) return path
+  if (path?.startsWith('/')) return path
   return (
     '/' +
     [basePath, path]
