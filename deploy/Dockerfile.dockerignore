@@ -1,6 +1,8 @@
 .git
 /.env
 /.env.*
+**/.env
+**/.env.*
 .venv
 venv
 __pycache__
@@ -9,9 +11,11 @@ __pycache__
 *.pyd
 .idea
 .vscode
+.tmp
 *.sqlite3
 db.sqlite3*
 migrations
+logs
 web/node_modules
 web/dist
 web/dist-ssr

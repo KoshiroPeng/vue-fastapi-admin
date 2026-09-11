@@ -131,7 +131,7 @@ BOOTSTRAP_ADMIN_PASSWORD=<至少 12 位的独立强密码>
 ```bash
 mkdir -p /srv/vue-fastapi-admin/data /srv/vue-fastapi-admin/logs /etc/vue-fastapi-admin
 touch /srv/vue-fastapi-admin/data/db.sqlite3
-cp .env.example /etc/vue-fastapi-admin/app.env
+cp deploy/.env.example /etc/vue-fastapi-admin/app.env
 ```
 
 编辑 `/etc/vue-fastapi-admin/app.env`，至少设置部署环境、`SECRET_KEY`、CORS 来源、各业务密钥和初始管理员。配置文件不得放入镜像或提交到仓库。
@@ -139,7 +139,7 @@ cp .env.example /etc/vue-fastapi-admin/app.env
 可直接访问 Docker Hub 时执行：
 
 ```bash
-docker compose up -d --build
+docker compose -f deploy/compose.yaml up -d --build
 ```
 
 使用华为云 SWR 镜像源时执行：
@@ -148,7 +148,7 @@ docker compose up -d --build
 NODE_IMAGE=swr.cn-north-4.myhuaweicloud.com/ddn-k8s/docker.io/node:18-alpine \
 PYTHON_IMAGE=swr.cn-north-4.myhuaweicloud.com/ddn-k8s/docker.io/python:3.11-slim \
 REDIS_IMAGE=swr.cn-north-4.myhuaweicloud.com/ddn-k8s/docker.io/redis:7.2-alpine \
-docker compose up -d --build
+docker compose -f deploy/compose.yaml up -d --build
 ```
 
 默认访问地址为 `http://服务器地址:18082`。可以通过 `APP_PORT` 调整宿主机端口。确认初始管理员创建成功后，应关闭 `BOOTSTRAP_ADMIN_ENABLED`、清除配置中的初始密码，并重新创建应用容器。
@@ -186,12 +186,17 @@ pnpm lint
 │   ├── settings         后端配置
 │   └── utils            工具函数
 ├── deploy               部署配置
+│   ├── .env.example     服务端运行配置模板（不含真实密钥）
+│   ├── compose.yaml     Docker Compose 编排
+│   ├── Dockerfile       应用镜像构建文件
+│   ├── entrypoint.sh    容器启动脚本
+│   └── web.conf         Nginx 配置
+├── logs                 本地运行日志（日志文件不提交）
 ├── web                  前端应用代码
 │   ├── build            Vite 构建配置
 │   ├── public           前端公共资源
 │   ├── settings         前端项目配置
 │   └── src              前端源码
-├── Dockerfile           Docker 镜像构建文件
 ├── Makefile             后端开发辅助命令
 ├── pyproject.toml       后端项目和依赖配置
 ├── requirements.txt     后端 pip 依赖清单

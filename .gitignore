@@ -9,6 +9,7 @@ venv/
 .vscode
 .ruff_cache/
 .pytest_cache/
+.tmp/
 migrations/
 
 db.sqlite3
@@ -17,7 +18,8 @@ db.sqlite3-shm
 db.sqlite3-wal
 *.sqlite3
 
-logs/
+logs/*
+!logs/.gitkeep
 *.log
 
 web/node_modules/

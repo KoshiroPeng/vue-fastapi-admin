@@ -79,7 +79,7 @@ class Settings(BaseSettings):
 
     PROJECT_ROOT: str = os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir))
     BASE_DIR: str = os.path.abspath(os.path.join(PROJECT_ROOT, os.pardir))
-    LOGS_ROOT: str = os.path.join(BASE_DIR, "app/logs")
+    LOGS_ROOT: str = os.path.join(BASE_DIR, "logs")
     SECRET_KEY: str = DEVELOPMENT_SECRET_KEY
     BOOTSTRAP_ADMIN_ENABLED: bool = False
     BOOTSTRAP_ADMIN_USERNAME: str = "admin"
