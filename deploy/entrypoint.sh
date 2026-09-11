@@ -2,4 +2,4 @@
 set -e
 
 nginx
-python run.py
+exec python run.py

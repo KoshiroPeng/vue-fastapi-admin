@@ -1,0 +1,45 @@
+name: vue-fastapi-admin
+
+services:
+  redis:
+    image: ${REDIS_IMAGE:-redis:7.2-alpine}
+    restart: unless-stopped
+    command: ["redis-server", "--appendonly", "yes"]
+    volumes:
+      - redis-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  app:
+    image: vue-fastapi-admin:${APP_IMAGE_TAG:-latest}
+    build:
+      context: .
+      args:
+        NODE_IMAGE: ${NODE_IMAGE:-node:18-alpine}
+        PYTHON_IMAGE: ${PYTHON_IMAGE:-python:3.11-slim}
+        PIP_INDEX_URL: ${PIP_INDEX_URL:-https://pypi.org/simple}
+    restart: unless-stopped
+    env_file:
+      - ${APP_ENV_FILE:-/etc/vue-fastapi-admin/app.env}
+    environment:
+      REDIS_URL: redis://redis:6379/0
+    ports:
+      - "${APP_PORT:-18082}:80"
+    volumes:
+      - ${SQLITE_FILE:-/srv/vue-fastapi-admin/data/db.sqlite3}:/opt/vue-fastapi-admin/db.sqlite3:Z
+      - ${APP_LOG_DIR:-/srv/vue-fastapi-admin/logs}:/opt/vue-fastapi-admin/app/logs:Z
+    depends_on:
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://127.0.0.1:9999/openapi.json"]
+      interval: 15s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
+volumes:
+  redis-data:

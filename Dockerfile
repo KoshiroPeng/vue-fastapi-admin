@@ -1,4 +1,7 @@
-FROM node:18-alpine AS web
+ARG NODE_IMAGE=node:18-alpine
+ARG PYTHON_IMAGE=python:3.11-slim
+
+FROM ${NODE_IMAGE} AS web
 
 WORKDIR /opt/vue-fastapi-admin/web
 COPY ./web/package.json ./web/pnpm-lock.yaml* ./
@@ -7,7 +10,7 @@ COPY ./web ./
 RUN pnpm build
 
 
-FROM python:3.11-slim
+FROM ${PYTHON_IMAGE}
 
 ARG PIP_INDEX_URL=https://pypi.org/simple
 WORKDIR /opt/vue-fastapi-admin
@@ -28,4 +31,4 @@ RUN rm -f /etc/nginx/sites-enabled/default \
 ENV LANG=C.UTF-8
 EXPOSE 80
 
-ENTRYPOINT [ "sh", "deploy/entrypoint.sh" ]
+ENTRYPOINT [ "sh", "deploy/entrypoint.sh" ]

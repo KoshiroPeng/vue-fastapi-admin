@@ -124,25 +124,34 @@ BOOTSTRAP_ADMIN_PASSWORD=<至少 12 位的独立强密码>
 
 ## Docker 部署
 
-构建镜像：
+镜像内会构建前端静态资源，通过 Nginx 提供页面，并把 `/api/` 请求转发给同一容器内的 FastAPI。Compose 会同时启动独立 Redis，并持久化 Redis、SQLite 和应用日志。
 
-```powershell
-docker build --no-cache . -t vue-fastapi-admin
+先在服务器创建 SQLite 文件和日志目录，并准备运行配置：
+
+```bash
+mkdir -p /srv/vue-fastapi-admin/data /srv/vue-fastapi-admin/logs /etc/vue-fastapi-admin
+touch /srv/vue-fastapi-admin/data/db.sqlite3
+cp .env.example /etc/vue-fastapi-admin/app.env
 ```
 
-启动容器：
+编辑 `/etc/vue-fastapi-admin/app.env`，至少设置部署环境、`SECRET_KEY`、CORS 来源、各业务密钥和初始管理员。配置文件不得放入镜像或提交到仓库。
 
-```powershell
-docker run -d --restart=always --name vue-fastapi-admin -p 9999:80 vue-fastapi-admin
+可直接访问 Docker Hub 时执行：
+
+```bash
+docker compose up -d --build
 ```
 
-访问地址：
+使用华为云 SWR 镜像源时执行：
 
-```text
-http://localhost:9999
+```bash
+NODE_IMAGE=swr.cn-north-4.myhuaweicloud.com/ddn-k8s/docker.io/node:18-alpine \
+PYTHON_IMAGE=swr.cn-north-4.myhuaweicloud.com/ddn-k8s/docker.io/python:3.11-slim \
+REDIS_IMAGE=swr.cn-north-4.myhuaweicloud.com/ddn-k8s/docker.io/redis:7.2-alpine \
+docker compose up -d --build
 ```
 
-Docker 镜像内会先构建前端静态资源，再通过 Nginx 提供前端页面，并把 `/api/` 请求转发给后端服务。
+默认访问地址为 `http://服务器地址:18082`。可以通过 `APP_PORT` 调整宿主机端口。确认初始管理员创建成功后，应关闭 `BOOTSTRAP_ADMIN_ENABLED`、清除配置中的初始密码，并重新创建应用容器。
 
 ## 常用命令
 
