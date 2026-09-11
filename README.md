@@ -34,7 +34,7 @@ https://github.com/KoshiroPeng/vue-fastapi-admin.git
 - FastAPI
 - Tortoise ORM
 - Aerich
-- SQLite 默认数据库
+- MySQL 8.0
 - Uvicorn
 
 前端：
@@ -54,6 +54,7 @@ https://github.com/KoshiroPeng/vue-fastapi-admin.git
 - Node.js 18.8.0 或以上版本
 - pnpm
 - Git
+- MySQL 8.0
 
 Docker 部署需要 Docker 17.05 或以上版本。
 
@@ -68,6 +69,10 @@ pip install uv
 uv venv
 .\.venv\Scripts\activate
 uv sync
+Copy-Item deploy/.env.example .env
+# 编辑 .env，配置 MYSQL_HOST、MYSQL_PORT、MYSQL_USER、MYSQL_PASSWORD 和 MYSQL_DATABASE
+python -c "from aerich.cli import main; main()" upgrade
+python -m scripts.bootstrap
 python run.py
 ```
 
@@ -124,17 +129,24 @@ BOOTSTRAP_ADMIN_PASSWORD=<至少 12 位的独立强密码>
 
 ## Docker 部署
 
-镜像内会构建前端静态资源，通过 Nginx 提供页面，并把 `/api/` 请求转发给同一容器内的 FastAPI。Compose 会同时启动独立 Redis，并持久化 Redis、SQLite 和应用日志。
+镜像内会构建前端静态资源，通过 Nginx 提供页面，并把 `/api/` 请求转发给同一容器内的 FastAPI。Compose 会同时启动独立 Redis，并连接外部 MySQL 8.0。部署时先由一次性 `migrate` 服务执行版本化迁移和基础数据初始化，再启动应用服务。
 
-先在服务器创建 SQLite 文件和日志目录，并准备运行配置：
+先在服务器创建日志目录并准备运行配置：
 
 ```bash
-mkdir -p /srv/vue-fastapi-admin/data /srv/vue-fastapi-admin/logs /etc/vue-fastapi-admin
-touch /srv/vue-fastapi-admin/data/db.sqlite3
+mkdir -p /srv/vue-fastapi-admin/logs /etc/vue-fastapi-admin
 cp deploy/.env.example /etc/vue-fastapi-admin/app.env
 ```
 
-编辑 `/etc/vue-fastapi-admin/app.env`，至少设置部署环境、`SECRET_KEY`、CORS 来源、各业务密钥和初始管理员。配置文件不得放入镜像或提交到仓库。
+编辑 `/etc/vue-fastapi-admin/app.env`，至少设置 MySQL 连接、部署环境、`SECRET_KEY`、CORS 来源、各业务密钥和初始管理员。配置文件不得放入镜像或提交到仓库。
+
+从旧版 SQLite 一次性迁移数据时，先执行数据库迁移建立 MySQL 表结构，再运行：
+
+```bash
+python -m scripts.migrate_sqlite_to_mysql --source /path/to/db.sqlite3
+```
+
+脚本默认拒绝覆盖非空 MySQL。确认需要清空业务表并重新导入时，必须显式增加 `--replace`。
 
 可直接访问 Docker Hub 时执行：
 
@@ -212,13 +224,13 @@ pnpm lint
 - 本地 SQLite 数据库文件，例如 `db.sqlite3`
 - Python 缓存目录，例如 `__pycache__/`
 - 本地构建产物，例如前端 `dist/`
-- 本地迁移生成目录，例如 `migrations/`
 
 当前 `.gitignore` 已包含这些规则。
 
 ## 配置注意事项
 
-- 后端默认使用 SQLite，数据库文件会在本地运行时生成。
+- 后端使用 MySQL 8.0，连接信息由 `MYSQL_*` 环境变量注入。
+- `migrations/` 是数据库版本的一部分，必须提交到仓库；应用实例启动时不会自动生成迁移。
 - 后端服务默认端口为 `9999`。
 - 前端开发服务默认端口为 `3100`。
 - `APP_ENV=production` 时必须通过环境变量注入至少 32 字符的独立 `SECRET_KEY`。

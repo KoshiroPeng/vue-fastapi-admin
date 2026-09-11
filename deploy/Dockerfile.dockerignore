@@ -14,7 +14,6 @@ __pycache__
 .tmp
 *.sqlite3
 db.sqlite3*
-migrations
 logs
 web/node_modules
 web/dist

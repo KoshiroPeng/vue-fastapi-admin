@@ -29,6 +29,8 @@ asyncclick==8.1.8
     # via
     #   aerich
     #   vue-fastapi-admin
+asyncmy==0.2.10
+    # via vue-fastapi-admin
 black==24.10.0
     # via vue-fastapi-admin
 certifi==2024.12.14
@@ -39,6 +41,7 @@ certifi==2024.12.14
 cffi==1.17.1
     # via
     #   argon2-cffi-bindings
+    #   cryptography
     #   vue-fastapi-admin
 click==8.1.8
     # via
@@ -53,6 +56,10 @@ colorama==0.4.6 ; sys_platform == 'win32'
     #   click
     #   loguru
     #   uvicorn
+cryptography==45.0.7 ; python_full_version >= '3.14' and platform_python_implementation != 'PyPy'
+    # via vue-fastapi-admin
+cryptography==46.0.0 ; python_full_version < '3.14' or platform_python_implementation == 'PyPy'
+    # via vue-fastapi-admin
 dictdiffer==0.9.0
     # via
     #   aerich

@@ -30,17 +30,25 @@ services:
     ports:
       - "${APP_PORT:-18082}:80"
     volumes:
-      - ${SQLITE_FILE:-/srv/vue-fastapi-admin/data/db.sqlite3}:/opt/vue-fastapi-admin/db.sqlite3:Z
       - ${APP_LOG_DIR:-/srv/vue-fastapi-admin/logs}:/opt/vue-fastapi-admin/logs:Z
     depends_on:
       redis:
         condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
     healthcheck:
       test: ["CMD", "curl", "-fsS", "http://127.0.0.1:9999/openapi.json"]
       interval: 15s
       timeout: 5s
       retries: 10
       start_period: 30s
+
+  migrate:
+    image: vue-fastapi-admin:${APP_IMAGE_TAG:-latest}
+    entrypoint: ["sh", "deploy/migrate.sh"]
+    restart: "no"
+    env_file:
+      - ${APP_ENV_FILE:-/etc/vue-fastapi-admin/app.env}
 
 volumes:
   redis-data:
