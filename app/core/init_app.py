@@ -54,6 +54,8 @@ def make_middlewares():
                 "/api/v1/portal/",
                 "/docs",
                 "/openapi.json",
+                "/health/live",
+                "/health/ready",
             ],
         ),
     ]

@@ -102,9 +102,12 @@ jobs:
           "
 
   docker-build:
-    name: Build Docker Image
+    name: Build Docker Image (${{ matrix.target }})
     needs: [web-build, backend-check]
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        target: [backend, gateway]
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
@@ -117,5 +120,6 @@ jobs:
         with:
           context: .
           file: ./deploy/Dockerfile
+          target: ${{ matrix.target }}
           push: false
-          tags: vue-fastapi-admin:latest
+          tags: vue-fastapi-admin-${{ matrix.target }}:latest

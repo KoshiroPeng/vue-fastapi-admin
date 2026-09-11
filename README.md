@@ -129,12 +129,12 @@ BOOTSTRAP_ADMIN_PASSWORD=<至少 12 位的独立强密码>
 
 ## Docker 部署
 
-镜像内会构建前端静态资源，通过 Nginx 提供页面，并把 `/api/` 请求转发给同一容器内的 FastAPI。Compose 会同时启动独立 Redis，并连接外部 MySQL 8.0。部署时先由一次性 `migrate` 服务执行版本化迁移和基础数据初始化，再启动应用服务。
+部署由独立 Nginx 网关、多个 FastAPI 后端实例、Redis 和外部 MySQL 8.0 组成。Nginx 提供前端静态资源，并通过 Docker DNS 将 `/api/` 请求分发到健康的后端实例。部署时先由一次性 `migrate` 服务执行版本化迁移和基础数据初始化，再启动默认两个后端实例，最后启动网关。
 
 先在服务器创建日志目录并准备运行配置：
 
 ```bash
-mkdir -p /srv/vue-fastapi-admin/logs /etc/vue-fastapi-admin
+mkdir -p /srv/vue-fastapi-admin/logs/app /srv/vue-fastapi-admin/logs/nginx /etc/vue-fastapi-admin
 cp deploy/.env.example /etc/vue-fastapi-admin/app.env
 ```
 
@@ -151,7 +151,7 @@ python -m scripts.migrate_sqlite_to_mysql --source /path/to/db.sqlite3
 可直接访问 Docker Hub 时执行：
 
 ```bash
-docker compose -f deploy/compose.yaml up -d --build
+docker compose --env-file /etc/vue-fastapi-admin/app.env -f deploy/compose.yaml up -d --build
 ```
 
 使用华为云 SWR 镜像源时执行：
@@ -159,11 +159,22 @@ docker compose -f deploy/compose.yaml up -d --build
 ```bash
 NODE_IMAGE=swr.cn-north-4.myhuaweicloud.com/ddn-k8s/docker.io/node:18-alpine \
 PYTHON_IMAGE=swr.cn-north-4.myhuaweicloud.com/ddn-k8s/docker.io/python:3.11-slim \
+NGINX_IMAGE=swr.cn-north-4.myhuaweicloud.com/ddn-k8s/docker.io/nginx:1.27-alpine \
 REDIS_IMAGE=swr.cn-north-4.myhuaweicloud.com/ddn-k8s/docker.io/redis:7.2-alpine \
-docker compose -f deploy/compose.yaml up -d --build
+docker compose --env-file /etc/vue-fastapi-admin/app.env -f deploy/compose.yaml up -d --build
 ```
 
-默认访问地址为 `http://服务器地址:18082`。可以通过 `APP_PORT` 调整宿主机端口。确认初始管理员创建成功后，应关闭 `BOOTSTRAP_ADMIN_ENABLED`、清除配置中的初始密码，并重新创建应用容器。
+默认访问地址为 `http://服务器地址:18082`。可以通过 `APP_PORT` 调整宿主机端口，通过 `APP_REPLICAS` 调整后端副本数。每个副本默认运行一个 Uvicorn worker，避免副本数和进程数叠加后超过 MySQL 连接池预算。
+
+部署健康检查：
+
+```bash
+curl -fsS http://127.0.0.1:18082/health/live
+curl -fsS http://127.0.0.1:18082/health/ready
+docker compose --env-file /etc/vue-fastapi-admin/app.env -f deploy/compose.yaml ps -a
+```
+
+`/health/live` 只检查 Nginx 入口进程，`/health/ready` 会穿过 Nginx 并检查后端、MySQL 和 Redis。应用实例日志按容器主机名写入 `/srv/vue-fastapi-admin/logs/app`，Nginx 日志写入 `/srv/vue-fastapi-admin/logs/nginx`。确认初始管理员创建成功后，应关闭 `BOOTSTRAP_ADMIN_ENABLED`、清除配置中的初始密码，并重新创建应用容器。
 
 ## 常用命令
 
@@ -202,6 +213,7 @@ pnpm lint
 │   ├── compose.yaml     Docker Compose 编排
 │   ├── Dockerfile       应用镜像构建文件
 │   ├── entrypoint.sh    容器启动脚本
+│   ├── proxy_params.conf Nginx 反向代理公共参数
 │   └── web.conf         Nginx 配置
 ├── logs                 本地运行日志（日志文件不提交）
 ├── web                  前端应用代码
@@ -232,6 +244,8 @@ pnpm lint
 - 后端使用 MySQL 8.0，连接信息由 `MYSQL_*` 环境变量注入。
 - `migrations/` 是数据库版本的一部分，必须提交到仓库；应用实例启动时不会自动生成迁移。
 - 后端服务默认端口为 `9999`。
+- Compose 默认运行两个独立后端容器，只有 Nginx 网关暴露宿主机端口。
+- `EDGE_SUBNET` 和 `GATEWAY_IP` 必须属于同一未占用网段；后端只信任该网关传入的客户端地址。
 - 前端开发服务默认端口为 `3100`。
 - `APP_ENV=production` 时必须通过环境变量注入至少 32 字符的独立 `SECRET_KEY`。
 - 生产环境禁止使用通配符 CORS 来源。
