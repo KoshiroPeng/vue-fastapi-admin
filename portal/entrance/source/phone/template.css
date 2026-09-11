@@ -1,0 +1,255 @@
+:root {
+  --wifi-ink: #082344;
+  --wifi-muted: #848aab;
+  --wifi-blue: #0077ff;
+  --wifi-line: rgba(255, 255, 255, 0.78);
+  --wifi-panel: rgba(250, 252, 255, 0.93);
+}
+
+html,
+body {
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  margin: 0;
+  overflow: hidden;
+}
+
+body.wifi-page {
+  width: 100vw;
+  height: 100vh;
+  height: 100dvh;
+  min-width: 320px;
+  min-height: 0;
+  overflow: hidden;
+  color: var(--wifi-ink);
+  background: #dceeff url("assets/airport-bg.png") center bottom / cover no-repeat;
+  font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", Arial, sans-serif;
+}
+
+.wifi-page *,
+.wifi-page *::before,
+.wifi-page *::after {
+  box-sizing: border-box;
+  letter-spacing: 0;
+}
+
+.wifi-page a {
+  -webkit-tap-highlight-color: transparent;
+}
+
+.wifi-page a:focus-visible {
+  outline: 3px solid rgba(0, 119, 255, 0.55);
+  outline-offset: 3px;
+}
+
+.wifi-shell {
+  width: min(100%, 920px);
+  height: 100%;
+  min-height: 0;
+  margin: 0 auto;
+  padding: 42px clamp(16px, 5vw, 54px) 34px;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior-y: contain;
+  -webkit-overflow-scrolling: touch;
+}
+
+.entry-shell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.welcome-block {
+  width: 100%;
+  margin: 0 auto 24px;
+  text-align: center;
+}
+
+.entry-logo {
+  display: block;
+  width: 49px;
+  height: 53px;
+  margin: 0 auto 26px;
+  object-fit: contain;
+}
+
+.welcome-block h1 {
+  margin: 0;
+  color: var(--wifi-ink);
+  font-size: clamp(29px, 7.5vw, 42px);
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.welcome-block p,
+.entry-heading p {
+  margin: 9px 0 0;
+  color: var(--wifi-muted);
+  font-size: clamp(14px, 3.8vw, 18px);
+  line-height: 1.4;
+}
+
+.entry-card {
+  width: 100%;
+  max-width: 700px;
+  padding: clamp(28px, 7vw, 52px) clamp(18px, 6vw, 58px) 28px;
+  border: 1px solid var(--wifi-line);
+  border-radius: 30px;
+  background: var(--wifi-panel);
+  box-shadow: 0 16px 42px rgba(37, 72, 112, 0.12);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  .entry-card {
+    background: #fafdff;
+  }
+}
+
+.entry-heading {
+  text-align: center;
+}
+
+.entry-heading h2 {
+  margin: 0;
+  color: var(--wifi-ink);
+  font-size: clamp(22px, 5.5vw, 30px);
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.entry-options {
+  display: grid;
+  gap: 16px;
+  margin-top: 36px;
+}
+
+.entry-option {
+  display: grid;
+  grid-template-columns: 64px minmax(0, 1fr) 24px;
+  align-items: center;
+  min-height: 76px;
+  padding: 8px 20px 8px 8px;
+  border-radius: 999px;
+  color: var(--wifi-ink);
+  background: #fff;
+  box-shadow: 0 10px 24px rgba(34, 64, 98, 0.09);
+  text-decoration: none;
+  transition: transform 150ms ease, box-shadow 150ms ease;
+}
+
+.entry-option:hover {
+  box-shadow: 0 13px 28px rgba(34, 64, 98, 0.14);
+  transform: translateY(-1px);
+}
+
+.entry-option:active {
+  box-shadow: 0 6px 14px rgba(34, 64, 98, 0.1);
+  transform: translateY(1px);
+}
+
+.entry-option-icon {
+  width: 56px;
+  height: 56px;
+  object-fit: contain;
+}
+
+.entry-option-copy {
+  min-width: 0;
+  text-align: center;
+}
+
+.entry-option-copy strong,
+.entry-option-copy span {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.entry-option-copy strong {
+  font-size: clamp(18px, 4.8vw, 24px);
+  font-weight: 600;
+  line-height: 1.25;
+}
+
+.entry-option-copy span {
+  margin-top: 2px;
+  color: var(--wifi-muted);
+  font-size: clamp(12px, 3.5vw, 16px);
+  line-height: 1.3;
+}
+
+.entry-option-arrow {
+  display: block;
+  width: 14px;
+  height: 14px;
+  border-top: 2px solid #87909d;
+  border-right: 2px solid #87909d;
+  transform: rotate(45deg);
+}
+
+.language-switch {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  width: 132px;
+  margin: 30px auto 0;
+  overflow: hidden;
+  border-radius: 999px;
+  background: #f1f2f6;
+}
+
+.lang-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 40px;
+  color: var(--wifi-muted);
+  font-size: 17px;
+  text-decoration: none;
+}
+
+.lang-link.is-active,
+.lang-link[aria-current="page"] {
+  color: var(--wifi-blue);
+  background: #dcecff;
+}
+
+@media (max-width: 460px) {
+  .wifi-shell {
+    padding-top: 36px;
+  }
+
+  .entry-card {
+    border-radius: 28px;
+  }
+
+  .entry-option {
+    grid-template-columns: 58px minmax(0, 1fr) 20px;
+    min-height: 72px;
+    padding-right: 16px;
+  }
+
+  .entry-option-icon {
+    width: 52px;
+    height: 52px;
+  }
+}
+
+@media (max-width: 360px) {
+  .wifi-shell {
+    padding-right: 12px;
+    padding-left: 12px;
+  }
+
+  .entry-option-copy strong {
+    font-size: 17px;
+  }
+
+  .entry-option-copy span {
+    font-size: 11px;
+  }
+}

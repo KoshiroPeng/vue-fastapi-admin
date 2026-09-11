@@ -1,0 +1,12 @@
+{
+  "name": "airport-wifi-portal",
+  "private": true,
+  "scripts": {
+    "dev": "node preview-server.js --dev",
+    "build": "node scripts/build-all.js",
+    "build:entrance": "node scripts/build-project.js entrance",
+    "build:sms": "node scripts/build-project.js sms",
+    "build:passport": "node scripts/build-project.js passport",
+    "preview": "node preview-server.js"
+  }
+}
