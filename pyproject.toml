@@ -24,7 +24,6 @@ dependencies = [
     "setuptools==75.8.0",
     "uvicorn==0.34.0",
     "h11==0.14.0",
-    "aiosqlite==0.20.0",
     "anyio==4.8.0",
     "argon2-cffi-bindings==21.2.0",
     "certifi==2024.12.14",

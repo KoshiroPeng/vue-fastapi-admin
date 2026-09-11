@@ -250,7 +250,7 @@ pnpm lint
 
 - Python 虚拟环境，例如 `.venv/`
 - 前端依赖目录，例如 `node_modules/`
-- 本地 SQLite 数据库文件，例如 `db.sqlite3`
+- 本地数据库备份文件
 - Python 缓存目录，例如 `__pycache__/`
 - 本地构建产物，例如前端 `dist/`
 

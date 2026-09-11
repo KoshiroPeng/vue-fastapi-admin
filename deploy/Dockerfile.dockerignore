@@ -12,8 +12,6 @@ __pycache__
 .idea
 .vscode
 .tmp
-*.sqlite3
-db.sqlite3*
 logs
 web/node_modules
 web/dist
