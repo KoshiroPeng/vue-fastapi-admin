@@ -5,7 +5,7 @@ const { readLocale, renderProjectText } = require('./scripts/locales')
 
 const ROOT_DIR = __dirname
 const MODE = process.argv.includes('--dev') ? 'dev' : 'preview'
-const START_PORT = Number.parseInt(process.env.PORT || process.env.PREVIEW_PORT || '5500', 10)
+const START_PORT = Number.parseInt(process.env.PORT || process.env.PREVIEW_PORT || '3300', 10)
 const HOST = process.env.PREVIEW_HOST || '127.0.0.1'
 
 const excludedDirectories = new Set(['.git', 'node_modules', 'phone-ui'])

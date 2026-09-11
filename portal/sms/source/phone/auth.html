@@ -76,10 +76,10 @@
 <input class="phoneinput" id="authType" type="hidden" value="117">
 <main class="wifi-shell detail-shell">
   <nav class="detail-nav"><a class="back-link" href="/entrance/dist/entrance_zh/phone/auth.html" aria-label="{{common.backToMethods}}"><img class="back-icon" src="assets/back.svg" alt=""></a></nav>
-  <header class="welcome-block"><h1>{{sms.welcome}}</h1><p>Welcome to Shenzhen Bao'an International Airport Wi-Fi</p></header>
+  <header class="welcome-block"><h1>{{sms.welcome}}</h1><p>{{sms.welcomeEn}}</p></header>
   <section class="auth-card">
-    <div class="auth-heading"><h2>{{sms.heading}}</h2><p>Enter mobile for verification code</p></div>
-    <div class="sms-notice" role="note"><span class="sms-notice-primary"><img class="sms-notice-icon" src="assets/warning.png" alt=""><span>{{sms.notice}}</span></span><span class="sms-notice-secondary">Only domestic SIM cards or international SIM cards with roaming enabled are supported.</span></div>
+    <div class="auth-heading"><h2>{{sms.heading}}</h2><p>{{sms.headingEn}}</p></div>
+    <div class="sms-notice" role="note"><span class="sms-notice-primary"><img class="sms-notice-icon" src="assets/warning.png" alt=""><span>{{sms.notice}}</span></span><span class="sms-notice-secondary">{{sms.noticeEn}}</span></div>
     <div class="sms-fields">
 <div class="g-container">
     <div class="basic-grey">
@@ -87,7 +87,7 @@
             <div class="Companies">
                 <input class="code" type="text" placeholder=" +86" id="js-groupId" value="+86" onclick="SetInputNull()">
                 <input id="mobileNum" value="{{sms.mobileNumber}}" emptytip="{{sms.mobileNumber}}" type="hidden" class="frm-input">
-                <input class="phoneinput" id="phone" type="tel" placeholder="{{sms.mobilePlaceholder}}">
+                <input class="phoneinput" id="phone" type="tel" placeholder="{{sms.mobilePlaceholder}} ({{sms.mobilePlaceholderEn}})">
                 <input type="hidden" id="groupId">
                 <ul id="groupid">
                     <li data-id="827"><a href="javascript:void(0)"> +86    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{sms.china}}</a></li>
@@ -299,15 +299,15 @@
 
 </div>
       <div class="verify-row">
-        <div class="verify-input-shell"><input class="pwdinput" id="pwd" type="tel" placeholder="{{sms.codePlaceholder}}"></div>
-        <div class="code-button"><span id="getpasswordLabel" class="code-button-label"><span class="button-primary">{{sms.getCode}}</span><span class="button-secondary">GET Code</span></span><input class="code-button-control" id="getpassword" onclick="getPasswordBefore()" type="button" value="{{sms.getCode}}" aria-label="{{sms.getCode}}"></div>
+        <div class="verify-input-shell"><input class="pwdinput" id="pwd" type="tel" placeholder="{{sms.codePlaceholder}} ({{sms.codePlaceholderEn}})"></div>
+        <div class="code-button"><span id="getpasswordLabel" class="code-button-label"><span class="button-primary">{{sms.getCode}}</span><span class="button-secondary">{{sms.getCodeEn}}</span></span><input class="code-button-control" id="getpassword" onclick="getPasswordBefore()" type="button" value="{{sms.getCode}}" aria-label="{{sms.getCode}}"></div>
       </div>
     </div>
     <div class="agreement-row">
       <img class="agreement-check" id="agreeCheck" role="checkbox" aria-checked="true" onclick="togglePortalAgreement(this)" src="assets/check.svg" alt="{{sms.agreementChecked}}">
-      <a class="agreement-copy" id="readmeLink" onclick="turnReadmePage();return false" href="#"><span>{{sms.agreement}}</span><small>I have read and agree to the Airport Wi-Fi terms of use</small></a>
+      <a class="agreement-copy" id="readmeLink" onclick="turnReadmePage();return false" href="#"><span>{{sms.agreement}}</span><small>{{sms.agreementEn}}</small></a>
     </div>
-    <div class="login-button"><span class="login-button-label"><span class="button-primary">{{common.login}}</span><span class="button-secondary">Log in</span></span><input class="login-button-control" id="loginBtn" onclick="loginBefore()" type="button" value="{{common.login}}" aria-label="{{common.login}}"></div>
+    <div class="login-button"><span class="login-button-label"><span class="button-primary">{{common.login}}</span><span class="button-secondary">{{common.loginEn}}</span></span><input class="login-button-control" id="loginBtn" onclick="loginBefore()" type="button" value="{{common.login}}" aria-label="{{common.login}}"></div>
     <nav class="language-switch auth-language-switch" aria-label="{{common.languageSwitch}}"><a class="lang-link is-active" href="#" data-language="zh-cn" aria-current="page" onclick="return false;">{{common.simplified}}</a><a class="lang-link" href="../../sms_trl/phone/auth.html" data-href="../../sms_trl/phone/auth.html" data-language="zh-tw">{{common.traditional}}</a></nav>
   </section>
 </main>

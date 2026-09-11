@@ -5,7 +5,15 @@ const PLACEHOLDER_PATTERN = /\{\{\s*([a-zA-Z0-9_.-]+)\s*\}\}/g
 
 function readLocale(projectDir, language) {
   const filePath = path.join(projectDir, 'locales', `${language}.json`)
-  return JSON.parse(fs.readFileSync(filePath, 'utf8'))
+  const locale = JSON.parse(fs.readFileSync(filePath, 'utf8'))
+  const englishPath = path.join(projectDir, 'locales', 'en.json')
+  if (language === 'en' || !fs.existsSync(englishPath)) return locale
+  const english = JSON.parse(fs.readFileSync(englishPath, 'utf8'))
+  const duplicateKeys = Object.keys(english).filter((key) => key in locale)
+  if (duplicateKeys.length) {
+    throw new Error(`English locale keys must be unique. Duplicates in ${language}.json: ${duplicateKeys.join(', ')}`)
+  }
+  return { ...english, ...locale }
 }
 
 function readLocales(projectDir) {
@@ -40,6 +48,26 @@ function localizeLanguageLinks(source, projectName, filePath, activeLanguage, hr
   return source.replace(/<a\b[^>]*data-language="(zh-cn|zh-tw)"[^>]*>/g, (tag, language) => {
     const languageSuffix = language === 'zh-tw' ? 'trl' : 'zh'
     const isActive = languageSuffix === activeLanguage
+    const usesServerNavigation = /\sfolder="[^"]+"/.test(tag)
+
+    if (usesServerNavigation) {
+      let nextTag = tag
+        .replace(/\saria-current="[^"]*"/g, '')
+        .replace(/class="([^"]*)"/, (_match, className) => {
+          const classes = className.split(/\s+/).filter((name) => name && name !== 'is-active')
+          if (isActive) classes.push('is-active')
+          return `class="${classes.join(' ')}"`
+        })
+
+      if (isActive) {
+        nextTag = nextTag
+          .replace(/\sonclick="[^"]*"/g, '')
+          .replace(/href="[^"]*"/, 'href="#"')
+          .replace(/>$/, ' aria-current="page" onclick="return false;">')
+      }
+      return nextTag
+    }
+
     const href = hrefForLanguage
       ? hrefForLanguage(languageSuffix, device, pageName)
       : `../../${projectName}_${languageSuffix}/${device}/${pageName}`
@@ -64,11 +92,12 @@ function localizeLanguageLinks(source, projectName, filePath, activeLanguage, hr
 
 function renderProjectText(source, options) {
   const { activeLanguage, filePath, hrefForLanguage, locale, projectName } = options
-  let rendered = renderLocale(source, locale, filePath)
+  let rendered = source
   if (activeLanguage === 'trl') {
     rendered = rendered.replace(/_zh(?=\/|\\|["'])/g, '_trl')
     rendered = rendered.replace(/\blanguage-zh\b/g, 'language-trl')
   }
+  rendered = renderLocale(rendered, locale, filePath)
   return localizeLanguageLinks(rendered, projectName, filePath, activeLanguage, hrefForLanguage)
 }
 

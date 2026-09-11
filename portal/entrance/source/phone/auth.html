@@ -20,65 +20,54 @@
     <script type="text/javascript" src="../../../../material/custom/auth.js"></script>
     <script type="text/javascript" src="../../../../material/custom/socialAuth.js"></script>
     <script type="text/javascript" src="../../../../material/custom/check.js"></script>
-    <link rel="stylesheet" href="template.css" type="text/css" />
     <title>{{common.authentication}}</title>
   </head>
 
   <body class="wifi-page entry-page device-phone language-zh">
-    <script type="text/javascript">
-      function turnToLanPage(link) {
-        var target = link.getAttribute("data-href");
-        if (target) {
-          window.location.href = target;
-        }
-      }
-
-    </script>
-
     <main class="wifi-shell entry-shell">
       <header class="welcome-block">
         <img class="entry-logo" src="assets/airport-logo.png" alt="{{common.airport}}" />
         <h1>{{entrance.welcome}}</h1>
-        <p>WELCOME TO SHENZHEN AIRPORT</p>
+        <p>{{entrance.welcomeEn}}</p>
       </header>
 
       <section class="entry-card" aria-labelledby="entry-title">
         <div class="entry-heading">
           <h2 id="entry-title">{{entrance.chooseMethod}}</h2>
-          <p>Please Select Wi-Fi login method</p>
+          <p>{{entrance.chooseMethodEn}}</p>
         </div>
 
         <nav class="entry-options" aria-label="{{entrance.methodLabel}}">
-          <a class="entry-option" href="/sms/dist/sms_zh/phone/auth.html" data-href="/sms/dist/sms_zh/phone/auth.html" data-method="sms" onclick="turnToLanPage(this); return false;">
+          <a class="entry-option" href="#" folder="{{entrance.smsFolder}}" data-method="sms" onclick="turnToLanPage($(this)); return false;">
             <img src="assets/sms.png" alt="" class="entry-option-icon" />
-            <span class="entry-option-copy"><strong>{{entrance.sms}}</strong><span>SMS Authentication</span></span>
+            <span class="entry-option-copy"><strong>{{entrance.sms}}</strong><span>{{entrance.smsEn}}</span></span>
             <span class="entry-option-arrow" aria-hidden="true"></span>
           </a>
-          <a class="entry-option" href="/passport/dist/passport_zh/phone/auth.html" data-href="/passport/dist/passport_zh/phone/auth.html" data-method="passport" onclick="turnToLanPage(this); return false;">
+          <a class="entry-option" href="#" folder="{{entrance.passportFolder}}" data-method="passport" onclick="turnToLanPage($(this)); return false;">
             <img src="assets/passport.png" alt="" class="entry-option-icon" />
-            <span class="entry-option-copy"><strong>{{entrance.passport}}</strong><span>Passport Authentication</span></span>
+            <span class="entry-option-copy"><strong>{{entrance.passport}}</strong><span>{{entrance.passportEn}}</span></span>
             <span class="entry-option-arrow" aria-hidden="true"></span>
           </a>
-          <a class="entry-option" href="#wechat" data-method="wechat" onclick="turnToLanPage(this); return false;">
+          <a class="entry-option" href="#" folder="{{entrance.wechatFolder}}" data-method="wechat" onclick="turnToLanPage($(this)); return false;">
             <img src="assets/wechat.png" alt="" class="entry-option-icon" />
-            <span class="entry-option-copy"><strong>{{entrance.wechat}}</strong><span>WeChat Mini Program</span></span>
+            <span class="entry-option-copy"><strong>{{entrance.wechat}}</strong><span>{{entrance.wechatEn}}</span></span>
             <span class="entry-option-arrow" aria-hidden="true"></span>
           </a>
-          <a class="entry-option" href="#boarding-pass" data-method="boarding-pass" onclick="turnToLanPage(this); return false;">
+          <a class="entry-option" href="#" folder="{{entrance.boardingPassFolder}}" data-method="boarding-pass" onclick="turnToLanPage($(this)); return false;">
             <img src="assets/boarding-pass.png" alt="" class="entry-option-icon" />
-            <span class="entry-option-copy"><strong>{{entrance.boardingPass}}</strong><span>Boarding Pass Authentication</span></span>
+            <span class="entry-option-copy"><strong>{{entrance.boardingPass}}</strong><span>{{entrance.boardingPassEn}}</span></span>
             <span class="entry-option-arrow" aria-hidden="true"></span>
           </a>
-          <a class="entry-option" href="#kiosk-account" data-method="kiosk-account" onclick="turnToLanPage(this); return false;">
+          <a class="entry-option" href="#" folder="{{entrance.kioskFolder}}" data-method="kiosk-account" onclick="turnToLanPage($(this)); return false;">
             <img src="assets/kiosk-account.png" alt="" class="entry-option-icon" />
-            <span class="entry-option-copy"><strong>{{entrance.kiosk}}</strong><span>Kiosk Account Login</span></span>
+            <span class="entry-option-copy"><strong>{{entrance.kiosk}}</strong><span>{{entrance.kioskEn}}</span></span>
             <span class="entry-option-arrow" aria-hidden="true"></span>
           </a>
         </nav>
 
         <nav class="language-switch" aria-label="{{common.languageSwitch}}">
-          <a class="lang-link is-active" href="#" data-language="zh-cn" aria-current="page" onclick="return false;">{{common.simplified}}</a>
-          <a class="lang-link" href="../../entrance_trl/phone/auth.html" data-href="../../entrance_trl/phone/auth.html" data-language="zh-tw" onclick="turnToLanPage(this); return false;">{{common.traditional}}</a>
+          <a class="lang-link" href="#" folder="{{entrance.simplifiedFolder}}" data-language="zh-cn" onclick="turnToLanPage($(this)); return false;">{{common.simplified}}</a>
+          <a class="lang-link" href="#" folder="{{entrance.traditionalFolder}}" data-language="zh-tw" onclick="turnToLanPage($(this)); return false;">{{common.traditional}}</a>
         </nav>
       </section>
     </main>

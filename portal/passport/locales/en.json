@@ -1,0 +1,14 @@
+{
+  "common.loginEn": "Log in",
+  "common.loading": "Loading&#8230;",
+  "passport.welcomeEn": "Welcome to Shenzhen Bao'an International Airport Wi-Fi",
+  "passport.authenticationEn": "Passport Authentication",
+  "passport.captureWarningEn": "Copy link to browser if photo capture fails.",
+  "passport.captureTipEn": "Ensure the document is clear and complete",
+  "passport.numberEn": "Passport number",
+  "passport.nameEn": "Name",
+  "passport.nationalityEn": "Nationality",
+  "passport.scanOrEnterEn": "Scan or enter",
+  "passport.scanOrSelectEn": "Scan or Select",
+  "passport.agreementEn": "I have read and agree to the Airport Wi-Fi terms of use"
+}

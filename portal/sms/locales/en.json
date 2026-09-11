@@ -1,0 +1,10 @@
+{
+  "common.loginEn": "Log in",
+  "sms.welcomeEn": "Welcome to Shenzhen Bao'an International Airport Wi-Fi",
+  "sms.headingEn": "Enter mobile for verification code",
+  "sms.noticeEn": "Only domestic SIM cards or international SIM cards with roaming enabled are supported.",
+  "sms.mobilePlaceholderEn": "Mobile Number",
+  "sms.codePlaceholderEn": "Verify Code",
+  "sms.getCodeEn": "GET Code",
+  "sms.agreementEn": "I have read and agree to the Airport Wi-Fi terms of use"
+}

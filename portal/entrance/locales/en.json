@@ -1,0 +1,9 @@
+{
+  "entrance.welcomeEn": "WELCOME TO SHENZHEN AIRPORT",
+  "entrance.chooseMethodEn": "Please Select Wi-Fi login method",
+  "entrance.smsEn": "SMS Authentication",
+  "entrance.passportEn": "Passport Authentication",
+  "entrance.wechatEn": "WeChat Mini Program",
+  "entrance.boardingPassEn": "Boarding Pass Authentication",
+  "entrance.kioskEn": "Kiosk Account Login"
+}
