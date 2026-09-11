@@ -3,10 +3,11 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from tortoise import Tortoise
 
+from app.api.health import router as health_router
 from app.core.exceptions import SettingNotFound
 from app.core.redis import redis_manager
 from app.core.init_app import (
-    init_data,
+    init_db,
     make_middlewares,
     register_exceptions,
     register_routers,
@@ -22,7 +23,7 @@ except ImportError:
 async def lifespan(app: FastAPI):
     await redis_manager.connect()
     try:
-        await init_data()
+        await init_db()
         yield
     finally:
         await Tortoise.close_connections()
@@ -39,6 +40,7 @@ def create_app() -> FastAPI:
         lifespan=lifespan,
     )
     register_exceptions(app)
+    app.include_router(health_router)
     register_routers(app, prefix="/api")
     return app
 

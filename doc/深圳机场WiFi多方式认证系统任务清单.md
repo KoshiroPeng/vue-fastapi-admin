@@ -55,7 +55,7 @@
 - [x] 增加 Redis、NCE、取号机、限流和超时配置
 - [x] 默认启用 `NCE_MOCK_ENABLED=true`
 - [x] 移除现有应用 `SECRET_KEY` 等敏感配置的生产默认值
-- [x] 提供 `.env.example`，不包含真实密钥
+- [x] 提供 `deploy/.env.example`，不包含真实密钥
 - [x] 实现只读、脱敏的运行配置摘要
 - **依赖**：M1-02
 - **完成标准**：Mock 模式无需真实 NCE 即可启动；配置摘要不返回密码或 Secret
@@ -241,7 +241,7 @@
 | 2026-09-10 | M1-01 | 建立持久化任务清单 | 本文件创建 | 执行 M1-02 |
 | 2026-09-10 | M1-02 | 检查测试及 Redis 依赖 | 当前环境缺少 `pytest` 和 `redis`；发现 Windows 下重复的无条件 `uvloop` 依赖 | 修复依赖并建立首个行为测试 |
 | 2026-09-10 | M1-02 | 修复依赖并建立测试基线 | 移除 Windows 无条件 `uvloop`，引入 Redis、pytest、pytest-asyncio；Makefile 使用 `uv run python -m pytest` | 完成 M1-02 |
-| 2026-09-10 | M1-03 | 增加 WiFi 配置和脱敏摘要 | 默认启用 NCE Mock，新增 `.env.example` 和 `/runtime-config/summary` 后端接口 | 继续处理现有应用 Secret 安全基线 |
+| 2026-09-10 | M1-03 | 增加 WiFi 配置和脱敏摘要 | 默认启用 NCE Mock，新增 `deploy/.env.example` 和 `/runtime-config/summary` 后端接口 | 继续处理现有应用 Secret 安全基线 |
 | 2026-09-10 | M1-04 | 建立 NCE 客户端边界 | NCE Mock 已支持健康探测、访客创建和不可用场景 | 补充 Token、在线用户、RADIUS 和错误场景 |
 | 2026-09-10 | M1-08 | 建立首个管理端健康接口 | `/api/v1/dashboard/health` 已接入现有路径权限；测试覆盖 Mock 健康响应 | 后续增加 traceId 和结构化日志 |
 | 2026-09-10 | 文档接入 | 从根目录 README 链接详细设计、实施计划和任务清单 | 后续人员可直接查看范围、顺序与实时进度 | 每次任务状态变化同步更新本文件 |

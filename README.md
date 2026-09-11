@@ -34,7 +34,7 @@ https://github.com/KoshiroPeng/vue-fastapi-admin.git
 - FastAPI
 - Tortoise ORM
 - Aerich
-- SQLite 默认数据库
+- MySQL 8.0
 - Uvicorn
 
 前端：
@@ -54,6 +54,7 @@ https://github.com/KoshiroPeng/vue-fastapi-admin.git
 - Node.js 18.8.0 或以上版本
 - pnpm
 - Git
+- MySQL 8.0
 
 Docker 部署需要 Docker 17.05 或以上版本。
 
@@ -68,6 +69,10 @@ pip install uv
 uv venv
 .\.venv\Scripts\activate
 uv sync
+Copy-Item deploy/.env.example .env
+# 编辑 .env，配置 MYSQL_HOST、MYSQL_PORT、MYSQL_USER、MYSQL_PASSWORD 和 MYSQL_DATABASE
+python -c "from aerich.cli import main; main()" upgrade
+python -m scripts.bootstrap
 python run.py
 ```
 
@@ -124,25 +129,52 @@ BOOTSTRAP_ADMIN_PASSWORD=<至少 12 位的独立强密码>
 
 ## Docker 部署
 
-构建镜像：
+部署由独立 Nginx 网关、多个 FastAPI 后端实例、Redis 和外部 MySQL 8.0 组成。Nginx 提供前端静态资源，并通过 Docker DNS 将 `/api/` 请求分发到健康的后端实例。部署时先由一次性 `migrate` 服务执行版本化迁移和基础数据初始化，再启动默认两个后端实例，最后启动网关。
 
-```powershell
-docker build --no-cache . -t vue-fastapi-admin
+先在服务器创建日志目录并准备运行配置：
+
+```bash
+mkdir -p /srv/vue-fastapi-admin/logs/app /srv/vue-fastapi-admin/logs/nginx /etc/vue-fastapi-admin
+cp deploy/.env.example /etc/vue-fastapi-admin/app.env
 ```
 
-启动容器：
+编辑 `/etc/vue-fastapi-admin/app.env`，至少设置 MySQL 连接、部署环境、`SECRET_KEY`、CORS 来源、各业务密钥和初始管理员。配置文件不得放入镜像或提交到仓库。
 
-```powershell
-docker run -d --restart=always --name vue-fastapi-admin -p 9999:80 vue-fastapi-admin
+从旧版 SQLite 一次性迁移数据时，先执行数据库迁移建立 MySQL 表结构，再运行：
+
+```bash
+python -m scripts.migrate_sqlite_to_mysql --source /path/to/db.sqlite3
 ```
 
-访问地址：
+脚本默认拒绝覆盖非空 MySQL。确认需要清空业务表并重新导入时，必须显式增加 `--replace`。
 
-```text
-http://localhost:9999
+可直接访问 Docker Hub 时执行：
+
+```bash
+docker compose --env-file /etc/vue-fastapi-admin/app.env -f deploy/compose.yaml up -d --build
 ```
 
-Docker 镜像内会先构建前端静态资源，再通过 Nginx 提供前端页面，并把 `/api/` 请求转发给后端服务。
+使用华为云 SWR 镜像源时执行：
+
+```bash
+NODE_IMAGE=swr.cn-north-4.myhuaweicloud.com/ddn-k8s/docker.io/node:18-alpine \
+PYTHON_IMAGE=swr.cn-north-4.myhuaweicloud.com/ddn-k8s/docker.io/python:3.11-slim \
+NGINX_IMAGE=swr.cn-north-4.myhuaweicloud.com/ddn-k8s/docker.io/nginx:1.27-alpine \
+REDIS_IMAGE=swr.cn-north-4.myhuaweicloud.com/ddn-k8s/docker.io/redis:7.2-alpine \
+docker compose --env-file /etc/vue-fastapi-admin/app.env -f deploy/compose.yaml up -d --build
+```
+
+默认访问地址为 `http://服务器地址:18082`。可以通过 `APP_PORT` 调整宿主机端口，通过 `APP_REPLICAS` 调整后端副本数。每个副本默认运行一个 Uvicorn worker，避免副本数和进程数叠加后超过 MySQL 连接池预算。
+
+部署健康检查：
+
+```bash
+curl -fsS http://127.0.0.1:18082/health/live
+curl -fsS http://127.0.0.1:18082/health/ready
+docker compose --env-file /etc/vue-fastapi-admin/app.env -f deploy/compose.yaml ps -a
+```
+
+`/health/live` 只检查 Nginx 入口进程，`/health/ready` 会穿过 Nginx 并检查后端、MySQL 和 Redis。应用实例日志按容器主机名写入 `/srv/vue-fastapi-admin/logs/app`，Nginx 日志写入 `/srv/vue-fastapi-admin/logs/nginx`。确认初始管理员创建成功后，应关闭 `BOOTSTRAP_ADMIN_ENABLED`、清除配置中的初始密码，并重新创建应用容器。
 
 ## 常用命令
 
@@ -177,12 +209,18 @@ pnpm lint
 │   ├── settings         后端配置
 │   └── utils            工具函数
 ├── deploy               部署配置
+│   ├── .env.example     服务端运行配置模板（不含真实密钥）
+│   ├── compose.yaml     Docker Compose 编排
+│   ├── Dockerfile       应用镜像构建文件
+│   ├── entrypoint.sh    容器启动脚本
+│   ├── proxy_params.conf Nginx 反向代理公共参数
+│   └── web.conf         Nginx 配置
+├── logs                 本地运行日志（日志文件不提交）
 ├── web                  前端应用代码
 │   ├── build            Vite 构建配置
 │   ├── public           前端公共资源
 │   ├── settings         前端项目配置
 │   └── src              前端源码
-├── Dockerfile           Docker 镜像构建文件
 ├── Makefile             后端开发辅助命令
 ├── pyproject.toml       后端项目和依赖配置
 ├── requirements.txt     后端 pip 依赖清单
@@ -198,14 +236,16 @@ pnpm lint
 - 本地 SQLite 数据库文件，例如 `db.sqlite3`
 - Python 缓存目录，例如 `__pycache__/`
 - 本地构建产物，例如前端 `dist/`
-- 本地迁移生成目录，例如 `migrations/`
 
 当前 `.gitignore` 已包含这些规则。
 
 ## 配置注意事项
 
-- 后端默认使用 SQLite，数据库文件会在本地运行时生成。
+- 后端使用 MySQL 8.0，连接信息由 `MYSQL_*` 环境变量注入。
+- `migrations/` 是数据库版本的一部分，必须提交到仓库；应用实例启动时不会自动生成迁移。
 - 后端服务默认端口为 `9999`。
+- Compose 默认运行两个独立后端容器，只有 Nginx 网关暴露宿主机端口。
+- `EDGE_SUBNET` 和 `GATEWAY_IP` 必须属于同一未占用网段；后端只信任该网关传入的客户端地址。
 - 前端开发服务默认端口为 `3100`。
 - `APP_ENV=production` 时必须通过环境变量注入至少 32 字符的独立 `SECRET_KEY`。
 - 生产环境禁止使用通配符 CORS 来源。

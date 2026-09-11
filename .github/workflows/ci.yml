@@ -36,6 +36,37 @@ jobs:
   backend-check:
     name: Check Backend & Dependencies
     runs-on: ubuntu-latest
+    env:
+      MYSQL_HOST: 127.0.0.1
+      MYSQL_PORT: 3306
+      MYSQL_USER: vue_fastapi_admin
+      MYSQL_PASSWORD: ci-database-password
+      MYSQL_DATABASE: vue_fastapi_admin
+      REDIS_URL: redis://127.0.0.1:6379/0
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: ci-root-password
+          MYSQL_DATABASE: vue_fastapi_admin
+          MYSQL_USER: vue_fastapi_admin
+          MYSQL_PASSWORD: ci-database-password
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping -h 127.0.0.1 -uroot -pci-root-password"
+          --health-interval=5s
+          --health-timeout=5s
+          --health-retries=20
+      redis:
+        image: redis:7.2-alpine
+        ports:
+          - 6379:6379
+        options: >-
+          --health-cmd="redis-cli ping"
+          --health-interval=5s
+          --health-timeout=3s
+          --health-retries=20
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
@@ -50,6 +81,15 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
+      - name: Lint Backend
+        run: ruff check app tests scripts
+
+      - name: Run Backend Tests
+        run: python -m pytest -q
+
+      - name: Apply Database Migrations
+        run: python -c "from aerich.cli import main; main()" upgrade
+
       - name: Validate Backend Startup & Lifespan
         run: |
           python -c "
@@ -62,9 +102,12 @@ jobs:
           "
 
   docker-build:
-    name: Build Docker Image
+    name: Build Docker Image (${{ matrix.target }})
     needs: [web-build, backend-check]
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        target: [backend, gateway]
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
@@ -76,6 +119,7 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: .
-          file: ./Dockerfile
+          file: ./deploy/Dockerfile
+          target: ${{ matrix.target }}
           push: false
-          tags: vue-fastapi-admin:latest
+          tags: vue-fastapi-admin-${{ matrix.target }}:latest

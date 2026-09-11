@@ -1,7 +1,7 @@
 import os
 import typing
 
-from pydantic import model_validator
+from pydantic import SecretStr, model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -57,6 +57,14 @@ class Settings(BaseSettings):
     WECHAT_CALLBACK_CLOCK_SKEW_SECONDS: int = 300
 
     REDIS_URL: str = "redis://127.0.0.1:6379/0"
+    MYSQL_HOST: str = "127.0.0.1"
+    MYSQL_PORT: int = 3306
+    MYSQL_USER: str = "vue_fastapi_admin"
+    MYSQL_PASSWORD: SecretStr | None = None
+    MYSQL_DATABASE: str = "vue_fastapi_admin"
+    MYSQL_POOL_MIN_SIZE: int = 2
+    MYSQL_POOL_MAX_SIZE: int = 10
+    MYSQL_CONNECT_TIMEOUT_SECONDS: int = 10
     PII_HASH_SECRET: str | None = None
     AUTH_TRANSACTION_TTL_SECONDS: int = 300
     NONCE_TTL_SECONDS: int = 300
@@ -79,7 +87,7 @@ class Settings(BaseSettings):
 
     PROJECT_ROOT: str = os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir))
     BASE_DIR: str = os.path.abspath(os.path.join(PROJECT_ROOT, os.pardir))
-    LOGS_ROOT: str = os.path.join(BASE_DIR, "app/logs")
+    LOGS_ROOT: str = os.path.join(BASE_DIR, "logs")
     SECRET_KEY: str = DEVELOPMENT_SECRET_KEY
     BOOTSTRAP_ADMIN_ENABLED: bool = False
     BOOTSTRAP_ADMIN_USERNAME: str = "admin"
@@ -87,72 +95,37 @@ class Settings(BaseSettings):
     BOOTSTRAP_ADMIN_PASSWORD: str | None = None
     JWT_ALGORITHM: str = "HS256"
     JWT_ACCESS_TOKEN_EXPIRE_MINUTES: int = 60 * 24 * 7  # 7 day
-    TORTOISE_ORM: dict = {
-        "connections": {
-            # SQLite configuration
-            "sqlite": {
-                "engine": "tortoise.backends.sqlite",
-                "credentials": {"file_path": f"{BASE_DIR}/db.sqlite3"},  # Path to SQLite database file
-            },
-            # MySQL/MariaDB configuration
-            # Install with: tortoise-orm[asyncmy]
-            # "mysql": {
-            #     "engine": "tortoise.backends.mysql",
-            #     "credentials": {
-            #         "host": "localhost",  # Database host address
-            #         "port": 3306,  # Database port
-            #         "user": "yourusername",  # Database username
-            #         "password": "yourpassword",  # Database password
-            #         "database": "yourdatabase",  # Database name
-            #     },
-            # },
-            # PostgreSQL configuration
-            # Install with: tortoise-orm[asyncpg]
-            # "postgres": {
-            #     "engine": "tortoise.backends.asyncpg",
-            #     "credentials": {
-            #         "host": "localhost",  # Database host address
-            #         "port": 5432,  # Database port
-            #         "user": "yourusername",  # Database username
-            #         "password": "yourpassword",  # Database password
-            #         "database": "yourdatabase",  # Database name
-            #     },
-            # },
-            # MSSQL/Oracle configuration
-            # Install with: tortoise-orm[asyncodbc]
-            # "oracle": {
-            #     "engine": "tortoise.backends.asyncodbc",
-            #     "credentials": {
-            #         "host": "localhost",  # Database host address
-            #         "port": 1433,  # Database port
-            #         "user": "yourusername",  # Database username
-            #         "password": "yourpassword",  # Database password
-            #         "database": "yourdatabase",  # Database name
-            #     },
-            # },
-            # SQLServer configuration
-            # Install with: tortoise-orm[asyncodbc]
-            # "sqlserver": {
-            #     "engine": "tortoise.backends.asyncodbc",
-            #     "credentials": {
-            #         "host": "localhost",  # Database host address
-            #         "port": 1433,  # Database port
-            #         "user": "yourusername",  # Database username
-            #         "password": "yourpassword",  # Database password
-            #         "database": "yourdatabase",  # Database name
-            #     },
-            # },
-        },
-        "apps": {
-            "models": {
-                "models": ["app.models", "aerich.models"],
-                "default_connection": "sqlite",
-            },
-        },
-        "use_tz": False,  # Whether to use timezone-aware datetimes
-        "timezone": "Asia/Shanghai",  # Timezone setting
-    }
     DATETIME_FORMAT: str = "%Y-%m-%d %H:%M:%S"
+
+    @property
+    def TORTOISE_ORM(self) -> dict:
+        return {
+            "connections": {
+                "default": {
+                    "engine": "tortoise.backends.mysql",
+                    "credentials": {
+                        "host": self.MYSQL_HOST,
+                        "port": self.MYSQL_PORT,
+                        "user": self.MYSQL_USER,
+                        "password": self.MYSQL_PASSWORD.get_secret_value() if self.MYSQL_PASSWORD else "",
+                        "database": self.MYSQL_DATABASE,
+                        "charset": "utf8mb4",
+                        "storage_engine": "InnoDB",
+                        "minsize": self.MYSQL_POOL_MIN_SIZE,
+                        "maxsize": self.MYSQL_POOL_MAX_SIZE,
+                        "connect_timeout": self.MYSQL_CONNECT_TIMEOUT_SECONDS,
+                    },
+                }
+            },
+            "apps": {
+                "models": {
+                    "models": ["app.models", "aerich.models"],
+                    "default_connection": "default",
+                }
+            },
+            "use_tz": False,
+            "timezone": "Asia/Shanghai",
+        }
 
     @model_validator(mode="after")
     def validate_production_security(self) -> "Settings":
@@ -168,6 +141,10 @@ class Settings(BaseSettings):
             raise ValueError("生产环境 CORS_ORIGINS 禁止使用通配符")
         if self.BOOTSTRAP_ADMIN_ENABLED and not self.BOOTSTRAP_ADMIN_PASSWORD:
             raise ValueError("启用管理员初始化时必须配置 BOOTSTRAP_ADMIN_PASSWORD")
+        if not self.MYSQL_PASSWORD:
+            raise ValueError("生产环境必须配置 MYSQL_PASSWORD")
+        if self.MYSQL_POOL_MIN_SIZE <= 0 or self.MYSQL_POOL_MAX_SIZE < self.MYSQL_POOL_MIN_SIZE:
+            raise ValueError("MySQL 连接池参数无效")
         return self
 
 

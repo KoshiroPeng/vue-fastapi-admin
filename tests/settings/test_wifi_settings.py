@@ -36,6 +36,30 @@ def test_runtime_config_summary_never_exposes_secrets() -> None:
     assert "mock-operator" not in serialized
 
 
+def test_mysql_config_uses_pool_and_never_exposes_secret() -> None:
+    config = Settings(
+        _env_file=None,
+        MYSQL_HOST="mysql.internal",
+        MYSQL_PORT=6612,
+        MYSQL_USER="wifi_app",
+        MYSQL_PASSWORD="database-secret",
+        MYSQL_DATABASE="wifi_admin",
+        MYSQL_POOL_MIN_SIZE=3,
+        MYSQL_POOL_MAX_SIZE=12,
+    )
+
+    credentials = config.TORTOISE_ORM["connections"]["default"]["credentials"]
+
+    assert credentials["host"] == "mysql.internal"
+    assert credentials["port"] == 6612
+    assert credentials["user"] == "wifi_app"
+    assert credentials["password"] == "database-secret"
+    assert credentials["database"] == "wifi_admin"
+    assert credentials["minsize"] == 3
+    assert credentials["maxsize"] == 12
+    assert "database-secret" not in repr(config)
+
+
 def test_production_rejects_development_secret_and_wildcard_cors() -> None:
     with pytest.raises(ValidationError, match="SECRET_KEY"):
         Settings(_env_file=None, APP_ENV="production")

@@ -40,6 +40,7 @@ class Api(BaseModel, TimestampMixin):
 
     class Meta:
         table = "api"
+        unique_together = (("method", "path"),)
 
 
 class Menu(BaseModel, TimestampMixin):
@@ -57,6 +58,7 @@ class Menu(BaseModel, TimestampMixin):
 
     class Meta:
         table = "menu"
+        unique_together = (("parent_id", "path"),)
 
 
 class Dept(BaseModel, TimestampMixin):
@@ -74,6 +76,9 @@ class DeptClosure(BaseModel, TimestampMixin):
     ancestor = fields.IntField(description="父代", index=True)
     descendant = fields.IntField(description="子代", index=True)
     level = fields.IntField(default=0, description="深度", index=True)
+
+    class Meta:
+        unique_together = (("ancestor", "descendant"),)
 
 
 class AuditLog(BaseModel, TimestampMixin):
