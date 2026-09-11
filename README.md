@@ -121,7 +121,7 @@ http://localhost:3100
 先安装 MySQL 8.0、Redis 7.x、Nginx 和 Docker，然后创建运行目录：
 
 ```bash
-mkdir -p /srv/vue-fastapi-admin/logs/app /srv/vue-fastapi-admin/web /etc/vue-fastapi-admin
+mkdir -p /srv/vue-fastapi-admin/logs/app /opt/vue-fastapi-admin/logs/nginx /etc/vue-fastapi-admin
 cp deploy/.env.example /etc/vue-fastapi-admin/app.env
 chown root:root /etc/vue-fastapi-admin/app.env
 chmod 600 /etc/vue-fastapi-admin/app.env
@@ -168,18 +168,17 @@ docker compose --env-file /etc/vue-fastapi-admin/app.env -f deploy/compose.yaml 
 cd web
 pnpm install --frozen-lockfile
 pnpm build
-install -d -m 0755 /srv/vue-fastapi-admin/web
-cp -a dist/. /srv/vue-fastapi-admin/web/
+test -s /opt/vue-fastapi-admin/web/dist/index.html
 cd ..
 ```
 
-编辑 `deploy/web.conf`：保留 Nginx 所在服务器的两个本地 upstream；取得第二台应用服务器 IP 后，替换 `SECOND_APP_SERVER_IP` 并取消对应两行注释。然后安装配置：
+编辑 `deploy/nginx.conf`：保留 Nginx 所在服务器的两个本地 upstream；取得第二台应用服务器 IP 后，替换 `SECOND_APP_SERVER_IP` 并取消对应两行注释。然后安装配置：
 
 ```bash
-cp deploy/proxy_params.conf /etc/nginx/proxy_params.conf
-cp deploy/web.conf /etc/nginx/conf.d/vue-fastapi-admin.conf
-nginx -t
-systemctl reload nginx
+cp /usr/local/nginx/conf/nginx.conf /usr/local/nginx/conf/nginx.conf.bak
+cp deploy/nginx.conf /usr/local/nginx/conf/nginx.conf
+/usr/local/nginx/sbin/nginx -t
+/usr/local/nginx/sbin/nginx -s reload
 ```
 
 部署健康检查：
@@ -232,8 +231,7 @@ pnpm lint
 │   ├── Dockerfile       应用镜像构建文件
 │   ├── entrypoint.sh    容器启动脚本
 │   ├── init.sql         MySQL 全量初始化脚本
-│   ├── proxy_params.conf Nginx 反向代理公共参数
-│   └── web.conf         宿主机 Nginx 配置
+│   └── nginx.conf       宿主机 Nginx 单文件站点配置
 ├── logs                 本地运行日志（日志文件不提交）
 ├── web                  前端应用代码
 │   ├── build            Vite 构建配置
