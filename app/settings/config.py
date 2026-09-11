@@ -89,10 +89,6 @@ class Settings(BaseSettings):
     BASE_DIR: str = os.path.abspath(os.path.join(PROJECT_ROOT, os.pardir))
     LOGS_ROOT: str = os.path.join(BASE_DIR, "logs")
     SECRET_KEY: str = DEVELOPMENT_SECRET_KEY
-    BOOTSTRAP_ADMIN_ENABLED: bool = False
-    BOOTSTRAP_ADMIN_USERNAME: str = "admin"
-    BOOTSTRAP_ADMIN_EMAIL: str = "admin@admin.com"
-    BOOTSTRAP_ADMIN_PASSWORD: str | None = None
     JWT_ALGORITHM: str = "HS256"
     JWT_ACCESS_TOKEN_EXPIRE_MINUTES: int = 60 * 24 * 7  # 7 day
     DATETIME_FORMAT: str = "%Y-%m-%d %H:%M:%S"
@@ -119,7 +115,7 @@ class Settings(BaseSettings):
             },
             "apps": {
                 "models": {
-                    "models": ["app.models", "aerich.models"],
+                        "models": ["app.models"],
                     "default_connection": "default",
                 }
             },
@@ -139,8 +135,6 @@ class Settings(BaseSettings):
             raise ValueError("生产环境禁止启用 Mock 外部服务")
         if "*" in self.CORS_ORIGINS:
             raise ValueError("生产环境 CORS_ORIGINS 禁止使用通配符")
-        if self.BOOTSTRAP_ADMIN_ENABLED and not self.BOOTSTRAP_ADMIN_PASSWORD:
-            raise ValueError("启用管理员初始化时必须配置 BOOTSTRAP_ADMIN_PASSWORD")
         if not self.MYSQL_PASSWORD:
             raise ValueError("生产环境必须配置 MYSQL_PASSWORD")
         if self.MYSQL_POOL_MIN_SIZE <= 0 or self.MYSQL_POOL_MAX_SIZE < self.MYSQL_POOL_MIN_SIZE:
