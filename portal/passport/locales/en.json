@@ -1,5 +1,7 @@
 {
   "common.loginEn": "Log in",
+  "common.loginSuccessEn": "Login successful",
+  "common.logoutEn": "Logout",
   "common.loading": "Loading&#8230;",
   "passport.welcomeEn": "Welcome to Shenzhen Bao'an International Airport Wi-Fi",
   "passport.authenticationEn": "Passport Authentication",
@@ -10,5 +12,12 @@
   "passport.nationalityEn": "Nationality",
   "passport.scanOrEnterEn": "Scan or enter",
   "passport.scanOrSelectEn": "Scan or Select",
-  "passport.agreementEn": "I have read and agree to the Airport Wi-Fi terms of use"
+  "passport.agreementEn": "I have read and agree to the Airport Wi-Fi terms of use",
+  "success.accessNowEn": "You may access free Wi-Fi now",
+  "agreement.titleEn": "Wireless Internet Service Agreement",
+  "agreement.introEn": "Please read the following terms carefully before using the wireless internet service (\"Service\"). By accessing the Service, you agree to be bound by this Agreement and any revisions we may make from time to time without prior notice. If you do not accept this Agreement, please close your browser immediately and discontinue use of the Service.",
+  "agreement.item1En": "Users shall comply with all applicable laws and regulations of the country or region where they are located.",
+  "agreement.item2En": "Users shall have Wi-Fi-enabled wireless devices and relevant software to access the Service. It is recommended to use encrypted connections with better data protection while using the Service.",
+  "agreement.item3En": "Users shall not use the Service to browse or access websites containing obscene, indecent or illegal content.",
+  "agreement.agreeEn": "Agree"
 }

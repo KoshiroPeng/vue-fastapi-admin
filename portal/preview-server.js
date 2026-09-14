@@ -185,6 +185,12 @@ const previewClient = `(() => {
   events.addEventListener('reload', () => window.location.reload())
 })()`
 
+const verificationCodePlaceholder = `<svg xmlns="http://www.w3.org/2000/svg" width="118" height="58" viewBox="0 0 118 58">
+  <rect width="118" height="58" fill="#f4f7fb"/>
+  <path d="M8 42L110 15M14 13L104 45" stroke="#cbd7e7" stroke-width="1"/>
+  <text x="59" y="36" fill="#315f9d" font-family="Arial,sans-serif" font-size="22" text-anchor="middle">8K3P</text>
+</svg>`
+
 const jqueryShim = `(() => {
   class Collection {
     constructor(value) { this.elements = value == null ? [] : value instanceof NodeList || Array.isArray(value) ? Array.from(value) : [value] }
@@ -316,6 +322,7 @@ function requestHandler(req, res) {
   if (pathname === '/') { send(res, 200, mimeTypes['.html'], renderDashboard()); return }
   if (pathname === '/__preview/client.js') { send(res, 200, mimeTypes['.js'], previewClient); return }
   if (pathname === '/__preview/jquery-shim.js') { send(res, 200, mimeTypes['.js'], jqueryShim); return }
+  if (pathname === '/portalauth/verificationcode') { send(res, 200, mimeTypes['.svg'], verificationCodePlaceholder); return }
   if (pathname === '/__preview/events') { res.writeHead(200, { 'Cache-Control': 'no-cache', Connection: 'keep-alive', 'Content-Type': 'text/event-stream' }); res.write(': connected\n\n'); reloadClients.add(res); req.on('close', () => reloadClients.delete(res)); return }
   if (/^\/material\/custom\/.*\.js$/.test(pathname)) { send(res, 200, mimeTypes['.js'], ''); return }
   if (/^\/material\/custom\/.*\.css$/.test(pathname)) { send(res, 200, mimeTypes['.css'], ''); return }

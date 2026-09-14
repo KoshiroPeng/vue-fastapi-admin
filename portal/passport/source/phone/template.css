@@ -99,7 +99,7 @@ body {
 .infoMsg {
   position: fixed;
   display: none;
-  z-index: 9;
+  z-index: 100;
   top: 40px;
   align-items: center;
   justify-content: center;
@@ -516,10 +516,6 @@ body.wifi-page {
   letter-spacing: 0;
 }
 
-body.passport-page.device-pc {
-  background-attachment: fixed;
-}
-
 .wifi-page *,
 .wifi-page *::before,
 .wifi-page *::after {
@@ -553,10 +549,6 @@ body.passport-page.device-pc {
   overflow-y: auto;
   overscroll-behavior-y: contain;
   -webkit-overflow-scrolling: touch;
-}
-
-.device-pc .wifi-shell {
-  padding-top: 34px;
 }
 
 .welcome-block {
@@ -621,8 +613,11 @@ body.passport-page.device-pc {
 
 .entry-options {
   display: grid;
-  gap: 18px;
   margin-top: 38px;
+}
+
+.entry-option + .entry-option {
+  margin-top: 18px;
 }
 
 .entry-option {
@@ -705,10 +700,11 @@ body.passport-page.device-pc {
 
 .device-phone .language-switch {
   position: relative;
+  grid-template-columns: repeat(2, 51px);
+  justify-content: space-between;
   width: 132px;
   overflow: visible;
   border-radius: 0;
-  gap: 30px;
   background: transparent;
 }
 
@@ -732,21 +728,40 @@ body.passport-page.device-pc {
 }
 
 .detail-shell {
-  padding-top: 36px;
+  --detail-gutter: clamp(18px, 5vw, 54px);
+  padding-top: 0;
 }
 
 .detail-nav {
-  height: 38px;
-  margin-bottom: 10px;
+  position: sticky;
+  z-index: 10;
+  top: 0;
+  display: flex;
+  align-items: center;
+  height: 44px;
+  margin-right: calc(0px - var(--detail-gutter));
+  margin-bottom: 4px;
+  margin-left: calc(0px - var(--detail-gutter));
+  padding: 0 var(--detail-gutter);
+  background-image: url("assets/background.png");
+  background-position: center bottom;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-size: cover;
 }
 
 .back-link {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 38px;
-  height: 38px;
-  border-radius: 8px;
+}
+
+#turnBackLink.back-link {
+  position: static;
+  top: auto;
+  left: auto;
+  color: inherit;
+  font-size: inherit;
 }
 
 .back-icon {
@@ -788,7 +803,10 @@ body.passport-page.device-pc {
 
 .sms-fields {
   display: grid;
-  gap: 18px;
+}
+
+.sms-fields > * + * {
+  margin-top: 18px;
 }
 
 .sms-page .g-container,
@@ -866,12 +884,11 @@ body.passport-page.device-pc {
 }
 
 .verify-row {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) 150px;
-  gap: 12px;
+  display: flex;
 }
 
 .verify-input-shell {
+  flex: 1 1 auto;
   min-width: 0;
   overflow: hidden;
   border: 1px solid var(--wifi-line);
@@ -890,7 +907,9 @@ body.passport-page.device-pc {
 }
 
 .code-button {
+  flex: 0 0 150px;
   min-height: 58px;
+  margin-left: 12px;
   padding: 7px 12px;
   background: var(--wifi-blue);
   font-size: 13px !important;
@@ -917,9 +936,13 @@ body.passport-page.device-pc {
 .agreement-row {
   display: grid;
   grid-template-columns: 20px minmax(0, 1fr);
-  gap: 10px;
   align-items: start;
   margin-top: 24px;
+}
+
+.passport-page .agreement-row {
+  width: 100%;
+  text-align: left;
 }
 
 .agreement-check {
@@ -930,6 +953,8 @@ body.passport-page.device-pc {
 }
 
 .agreement-copy {
+  min-width: 0;
+  margin-left: 10px;
   color: var(--wifi-ink);
   font-size: 14px;
   line-height: 1.35;
@@ -970,12 +995,13 @@ body.passport-page.device-pc {
 }
 
 .passport-page .new_box {
+  --detail-gutter: clamp(18px, 5vw, 54px);
   display: block !important;
   width: min(100%, 920px) !important;
   height: 100% !important;
   min-height: 0 !important;
   margin: 0 auto;
-  padding: 24px clamp(18px, 5vw, 54px) 26px;
+  padding: 0 clamp(18px, 5vw, 54px) 26px;
   overflow-x: hidden !important;
   overflow-y: auto !important;
   overscroll-behavior-y: contain;
@@ -996,9 +1022,22 @@ body.passport-page.device-pc {
 }
 
 .passport-page .content {
+  --passport-card-gutter: clamp(20px, 6vw, 44px);
   max-width: 700px;
   margin: 0 auto;
-  padding: 24px clamp(20px, 6vw, 44px) 22px !important;
+  padding: 24px var(--passport-card-gutter) 22px !important;
+  -webkit-mask-image:
+    radial-gradient(circle at left center, transparent 0 10px, #000 10.5px),
+    radial-gradient(circle at right center, transparent 0 10px, #000 10.5px);
+  -webkit-mask-position: left top, right top;
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-size: 51% 100%, 51% 100%;
+  mask-image:
+    radial-gradient(circle at left center, transparent 0 10px, #000 10.5px),
+    radial-gradient(circle at right center, transparent 0 10px, #000 10.5px);
+  mask-position: left top, right top;
+  mask-repeat: no-repeat;
+  mask-size: 51% 100%, 51% 100%;
 }
 
 .passport-page .pr_title_text {
@@ -1046,7 +1085,7 @@ body.passport-page.device-pc {
 .passport-page .passport-warning-copy {
   flex: 0 1 auto;
   min-width: 0;
-  text-align: center;
+  text-align: left;
 }
 
 .passport-page .pr_title_warning {
@@ -1058,9 +1097,9 @@ body.passport-page.device-pc {
 .passport-page .pr_title_warning_tips {
   display: flex !important;
   align-items: flex-start;
-  justify-content: center;
   width: 100%;
   color: #ff8a2b;
+  font-size: 14px;
   line-height: 1.45;
 }
 
@@ -1069,6 +1108,7 @@ body.passport-page.device-pc {
   width: 20px;
   height: 20px;
   margin-top: 1px;
+  margin-right: 10px;
   object-fit: contain;
 }
 
@@ -1080,39 +1120,32 @@ body.passport-page.device-pc {
 .passport-page .passport-warning-copy small {
   margin-top: 2px;
   color: inherit;
-  font-size: 0.95em;
+  font-size: 14px;
 }
 
 .passport-page .pr_title_warning_copy {
   position: relative;
-  flex: 0 0 22px;
-  width: 22px;
-  height: 22px;
+  flex: 0 0 20px;
+  width: 20px;
+  height: 20px;
+  margin-left: 10px;
   margin-top: 1px;
-  color: transparent;
-  font-size: 0;
+  padding: 0;
+  border: 0;
+  outline: none;
+  background: transparent;
   cursor: pointer;
 }
 
-.passport-page .pr_title_warning_copy::before,
-.passport-page .pr_title_warning_copy::after {
-  position: absolute;
-  width: 11px;
-  height: 13px;
-  border: 2px solid var(--wifi-blue);
-  border-radius: 2px;
-  content: "";
+.passport-page .pr_title_warning_copy img {
+  display: block;
+  width: 20px;
+  height: 20px;
 }
 
-.passport-page .pr_title_warning_copy::before {
-  top: 5px;
-  left: 2px;
-}
-
-.passport-page .pr_title_warning_copy::after {
-  top: 2px;
-  left: 6px;
-  background: var(--wifi-panel);
+.passport-page .pr_title_warning_copy:focus {
+  outline: 2px solid var(--wifi-blue);
+  outline-offset: 3px;
 }
 
 .passport-page .pr_btn {
@@ -1121,9 +1154,9 @@ body.passport-page.device-pc {
 }
 
 .passport-page .pr_btn .bg_img {
+  display: block;
   width: 100% !important;
-  max-height: 190px;
-  object-fit: contain;
+  height: auto;
 }
 
 .passport-page .pr_btn .btn_img {
@@ -1243,29 +1276,6 @@ body.passport-page.device-pc {
   }
 }
 
-.device-pc .welcome-block h1 {
-  font-size: 30px;
-}
-
-.device-pc .welcome-block p {
-  margin-top: 4px;
-  font-size: 14px;
-}
-
-.device-pc .auth-heading h2,
-.passport-page.device-pc .pr_title_text {
-  font-size: 25px !important;
-}
-
-.device-pc .auth-heading p {
-  font-size: 14px;
-}
-
-.device-pc .auth-card,
-.passport-page.device-pc .content {
-  border-radius: 30px;
-}
-
 .device-phone .welcome-block h1 {
   font-size: 26px;
 }
@@ -1289,119 +1299,12 @@ body.passport-page.device-pc {
   border-radius: 26px;
 }
 
-.passport-page.device-pc .new_box {
-  padding: 12px 30px 16px;
-}
-
-.passport-page.device-pc .detail-nav {
-  height: 30px;
-  margin-bottom: 0;
-}
-
-.passport-page.device-pc .back-link {
-  width: 30px;
-  height: 30px;
-}
-
-.passport-page.device-pc .welcome-block {
-  margin-bottom: 10px;
-}
-
-.passport-page.device-pc .welcome-block h1 {
-  font-size: 30px;
-}
-
-.passport-page.device-pc .welcome-block p {
-  margin-top: 4px;
-  font-size: 14px;
-}
-
-.passport-page.device-pc .content {
-  padding: 18px 36px 16px !important;
-}
-
-.passport-page.device-pc .pr_title_text {
-  font-size: 25px !important;
-}
-
-.passport-page.device-pc .pr_btn {
-  margin: 8px 0 5px !important;
-}
-
-.passport-page.device-pc .pr_btn .bg_img {
-  height: 145px;
-  max-height: 145px;
-}
-
-.passport-page.device-pc .pr_btn .btn_img {
-  width: 48px !important;
-  height: 48px;
-  padding: 12px;
-}
-
-.passport-page.device-pc .pr_title_tip {
-  padding: 2px 0 !important;
-  font-size: 13px !important;
-}
-
-.passport-page.device-pc .form_box {
-  margin-top: 4px;
-  padding-top: 0 !important;
-}
-
-.passport-page.device-pc .form_item {
-  display: flex !important;
-  align-items: center !important;
-  justify-content: flex-start !important;
-  width: 100% !important;
-  min-height: 52px !important;
-  margin: 0 !important;
-  padding: 4px 0;
-  border: 0 !important;
-  border-bottom: 1px solid #e5e7ed !important;
-  border-radius: 0 !important;
-  background: transparent !important;
-}
-
-.passport-page.device-pc .form_item .label {
-  display: block !important;
-  width: 112px !important;
-  height: auto !important;
-  margin-right: 10px !important;
-  text-align: left;
-}
-
-.passport-page.device-pc .form_item .input {
-  flex: 1;
-  height: 42px !important;
-  border: 0 !important;
-  outline: none;
-  background: transparent !important;
-  text-align: right;
-}
-
-.passport-page.device-pc .form_item .select_list {
-  bottom: 54px !important;
-}
-
-.passport-page.device-pc .agreement-row {
-  margin-top: 10px;
-}
-
-.passport-page.device-pc .form_btn {
-  min-height: 52px !important;
-  margin-top: 10px;
-}
-
-.passport-page.device-pc .auth-language-switch {
-  margin-top: 10px;
-}
-
-.passport-page.device-pc .auth-language-switch .lang-link {
-  min-height: 36px;
-}
-
 @media (max-width: 520px) {
+
+  .detail-shell,
+  .passport-page .new_box {
+    --detail-gutter: 14px;
+  }
 
   .wifi-shell,
   .passport-page .new_box {
@@ -1439,18 +1342,13 @@ body.passport-page.device-pc {
   }
 
   .passport-page .new_box {
-    padding-top: 14px;
+    padding-top: 0;
     padding-bottom: 18px;
   }
 
   .passport-page .detail-nav {
-    height: 32px;
+    height: 44px;
     margin-bottom: 4px;
-  }
-
-  .passport-page .back-link {
-    width: 32px;
-    height: 32px;
   }
 
   .passport-page .welcome-block {
@@ -1467,6 +1365,7 @@ body.passport-page.device-pc {
   }
 
   .passport-page .content {
+    --passport-card-gutter: 16px;
     padding: 16px !important;
     border-radius: 26px;
   }
@@ -1477,11 +1376,6 @@ body.passport-page.device-pc {
 
   .passport-page .pr_btn {
     margin: 8px 0 6px !important;
-  }
-
-  .passport-page .pr_btn .bg_img {
-    height: 132px;
-    max-height: 132px;
   }
 
   .passport-page .pr_btn .btn_img {
@@ -1509,9 +1403,9 @@ body.passport-page.device-pc {
     padding: 4px 0;
   }
 
-  .verify-row {
-    grid-template-columns: minmax(0, 1fr) 126px;
-    gap: 10px;
+  .verify-row .code-button {
+    flex-basis: 126px;
+    margin-left: 10px;
   }
 
   .sms-page .Companies {
@@ -1584,6 +1478,11 @@ body.passport-page.device-pc {
     padding-top: 24px;
   }
 
+  .detail-shell,
+  .passport-page .new_box {
+    padding-top: 0;
+  }
+
   .entry-logo {
     margin-top: 0;
     margin-bottom: 14px;
@@ -1609,10 +1508,11 @@ body.passport-page.device-pc {
 }
 
 body.wifi-page.language-switch--pill .language-switch {
+  grid-template-columns: repeat(2, 1fr);
+  justify-content: normal;
   width: 124px;
   overflow: hidden;
   border-radius: 999px;
-  gap: 0;
   background: #f1f2f6;
 }
 
@@ -1632,10 +1532,11 @@ body.wifi-page.language-switch--pill .language-switch .lang-link.is-active {
 
 body.wifi-page.language-switch--inline .language-switch {
   position: relative;
+  grid-template-columns: repeat(2, 51px);
+  justify-content: space-between;
   width: 132px;
   overflow: visible;
   border-radius: 0;
-  gap: 30px;
   background: transparent;
 }
 
@@ -1657,4 +1558,203 @@ body.wifi-page.language-switch--inline .language-switch .lang-link {
 body.wifi-page.language-switch--inline .language-switch .lang-link.is-active {
   background: transparent;
   color: var(--wifi-blue);
+}
+
+/* Shared result and notice layouts mirror the SMS portal pages. */
+.success-page .detail-shell,
+.notice-page .detail-shell {
+  display: flex;
+  flex-direction: column;
+}
+
+.success-page .welcome-block {
+  margin-bottom: 18px;
+}
+
+.success-card,
+.notice-card {
+  flex: 0 0 auto;
+  padding: 16px 18px 14px;
+}
+
+.success-heading,
+.notice-heading {
+  margin-bottom: 18px;
+}
+
+.success-visual {
+  display: block;
+  width: min(88%, 273px);
+  height: auto;
+  aspect-ratio: 545 / 292;
+  margin: 0 auto 14px;
+  object-fit: contain;
+}
+
+.success-message {
+  text-align: center;
+}
+
+.success-message h3,
+.success-message p {
+  margin: 0;
+}
+
+.success-message h3 {
+  color: var(--wifi-ink);
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 24px;
+}
+
+.success-message p {
+  color: var(--wifi-muted);
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 18px;
+}
+
+.portal-action {
+  position: relative;
+  display: flex;
+  width: 100%;
+  height: 44px;
+  margin-top: 26px;
+  overflow: hidden;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(196, 196, 196, 0.55);
+  border-radius: 12px;
+  background: var(--wifi-blue);
+  color: var(--wifi-white);
+  text-align: center;
+}
+
+.portal-action-label,
+.portal-action-label strong,
+.portal-action-label small {
+  display: block;
+  pointer-events: none;
+}
+
+.portal-action-label strong {
+  font-size: 15px;
+  font-weight: 400;
+  line-height: 15px;
+}
+
+.portal-action-label small {
+  margin-top: 1px;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 17px;
+}
+
+.portal-action-control {
+  position: absolute;
+  z-index: 2;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.portal-action:active {
+  transform: translateY(1px);
+}
+
+.portal-action:focus-within {
+  outline: 2px solid rgba(0, 119, 255, 0.35);
+  outline-offset: 2px;
+}
+
+.success-card {
+  padding-bottom: 30px;
+}
+
+.notice-page .detail-shell {
+  padding-bottom: 14px;
+  overflow-y: hidden;
+}
+
+.notice-page .welcome-block {
+  flex: 0 0 auto;
+  margin-bottom: 12px;
+}
+
+.notice-card {
+  display: flex;
+  min-height: 0;
+  flex: 1 1 auto;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.notice-heading {
+  flex: 0 0 auto;
+  margin-bottom: 4px;
+}
+
+.notice-copy {
+  min-height: 0;
+  padding-right: 3px;
+  overflow-x: hidden;
+  overflow-y: auto;
+  flex: 1 1 auto;
+  overscroll-behavior-y: contain;
+  -webkit-overflow-scrolling: touch;
+}
+
+.notice-section {
+  margin-top: 8px;
+}
+
+.notice-section p {
+  margin: 0;
+}
+
+.notice-cn {
+  color: var(--wifi-ink);
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 20px;
+  text-align: justify;
+}
+
+.notice-en {
+  margin-top: 4px !important;
+  color: var(--wifi-muted);
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 16px;
+  text-align: justify;
+}
+
+.notice-action {
+  flex: 0 0 44px;
+  margin-top: 12px;
+}
+
+@media (max-height: 680px) {
+  .success-card,
+  .notice-card {
+    padding-top: 14px;
+  }
+
+  .success-heading {
+    margin-bottom: 10px;
+  }
+
+  .success-visual {
+    width: min(72%, 236px);
+    margin-bottom: 8px;
+  }
+
+  .success-card .portal-action {
+    margin-top: 16px;
+  }
 }

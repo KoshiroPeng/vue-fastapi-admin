@@ -14,6 +14,8 @@
   "passport.authentication": "護照認證",
   "passport.captureWarning": "如果無法拍照，請複製連結到瀏覽器中開啟",
   "passport.copyLink": "複製連結",
+  "passport.copySuccess": "連結複製成功",
+  "passport.copyFailed": "連結複製失敗，請長按網址列複製",
   "passport.captureTip": "確保證件清晰完整",
   "passport.number": "護照編號",
   "passport.invalidNumber": "護照號碼不合法",
@@ -32,5 +34,7 @@
   "agreement.introEnd": "或修訂。如不同意本協議，請立即關閉瀏覽器及結束連線並停止繼續使用本服務。",
   "agreement.item1": "使用者須遵守所在國家或地區所適用的所有法律、法規。",
   "agreement.item2": "使用者須配備支持 Wi-Fi 的無線裝置及相關軟件才能使用本服務。建議使用服務時，採用提供較佳資料保護功能的加密連結通道。",
-  "agreement.item3": "使用者不得利用本服務瀏覽或存取淫褻、不雅或非法內容的網頁。"
+  "agreement.item3": "使用者不得利用本服務瀏覽或存取淫褻、不雅或非法內容的網頁。",
+  "agreement.agree": "同意",
+  "success.accessNow": "現在即可免費上網"
 }

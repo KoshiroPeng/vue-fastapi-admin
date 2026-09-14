@@ -11,11 +11,16 @@
   "common.traditional": "繁",
   "common.languageSwitch": "语言切换",
   "sms.welcome": "欢迎使用深圳机场 Wi-Fi",
+  "sms.entranceFolder": "entrance_zh",
+  "sms.simplifiedFolder": "sms_zh",
+  "sms.traditionalFolder": "sms_trl",
   "sms.heading": "请输入手机号获取验证码",
   "sms.notice": "限国内SIM卡或者开通了漫游的国际SIM卡",
   "sms.mobilePlaceholder": "手机号",
   "sms.mobileNumber": "手机号码",
   "sms.codePlaceholder": "验证码",
+  "sms.captchaPlaceholder": "图片验证码",
+  "sms.captchaAlt": "点击更换图片验证码",
   "sms.getCode": "获取验证码",
   "sms.agreement": "我已阅读并同意机场 Wi-Fi 使用条款",
   "sms.agreementChecked": "已同意",
@@ -29,5 +34,7 @@
   "agreement.introEnd": "或修订。如不同意本协议，请立即关闭浏览器及结束连线并停止继续使用本服务。",
   "agreement.item1": "使用者须遵守所在国家或地区所适用的所有法律、法规。",
   "agreement.item2": "使用者须配备支持Wi-Fi的无线装置及相关软件才能使用本服务。建议使用服务时，采用提供较佳数据保护功能的加密连结通道。",
-  "agreement.item3": "使用者不得利用本服务浏览或存取淫亵、不雅或非法内容的网页。"
+  "agreement.item3": "使用者不得利用本服务浏览或存取淫亵、不雅或非法内容的网页。",
+  "agreement.agree": "同意",
+  "success.accessNow": "现在即可免费上网"
 }

@@ -371,21 +371,40 @@ body.wifi-page {
 }
 
 .detail-shell {
-  padding-top: 36px;
+  --detail-gutter: clamp(18px, 5vw, 54px);
+  padding-top: 0;
 }
 
 .detail-nav {
-  height: 38px;
-  margin-bottom: 10px;
+  position: sticky;
+  z-index: 10;
+  top: 0;
+  display: flex;
+  align-items: center;
+  height: 44px;
+  margin-right: calc(0px - var(--detail-gutter));
+  margin-bottom: 4px;
+  margin-left: calc(0px - var(--detail-gutter));
+  padding: 0 var(--detail-gutter);
+  background-image: url("assets/background.png");
+  background-position: center bottom;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-size: cover;
 }
 
 .back-link {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 38px;
-  height: 38px;
-  border-radius: 8px;
+}
+
+#turnBackLink.back-link {
+  position: static;
+  top: auto;
+  left: auto;
+  color: inherit;
+  font-size: inherit;
 }
 
 .back-icon {
@@ -396,17 +415,17 @@ body.wifi-page {
 }
 
 .detail-shell .welcome-block {
-  margin-bottom: 24px;
+  margin-bottom: 18px;
 }
 
 .auth-card {
   max-width: 700px;
   margin: 0 auto;
-  padding: clamp(26px, 7vw, 48px) clamp(20px, 6vw, 44px) 30px;
+  padding: clamp(26px, 7vw, 48px) clamp(20px, 6vw, 44px) 18px;
 }
 
 .auth-heading {
-  margin-bottom: 28px;
+  margin-bottom: 18px;
   text-align: center;
 }
 
@@ -426,36 +445,110 @@ body.wifi-page {
 }
 
 .sms-notice {
-  max-width: 560px;
-  margin: -10px auto 28px;
+  display: flex;
+  align-items: start;
+  width: 100%;
+  margin: 0 0 18px;
   color: #ff8a2b;
   font-size: 15px;
   line-height: 1.45;
-  text-align: center;
-}
-
-.sms-notice-primary {
-  display: flex !important;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
+  text-align: left;
 }
 
 .sms-notice-icon {
   flex: 0 0 20px;
   width: 20px;
   height: 20px;
+  margin-right: 10px;
   object-fit: contain;
 }
 
-.sms-notice-secondary {
+.sms-notice-copy {
+  min-width: 0;
+}
+
+.sms-notice-copy span,
+.sms-notice-copy small {
   display: block;
+}
+
+.sms-notice-copy small {
   margin-top: 2px;
+  color: inherit;
+  font-size: 1em;
+  line-height: inherit;
 }
 
 .sms-fields {
-  display: grid;
-  gap: 18px;
+  display: block;
+}
+
+.sms-form-row {
+  display: flex;
+  min-width: 0;
+}
+
+.sms-form-row + .sms-form-row {
+  margin-top: 18px;
+}
+
+.sms-form-row > :first-child {
+  min-width: 0;
+  flex: 1 1 auto;
+}
+
+.sms-form-row > :last-child:not(:first-child) {
+  flex: 0 0 100px;
+  width: 100px;
+  margin-left: 10px;
+}
+
+.sms-phone-row {
+  display: block;
+}
+
+.sms-field-shell {
+  position: relative;
+  min-width: 0;
+  overflow: hidden;
+  border: 1px solid var(--wifi-line);
+  border-radius: 14px;
+  background: var(--wifi-white);
+}
+
+.sms-page .sms-field-shell .frm-input,
+.sms-page .verify-input-shell .frm-input {
+  width: 100% !important;
+  height: 44px !important;
+  margin: 0 !important;
+  padding: 0 12px !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  outline: none;
+  background: transparent !important;
+  color: var(--wifi-ink) !important;
+  font-size: 14px !important;
+  font-weight: 400 !important;
+  line-height: normal !important;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.sms-page .sms-phone-field .frm-input,
+.sms-page .captcha-field .frm-input,
+.sms-page .verify-input-shell .frm-input {
+  padding-left: 44px !important;
+}
+
+#validCodeImg {
+  display: block;
+  width: 100%;
+  height: 44px;
+  border: 1px solid var(--wifi-line);
+  border-radius: 14px;
+  background: var(--wifi-white);
+  object-fit: contain;
+  cursor: pointer;
 }
 
 .sms-page .g-container,
@@ -468,9 +561,8 @@ body.wifi-page {
 
 .sms-page .Companies {
   position: relative;
-  display: grid;
-  grid-template-columns: 112px minmax(0, 1fr);
-  min-height: 58px;
+  display: flex;
+  min-height: 44px;
   overflow: visible;
   border: 1px solid var(--wifi-line);
   border-radius: 14px;
@@ -481,34 +573,44 @@ body.wifi-page {
 .sms-page .phoneinput,
 .sms-page .pwdinput {
   width: 100% !important;
-  height: 58px !important;
+  height: 44px !important;
   margin: 0 !important;
-  padding: 0 18px !important;
+  padding: 0 12px !important;
   border: 0 !important;
   border-radius: 0 !important;
   outline: none;
   background: transparent !important;
   color: var(--wifi-ink) !important;
-  font-size: 16px !important;
+  font-size: 14px !important;
   -webkit-appearance: none;
   appearance: none;
 }
 
 .sms-page .code {
+  flex: 0 0 106px;
+  width: 106px !important;
   border-right: 1px solid #e5e7ed !important;
   color: var(--wifi-muted) !important;
-  text-align: center;
+  text-align: left;
+}
+
+.sms-page .phoneinput {
+  min-width: 0;
+  flex: 1 1 auto;
 }
 
 .sms-page input::placeholder {
   color: var(--wifi-muted) !important;
+  font-size: 14px !important;
+  font-weight: 400 !important;
+  line-height: normal !important;
   opacity: 1;
 }
 
 .sms-page .Companies ul {
   position: absolute !important;
   z-index: 20;
-  top: 62px;
+  top: 48px;
   left: 0;
   width: 100% !important;
   height: min(300px, 42vh) !important;
@@ -530,12 +632,6 @@ body.wifi-page {
 .sms-page .Companies ul a {
   color: var(--wifi-ink);
   text-decoration: none;
-}
-
-.verify-row {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) 150px;
-  gap: 12px;
 }
 
 .verify-input-shell {
@@ -563,8 +659,9 @@ body.wifi-page {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  min-height: 58px;
-  padding: 7px 12px;
+  height: 44px;
+  min-height: 44px;
+  padding: 2px 12px;
   background: var(--wifi-blue);
   font-size: 13px !important;
   white-space: nowrap;
@@ -573,6 +670,10 @@ body.wifi-page {
 .code-button-label {
   width: 100%;
   pointer-events: none;
+}
+
+.code-button .button-primary {
+  font-size: 14px;
 }
 
 .code-button-control {
@@ -590,6 +691,13 @@ body.wifi-page {
 
 .code-button-control:disabled {
   cursor: not-allowed;
+}
+
+.sms-page #getpassword {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  background: transparent;
 }
 
 .login-button {
@@ -637,16 +745,16 @@ body.wifi-page {
 }
 
 .agreement-row {
-  display: grid;
-  grid-template-columns: 20px minmax(0, 1fr);
-  gap: 10px;
+  display: flex;
   align-items: start;
-  margin-top: 24px;
+  margin-top: 18px;
 }
 
 .agreement-check {
+  flex: 0 0 18px;
   width: 18px !important;
   height: 18px !important;
+  margin-right: 10px;
   margin-top: 2px;
   border-radius: 4px;
 }
@@ -675,7 +783,7 @@ body.wifi-page {
   width: 100% !important;
   height: 52px !important;
   min-height: 52px !important;
-  margin-top: 26px;
+  margin-top: 18px;
   padding: 8px 16px;
   background: var(--wifi-blue-disabled);
   font-size: 17px !important;
@@ -688,7 +796,7 @@ body.wifi-page {
 }
 
 .auth-language-switch {
-  margin-top: 22px;
+  margin-top: 18px;
 }
 
 .passport-page .new_box {
@@ -900,6 +1008,10 @@ body.wifi-page {
 }
 
 @media (max-width: 520px) {
+  .detail-shell {
+    --detail-gutter: 14px;
+  }
+
   .wifi-shell,
   .passport-page .new_box {
     padding-right: 14px;
@@ -935,11 +1047,6 @@ body.wifi-page {
     border-radius: 26px;
   }
 
-  .verify-row {
-    grid-template-columns: minmax(0, 1fr) 126px;
-    gap: 10px;
-  }
-
   .sms-page .Companies {
     grid-template-columns: 92px minmax(0, 1fr);
   }
@@ -968,6 +1075,11 @@ body.wifi-page {
     padding-top: 24px;
   }
 
+  .detail-shell,
+  .passport-page .new_box {
+    padding-top: 0;
+  }
+
   .entry-logo {
     margin-top: 0;
     margin-bottom: 14px;
@@ -986,6 +1098,7 @@ body.wifi-page {
 }
 
 .sms-page .Companies::before,
+.sms-page .captcha-field::before,
 .sms-page .verify-input-shell::before {
   position: absolute;
   z-index: 2;
@@ -1003,11 +1116,33 @@ body.wifi-page {
 }
 
 .sms-page .Companies::before {
-  left: 14px;
+  left: 12px;
   width: 20px;
   height: 20px;
   -webkit-mask-image: url("assets/phone.svg");
   mask-image: url("assets/phone.svg");
+}
+
+.sms-page .Companies::after {
+  position: absolute;
+  z-index: 2;
+  top: 17px;
+  left: 88px;
+  width: 7px;
+  height: 7px;
+  border-right: 1px solid var(--wifi-muted);
+  border-bottom: 1px solid var(--wifi-muted);
+  content: "";
+  pointer-events: none;
+  transform: rotate(45deg);
+}
+
+.sms-page .captcha-field::before {
+  left: 12px;
+  width: 20px;
+  height: 20px;
+  -webkit-mask-image: url("assets/photo.svg");
+  mask-image: url("assets/photo.svg");
 }
 
 .sms-page .verify-input-shell {
@@ -1015,7 +1150,7 @@ body.wifi-page {
 }
 
 .sms-page .verify-input-shell::before {
-  left: 14px;
+  left: 12px;
   width: 20px;
   height: 20px;
   -webkit-mask-image: url("assets/code.svg");
@@ -1023,12 +1158,12 @@ body.wifi-page {
 }
 
 .sms-page .code {
-  padding-right: 8px !important;
+  padding-right: 22px !important;
   padding-left: 40px !important;
 }
 
 .sms-page .pwdinput {
-  padding-left: 50px !important;
+  padding-left: 44px !important;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -1087,4 +1222,199 @@ body.wifi-page.language-switch--inline .language-switch .lang-link {
 body.wifi-page.language-switch--inline .language-switch .lang-link.is-active {
   background: transparent;
   color: var(--wifi-blue);
+}
+
+/* Shared result and notice layouts use the same frame as SMS authentication. */
+.success-page .detail-shell,
+.notice-page .detail-shell {
+  display: flex;
+  flex-direction: column;
+}
+
+.success-card,
+.notice-card {
+  flex: 0 0 auto;
+  padding: 16px 18px 14px;
+}
+
+.success-heading,
+.notice-heading {
+  margin-bottom: 18px;
+}
+
+.success-visual {
+  display: block;
+  width: min(88%, 273px);
+  height: auto;
+  aspect-ratio: 545 / 292;
+  margin: 0 auto 14px;
+  object-fit: contain;
+}
+
+.success-message {
+  text-align: center;
+}
+
+.success-message h3,
+.success-message p {
+  margin: 0;
+}
+
+.success-message h3 {
+  color: var(--wifi-ink);
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 24px;
+}
+
+.success-message p {
+  color: var(--wifi-muted);
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 18px;
+}
+
+.portal-action {
+  position: relative;
+  display: flex;
+  width: 100%;
+  height: 44px;
+  margin-top: 26px;
+  overflow: hidden;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(196, 196, 196, 0.55);
+  border-radius: 12px;
+  background: var(--wifi-blue);
+  color: var(--wifi-white);
+  text-align: center;
+}
+
+.portal-action-label,
+.portal-action-label strong,
+.portal-action-label small {
+  display: block;
+  pointer-events: none;
+}
+
+.portal-action-label strong {
+  font-size: 15px;
+  font-weight: 400;
+  line-height: 15px;
+}
+
+.portal-action-label small {
+  margin-top: 1px;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 17px;
+}
+
+.portal-action-control {
+  position: absolute;
+  z-index: 2;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.portal-action:active {
+  transform: translateY(1px);
+}
+
+.portal-action:focus-within {
+  outline: 2px solid rgba(0, 119, 255, 0.35);
+  outline-offset: 2px;
+}
+
+.success-card {
+  padding-bottom: 30px;
+}
+
+.notice-page .detail-shell {
+  padding-bottom: 14px;
+  overflow-y: hidden;
+}
+
+.notice-page .welcome-block {
+  flex: 0 0 auto;
+  margin-bottom: 12px;
+}
+
+.notice-card {
+  display: flex;
+  min-height: 0;
+  flex: 1 1 auto;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.notice-heading {
+  flex: 0 0 auto;
+  margin-bottom: 4px;
+}
+
+.notice-copy {
+  min-height: 0;
+  padding-right: 3px;
+  overflow-x: hidden;
+  overflow-y: auto;
+  flex: 1 1 auto;
+  overscroll-behavior-y: contain;
+  -webkit-overflow-scrolling: touch;
+}
+
+.notice-section {
+  margin-top: 8px;
+}
+
+.notice-section p {
+  margin: 0;
+}
+
+.notice-cn {
+  color: var(--wifi-ink);
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 20px;
+  text-align: justify;
+}
+
+.notice-en {
+  margin-top: 4px !important;
+  color: var(--wifi-muted);
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 16px;
+  text-align: justify;
+}
+
+.notice-action {
+  flex: 0 0 44px;
+  margin-top: 12px;
+}
+
+@media (max-height: 680px) {
+  .success-card,
+  .notice-card {
+    padding-top: 14px;
+  }
+
+  .success-heading {
+    margin-bottom: 10px;
+  }
+
+  .success-visual {
+    width: min(72%, 236px);
+    margin-bottom: 8px;
+  }
+
+  .success-card .portal-action {
+    margin-top: 16px;
+  }
 }

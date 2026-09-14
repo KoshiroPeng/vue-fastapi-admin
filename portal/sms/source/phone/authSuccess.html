@@ -52,47 +52,47 @@
     <script type="text/javascript" src="template.js"></script>
     <title>{{common.loginSuccess}}</title>
   </head>
-  <body>
-    <p
-      style="
-        padding: 15px 0px;
-        font-size: 24px;
-        color: white;
-        background-color: #4d8eba;
-        text-align: center;
-      "
-    >
-      {{common.authentication}}
-    </p>
+  <body class="wifi-page sms-page success-page device-phone">
+    <main class="wifi-shell detail-shell">
+      <nav class="detail-nav">
+        <a class="back-link" href="#" onclick="logout();return false;" aria-label="{{common.back}}">
+          <img class="back-icon" src="assets/back.svg" alt="" />
+        </a>
+      </nav>
 
-    <p>&nbsp;</p>
-    <p>&nbsp;</p>
-    <p>&nbsp;</p>
-    <p>&nbsp;</p>
-    <p>&nbsp;</p>
-    <p>&nbsp;</p>
-    <p>&nbsp;</p>
+      <header class="welcome-block">
+        <h1>{{sms.welcome}}</h1>
+        <p>{{sms.welcomeEn}}</p>
+      </header>
 
-    <p style="text-align: center">
-      <span class="success-span">
-        <img
-          src="1426497214363.png"
-          style="vertical-align: middle; width: 40px"
-        />
-        &nbsp;{{common.success}}
-      </span>
-    </p>
-    <p>&nbsp;</p>
-    <p>&nbsp;</p>
-    <p style="text-align: center">
-      <input
-        id="logoutBtn"
-        onclick="logout()"
-        type="button"
-        value="{{common.logout}}"
-        class="frm-button button-font"
-        style="width: 80px; height: 35px; margin-right: 5px"
-      />
-    </p>
+      <section class="auth-card success-card">
+        <div class="auth-heading success-heading">
+          <h2>{{common.loginSuccess}}</h2>
+          <p>{{common.loginSuccessEn}}</p>
+        </div>
+
+        <img class="success-visual" src="assets/success.png" alt="" />
+
+        <div class="success-message">
+          <h3>{{success.accessNow}}</h3>
+          <p>{{success.accessNowEn}}</p>
+        </div>
+
+        <div class="portal-action">
+          <span class="portal-action-label">
+            <strong>{{common.logout}}</strong>
+            <small>{{common.logoutEn}}</small>
+          </span>
+          <input
+            id="logoutBtn"
+            class="portal-action-control"
+            onclick="logout()"
+            type="button"
+            value="{{common.logout}}"
+            aria-label="{{common.logout}}"
+          />
+        </div>
+      </section>
+    </main>
   </body>
 </html>

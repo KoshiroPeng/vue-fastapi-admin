@@ -56,60 +56,62 @@
     <script type="text/javascript" src="template.js"></script>
     <title>{{common.userNotice}}</title>
   </head>
-  <body
-    style="
-      background-repeat: repeat;
-      background-position: center center;
-      background-color: #dbe5f1;
-    "
-  >
-    <p
-      style="
-        padding: 15px 0px;
-        font-size: 24px;
-        color: white;
-        background-color: #4d8eba;
-        text-align: center;
-      "
-    >
-      <a id="turnBackLink" href="#" onclick="turnRegisterPage()">&lt;{{common.back}}</a
-      >{{common.userNotice}}
-    </p>
-    <p>&nbsp;</p>
-    <div
-      style="
-        width: 80%;
-        height: 90%;
-        overflow-y: auto;
-        padding: 10px;
-        line-height: 25px;
-        margin: 0 auto;
-        background-color: white;
-      "
-    >
-      <p style="text-align: center; font-size: 19px; margin-bottom: 10px">
-        {{agreement.title}}
-      </p>
-      <p style="font-size: 15px">
-        {{agreement.introStart}}
-        /
-        {{agreement.introEnd}}
-      </p>
-      <p style="font-size: 15px; margin-top: 5px">
-        1. {{agreement.item1}}
-      </p>
-      <p style="font-size: 15px; margin-top: 5px">
-        2.
-        {{agreement.item2}}
-      </p>
-      <p style="font-size: 15px; margin-top: 5px">
-        3. {{agreement.item3}}
-      </p>
-    </div>
-    <p>&nbsp;</p>
-    <p
-      style="display: none"
-      data-background="background-repeat:repeat; background-position:center center; background-color:#F2F2F2;"
-    ></p>
+  <body class="wifi-page sms-page notice-page device-phone">
+    <main class="wifi-shell detail-shell">
+      <nav class="detail-nav">
+        <a id="turnBackLink" class="back-link" href="#" onclick="turnRegisterPage();return false;" aria-label="{{common.back}}">
+          <img class="back-icon" src="assets/back.svg" alt="" />
+        </a>
+      </nav>
+
+      <header class="welcome-block">
+        <h1>{{sms.welcome}}</h1>
+        <p>{{sms.welcomeEn}}</p>
+      </header>
+
+      <section class="auth-card notice-card">
+        <div class="auth-heading notice-heading">
+          <h2>{{agreement.title}}</h2>
+          <p>{{agreement.titleEn}}</p>
+        </div>
+
+        <div class="notice-copy">
+          <div class="notice-section notice-intro">
+            <p class="notice-cn">{{agreement.introStart}}{{agreement.introEnd}}</p>
+            <p class="notice-en">{{agreement.introEn}}</p>
+          </div>
+
+          <div class="notice-section">
+            <p class="notice-cn">1. {{agreement.item1}}</p>
+            <p class="notice-en">1. {{agreement.item1En}}</p>
+          </div>
+
+          <div class="notice-section">
+            <p class="notice-cn">2. {{agreement.item2}}</p>
+            <p class="notice-en">2. {{agreement.item2En}}</p>
+          </div>
+
+          <div class="notice-section">
+            <p class="notice-cn">3. {{agreement.item3}}</p>
+            <p class="notice-en">3. {{agreement.item3En}}</p>
+          </div>
+        </div>
+
+        <div class="portal-action notice-action">
+          <span class="portal-action-label">
+            <strong>{{agreement.agree}}</strong>
+            <small>{{agreement.agreeEn}}</small>
+          </span>
+          <input
+            id="agreeBtn"
+            class="portal-action-control"
+            onclick="turnRegisterPage()"
+            type="button"
+            value="{{agreement.agree}}"
+            aria-label="{{agreement.agree}}"
+          />
+        </div>
+      </section>
+    </main>
   </body>
 </html>
