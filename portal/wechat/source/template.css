@@ -1,0 +1,930 @@
+:root {
+  --wifi-ink: #082344;
+  --wifi-muted: #848aab;
+  --wifi-blue: #007aff;
+  --wifi-blue-disabled: rgba(0, 122, 255, 0.55);
+  --wifi-line: #d8dce5;
+  --wifi-panel: rgba(250, 252, 255, 0.94);
+  --wifi-white: #fff;
+}
+
+html,
+body {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+}
+
+body.wifi-page {
+  min-width: 320px;
+  overflow: hidden;
+  background: #dceeff url("assets/background.png") center bottom / cover no-repeat fixed;
+  color: var(--wifi-ink);
+  font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", Arial, sans-serif;
+  letter-spacing: 0;
+}
+
+.wifi-page *,
+.wifi-page *::before,
+.wifi-page *::after {
+  box-sizing: border-box;
+  letter-spacing: 0;
+}
+
+.wifi-page button,
+.wifi-page input {
+  font: inherit;
+}
+
+.wifi-page button,
+.wifi-page a,
+.wifi-page img[role="checkbox"] {
+  -webkit-tap-highlight-color: transparent;
+}
+
+.wifi-shell {
+  width: 100%;
+  height: 100vh;
+  height: 100dvh;
+  margin: 0 auto;
+  padding: 0 14px 30px;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior-y: contain;
+  -webkit-overflow-scrolling: touch;
+}
+
+.detail-nav {
+  position: sticky;
+  z-index: 20;
+  top: 0;
+  display: flex;
+  height: 44px;
+  margin: 0 -14px;
+  padding: 0 14px;
+  align-items: center;
+  background-image: url("assets/background.png");
+  background-position: center bottom;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-size: cover;
+}
+
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--wifi-ink);
+  text-decoration: none;
+}
+
+.back-icon {
+  display: block;
+  width: 16px;
+  height: 16px;
+  object-fit: contain;
+}
+
+.back-text {
+  display: none;
+}
+
+.welcome-block {
+  margin: 14px auto 13px;
+  text-align: center;
+}
+
+.welcome-block h1 {
+  margin: 0;
+  color: var(--wifi-ink);
+  font-size: 28px;
+  font-weight: 600;
+  line-height: 35px;
+}
+
+.welcome-block p {
+  margin: 5px auto 0;
+  max-width: 330px;
+  color: var(--wifi-muted);
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 18px;
+}
+
+.auth-card {
+  width: 100%;
+  max-width: 700px;
+  margin: 0 auto;
+  padding: 21px 18px 39px;
+  border: 1px solid rgba(255, 255, 255, 0.86);
+  border-radius: 24px;
+  background: var(--wifi-panel);
+  box-shadow: 0 16px 42px rgba(37, 72, 112, 0.12);
+}
+
+.auth-heading {
+  margin-bottom: 13px;
+  text-align: center;
+}
+
+.auth-heading h2 {
+  margin: 0;
+  color: var(--wifi-ink);
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 24px;
+}
+
+.auth-heading p {
+  margin: 1px 0 0;
+  color: var(--wifi-muted);
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 18px;
+}
+
+.auth-notice {
+  display: flex;
+  width: 100%;
+  margin-bottom: 18px;
+  align-items: flex-start;
+  color: #ff892b;
+  text-align: left;
+}
+
+.auth-notice-icon {
+  flex: 0 0 16px;
+  width: 16px;
+  height: 16px;
+  margin-top: 1px;
+  margin-right: 7px;
+  object-fit: contain;
+}
+
+.auth-notice-copy {
+  min-width: 0;
+  flex: 1 1 auto;
+}
+
+.auth-notice-copy span,
+.auth-notice-copy small {
+  display: block;
+  color: inherit;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 20px;
+}
+
+.auth-notice-copy small {
+  margin-top: 1px;
+}
+
+.auth-fields {
+  width: 100%;
+}
+
+.auth-field {
+  position: relative;
+  display: flex;
+  width: 100%;
+  height: 44px;
+  margin: 0;
+  align-items: center;
+  overflow: hidden;
+  border: 1px solid var(--wifi-line);
+  border-radius: 12px;
+  background: var(--wifi-white);
+}
+
+.auth-field + .auth-field {
+  margin-top: 20px;
+}
+
+.auth-field-icon {
+  flex: 0 0 16px;
+  width: 16px;
+  height: 16px;
+  margin-left: 11px;
+  object-fit: contain;
+}
+
+.portal-input {
+  min-width: 0;
+  height: 42px;
+  margin: 0;
+  padding: 0 10px;
+  flex: 1 1 auto;
+  border: 0;
+  outline: none;
+  background: transparent;
+  color: var(--wifi-ink);
+  font-size: 14px;
+  line-height: normal;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.portal-input::placeholder {
+  color: var(--wifi-muted);
+  font-size: 14px;
+  opacity: 1;
+}
+
+.auth-field:focus-within {
+  border-color: rgba(8, 126, 255, 0.7);
+  box-shadow: 0 0 0 2px rgba(8, 126, 255, 0.1);
+}
+
+.password-field .portal-input {
+  padding-right: 4px;
+}
+
+.password-toggle {
+  display: flex;
+  flex: 0 0 38px;
+  width: 38px;
+  height: 42px;
+  margin: 0;
+  padding: 0;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  cursor: pointer;
+}
+
+.password-toggle img {
+  display: block;
+  width: 16px;
+  height: 16px;
+  object-fit: contain;
+}
+
+.agreement-row {
+  display: flex;
+  margin-top: 20px;
+  align-items: flex-start;
+}
+
+.agreement-check {
+  flex: 0 0 16px;
+  width: 16px;
+  height: 16px;
+  margin: 0 8px 0 0;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.agreement-copy {
+  min-width: 0;
+  color: var(--wifi-ink);
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 16px;
+}
+
+.agreement-copy span,
+.agreement-copy small {
+  display: block;
+}
+
+.agreement-copy small {
+  margin-top: 6px;
+  color: var(--wifi-muted);
+  font-size: 11px;
+  line-height: 11px;
+}
+
+.agreement-notice-link {
+  display: block;
+  margin-top: 8px;
+  color: #007aff;
+  font-size: 14px;
+  line-height: 16px;
+  text-decoration: none;
+}
+
+.login-button,
+.portal-action {
+  position: relative;
+  display: flex;
+  width: 100%;
+  height: 44px;
+  margin: 28px 0 0;
+  padding: 0 16px;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  overflow: hidden;
+  border: 0;
+  border-radius: 12px;
+  background: var(--wifi-blue);
+  color: var(--wifi-white);
+  text-align: center;
+  cursor: pointer;
+}
+
+.login-button.is-disabled {
+  background: var(--wifi-blue-disabled);
+}
+
+.login-button:active,
+.portal-action:active {
+  transform: translateY(1px);
+}
+
+.button-primary,
+.button-secondary,
+.portal-action-label,
+.portal-action-label strong,
+.portal-action-label small {
+  display: block;
+  pointer-events: none;
+}
+
+.button-primary,
+.portal-action-label strong {
+  font-size: 15px;
+  font-weight: 400;
+  line-height: 15px;
+}
+
+.button-secondary,
+.portal-action-label small {
+  margin-top: 1px;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 14px;
+}
+
+.wechat-guide {
+  width: 100%;
+  height: 286px;
+  padding: 20px 16px 20px 31px;
+  border-radius: 12px;
+  background: #eaf5fe;
+}
+
+.wechat-logo {
+  display: block;
+  width: 60px;
+  height: 60px;
+  margin: 0 auto 19px;
+  object-fit: contain;
+}
+
+.wechat-steps {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.wechat-steps li {
+  position: relative;
+  display: flex;
+  min-height: 62px;
+  align-items: flex-start;
+}
+
+.wechat-steps li + li {
+  margin-top: 0;
+}
+
+.step-number {
+  position: relative;
+  display: flex;
+  flex: 0 0 34px;
+  width: 34px;
+  height: 34px;
+  margin-right: 20px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: #328df5;
+  color: #fff;
+  font-size: 18px;
+  line-height: 1;
+}
+
+.wechat-steps li:not(:last-child) .step-number::after {
+  position: absolute;
+  top: 40px;
+  left: 9px;
+  width: 16px;
+  height: 15px;
+  background: url("assets/arrow.svg") center / contain no-repeat;
+  content: "";
+}
+
+.step-copy {
+  min-width: 0;
+  padding-top: 0;
+  flex: 1 1 auto;
+}
+
+.step-copy strong,
+.step-copy small {
+  display: block;
+}
+
+.step-copy strong {
+  color: var(--wifi-ink);
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 20px;
+}
+
+.step-copy small {
+  margin-top: 2px;
+  color: var(--wifi-muted);
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 16px;
+}
+
+.success-page .detail-shell,
+.notice-page .detail-shell {
+  display: flex;
+  flex-direction: column;
+}
+
+.success-card,
+.notice-card {
+  flex: 0 0 auto;
+  padding: 16px 18px 30px;
+}
+
+.success-heading {
+  margin-bottom: 18px;
+}
+
+.success-visual {
+  display: block;
+  width: min(88%, 273px);
+  height: auto;
+  margin: 0 auto 14px;
+  object-fit: contain;
+}
+
+.success-message {
+  text-align: center;
+}
+
+.success-message h3,
+.success-message p {
+  margin: 0;
+}
+
+.success-message h3 {
+  color: var(--wifi-ink);
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 24px;
+}
+
+.success-message p {
+  color: var(--wifi-muted);
+  font-size: 14px;
+  line-height: 18px;
+}
+
+.portal-action {
+  margin-top: 26px;
+}
+
+.portal-action-control {
+  position: absolute;
+  z-index: 2;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.notice-page .detail-shell {
+  padding-bottom: 14px;
+  overflow-y: hidden;
+}
+
+.notice-page .welcome-block {
+  flex: 0 0 auto;
+  margin-bottom: 12px;
+}
+
+.notice-card {
+  display: flex;
+  min-height: 0;
+  flex: 1 1 auto;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.notice-heading {
+  flex: 0 0 auto;
+  margin-bottom: 4px;
+}
+
+.notice-copy {
+  min-height: 0;
+  padding-right: 3px;
+  overflow-x: hidden;
+  overflow-y: auto;
+  flex: 1 1 auto;
+  overscroll-behavior-y: contain;
+  -webkit-overflow-scrolling: touch;
+}
+
+.notice-section {
+  margin-top: 8px;
+}
+
+.notice-section p {
+  margin: 0;
+}
+
+.notice-cn {
+  color: var(--wifi-ink);
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 20px;
+  text-align: justify;
+}
+
+.notice-en {
+  margin-top: 4px !important;
+  color: var(--wifi-muted);
+  font-size: 12px;
+  line-height: 16px;
+  text-align: justify;
+}
+
+.notice-action {
+  flex: 0 0 44px;
+  margin-top: 12px;
+}
+
+@media (max-width: 359px) {
+  .welcome-block h1 {
+    font-size: 25px;
+  }
+
+  .auth-card {
+    padding-right: 14px;
+    padding-left: 14px;
+  }
+
+  .portal-input,
+  .portal-input::placeholder {
+    font-size: 13px;
+  }
+
+  .wechat-guide {
+    padding-right: 10px;
+    padding-left: 18px;
+  }
+
+  .step-number {
+    margin-right: 12px;
+  }
+}
+
+@media (max-height: 680px) {
+  .welcome-block {
+    margin-top: 6px;
+  }
+
+  .auth-card {
+    padding-top: 16px;
+    padding-bottom: 24px;
+  }
+}
+
+.device-pc.portal-auth-page {
+  background-image: url("assets/background-pc.png");
+  background-position: center center;
+}
+
+.device-pc.portal-auth-page .detail-shell {
+  display: block;
+  width: 100%;
+  max-width: none;
+  padding: 118px 32px 30px;
+  overflow-y: auto;
+}
+
+.device-pc.portal-auth-page .detail-nav {
+  position: fixed;
+  z-index: 30;
+  top: 40px;
+  left: 40px;
+  width: 140px;
+  height: 60px;
+  margin: 0;
+  padding: 0;
+  border: 1px solid rgba(255, 255, 255, 0.92);
+  border-radius: 32px;
+  background: rgba(255, 255, 255, 0.7);
+  box-shadow: 0 15px 30px rgba(0, 11, 59, 0.08);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+}
+
+.device-pc.portal-auth-page .back-link {
+  width: 100%;
+  height: 100%;
+}
+
+.device-pc.portal-auth-page .back-icon {
+  width: 24px;
+  height: 24px;
+  margin-right: 12px;
+}
+
+.device-pc.portal-auth-page .back-text {
+  display: inline;
+  font-size: 24px;
+  font-weight: 600;
+  line-height: 1;
+}
+
+.device-pc.portal-auth-page .welcome-block {
+  margin: 0 auto 42px;
+}
+
+.device-pc.portal-auth-page .welcome-block h1 {
+  font-size: 44px;
+  line-height: 53px;
+}
+
+.device-pc.portal-auth-page .welcome-block p {
+  max-width: none;
+  margin-top: 6px;
+  color: var(--wifi-ink);
+  font-size: 22px;
+  line-height: 28px;
+}
+
+.device-pc.portal-auth-page .auth-card {
+  width: 580px;
+  max-width: calc(100vw - 64px);
+  padding: 34px 44px 54px;
+  border-radius: 36px;
+  background: rgba(250, 252, 255, 0.94);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+}
+
+.device-pc.portal-auth-page .auth-heading {
+  margin-bottom: 28px;
+}
+
+.device-pc.portal-auth-page .auth-heading h2 {
+  font-size: 28px;
+  line-height: 36px;
+}
+
+.device-pc.portal-auth-page .auth-heading p {
+  margin-top: 4px;
+  font-size: 20px;
+  line-height: 25px;
+}
+
+.device-pc.portal-auth-page .auth-notice {
+  margin-bottom: 30px;
+}
+
+.device-pc.portal-auth-page .auth-notice-icon {
+  flex-basis: 24px;
+  width: 24px;
+  height: 24px;
+  margin-right: 9px;
+}
+
+.device-pc.portal-auth-page .auth-notice-copy span {
+  font-size: 20px;
+  line-height: 25px;
+}
+
+.device-pc.portal-auth-page .auth-notice-copy small {
+  margin-top: 2px;
+  font-size: 16px;
+  line-height: 21px;
+}
+
+.device-pc.portal-auth-page .auth-field {
+  height: 68px;
+  border-radius: 18px;
+}
+
+.device-pc.portal-auth-page .auth-field + .auth-field {
+  margin-top: 32px;
+}
+
+.device-pc.portal-auth-page .auth-field-icon {
+  flex-basis: 24px;
+  width: 24px;
+  height: 24px;
+  margin-left: 16px;
+}
+
+.device-pc.portal-auth-page .portal-input {
+  height: 66px;
+  padding-right: 14px;
+  padding-left: 14px;
+  font-size: 20px;
+}
+
+.device-pc.portal-auth-page .portal-input::placeholder {
+  font-size: 20px;
+}
+
+.device-pc.portal-auth-page .password-toggle {
+  flex-basis: 54px;
+  width: 54px;
+  height: 66px;
+}
+
+.device-pc.portal-auth-page .password-toggle img {
+  width: 24px;
+  height: 24px;
+}
+
+.device-pc.portal-auth-page .agreement-row {
+  margin-top: 26px;
+}
+
+.device-pc.portal-auth-page .agreement-check {
+  flex-basis: 24px;
+  width: 24px;
+  height: 24px;
+  margin-right: 12px;
+  border-radius: 6px;
+}
+
+.device-pc.portal-auth-page .agreement-copy {
+  font-size: 20px;
+  line-height: 24px;
+}
+
+.device-pc.portal-auth-page .agreement-copy small {
+  margin-top: 4px;
+  font-size: 16px;
+  line-height: 16px;
+}
+
+.device-pc.portal-auth-page .agreement-notice-link {
+  margin-top: 8px;
+  font-size: 20px;
+  line-height: 24px;
+}
+
+.device-pc.portal-auth-page .login-button {
+  height: 68px;
+  margin-top: 32px;
+  border-radius: 18px;
+}
+
+.device-pc.portal-auth-page .button-primary {
+  font-size: 20px;
+  line-height: 21px;
+}
+
+.device-pc.portal-auth-page .button-secondary {
+  font-size: 16px;
+  line-height: 18px;
+}
+
+.device-pc.portal-auth-page .wechat-guide {
+  height: 400px;
+  padding: 30px 64px 26px;
+  border-radius: 18px;
+}
+
+.device-pc.portal-auth-page .wechat-logo {
+  width: 90px;
+  height: 90px;
+  margin-bottom: 27px;
+}
+
+.device-pc.portal-auth-page .wechat-steps li {
+  min-height: 92px;
+}
+
+.device-pc.portal-auth-page .step-number {
+  flex-basis: 52px;
+  width: 52px;
+  height: 52px;
+  margin-right: 30px;
+  font-size: 24px;
+}
+
+.device-pc.portal-auth-page .wechat-steps li:not(:last-child) .step-number::after {
+  top: 62px;
+  left: 16px;
+  width: 20px;
+  height: 19px;
+}
+
+.device-pc.portal-auth-page .step-copy strong {
+  font-size: 20px;
+  line-height: 26px;
+}
+
+.device-pc.portal-auth-page .step-copy small {
+  margin-top: 2px;
+  font-size: 16px;
+  line-height: 21px;
+}
+
+.device-pc.portal-auth-page.success-page .detail-shell,
+.device-pc.portal-auth-page.notice-page .detail-shell {
+  padding-top: 70px;
+}
+
+.device-pc.portal-auth-page.success-page .welcome-block,
+.device-pc.portal-auth-page.notice-page .welcome-block {
+  margin-bottom: 32px;
+}
+
+.device-pc.portal-auth-page .success-card,
+.device-pc.portal-auth-page .notice-card {
+  min-height: 0;
+  padding: 32px 44px 40px;
+}
+
+.device-pc.portal-auth-page .success-visual {
+  width: 317px;
+  max-width: 100%;
+}
+
+.device-pc.portal-auth-page .success-message h3 {
+  font-size: 22px;
+}
+
+.device-pc.portal-auth-page .success-message p,
+.device-pc.portal-auth-page .notice-en {
+  font-size: 14px;
+}
+
+.device-pc.portal-auth-page .portal-action {
+  height: 68px;
+  border-radius: 18px;
+}
+
+.device-pc.portal-auth-page .portal-action-label strong {
+  font-size: 20px;
+  line-height: 21px;
+}
+
+.device-pc.portal-auth-page .portal-action-label small {
+  font-size: 16px;
+  line-height: 18px;
+}
+
+.device-pc.portal-auth-page .notice-card {
+  height: min(720px, calc(100vh - 230px));
+  min-height: 430px;
+}
+
+.device-pc.portal-auth-page .notice-cn {
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+@media (max-height: 900px) {
+  .device-pc.portal-auth-page .detail-shell {
+    padding-top: 32px;
+  }
+
+  .device-pc.portal-auth-page .welcome-block {
+    margin-bottom: 20px;
+  }
+
+  .device-pc.portal-auth-page .welcome-block h1 {
+    font-size: 34px;
+    line-height: 42px;
+  }
+
+  .device-pc.portal-auth-page .welcome-block p {
+    font-size: 16px;
+    line-height: 22px;
+  }
+
+  .device-pc.portal-auth-page .auth-card {
+    min-height: 0;
+    padding-top: 24px;
+    padding-bottom: 30px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wifi-page * {
+    scroll-behavior: auto !important;
+    transition: none !important;
+  }
+}

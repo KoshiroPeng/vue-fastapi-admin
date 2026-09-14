@@ -1,0 +1,320 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta http-equiv="pragma" content="no-cache" />
+    <meta http-equiv="cache-control" content="no-cache, no-store, must-revalidate" />
+    <meta http-equiv="expires" content="0" />
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=0.5, maximum-scale=2.0, user-scalable=no" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="format-detection" content="telephone=no" />
+    <link rel="stylesheet" href="../../../../material/custom/custom.css" type="text/css" />
+    <script type="text/javascript" src="../../../../material/custom/jquery-2.1.3.min.js"></script>
+    <script type="text/javascript" src="../../../../material/custom/detectMobileBrowser.js"></script>
+    <script type="text/javascript" src="../../../../material/custom/custom.js"></script>
+    <script>
+      var _configId;
+      var _isSocialPage;
+      var _isMobilePage = '{{device.isMobile}}'.toLowerCase() === 'true';
+    </script>
+    <script type="text/javascript" src="../../../../material/custom/lang/common-zh.js"></script>
+    <script type="text/javascript" src="../../../../material/custom/auth.js"></script>
+    <script type="text/javascript" src="../../../../material/custom/check.js"></script>
+    <script type="text/javascript" src="../../../../material/custom/lang/auth-zh.js"></script>
+    <link rel="stylesheet" href="template.css" type="text/css" />
+    <script type="text/javascript" src="template.js"></script>
+    <title>{{common.login}}</title>
+  </head>
+
+  <body class="wifi-page sms-page auth-page {{device.class}} language-zh">
+    <main class="wifi-shell detail-shell">
+      <nav class="detail-nav">
+        <a class="back-link" href="#" folder="{{sms.entranceFolder}}" onclick="turnToLanPage($(this));return false;" aria-label="{{common.backToMethods}}">
+          <img class="back-icon" src="assets/back.svg" alt="" />
+          <span class="back-text">{{common.back}}</span>
+        </a>
+      </nav>
+
+      <header class="welcome-block">
+        <h1>{{sms.welcome}}</h1>
+        <p>{{sms.welcomeEn}}</p>
+      </header>
+
+      <section class="auth-card">
+        <div class="auth-heading">
+          <h2>{{sms.heading}}</h2>
+          <p>{{sms.headingEn}}</p>
+        </div>
+
+        <div class="sms-notice" role="note">
+          <img class="sms-notice-icon" src="assets/info.svg" alt="" />
+          <div class="sms-notice-copy">
+            <span>{{sms.notice}}</span>
+            <small>{{sms.noticeEn}}</small>
+          </div>
+        </div>
+
+        <div class="sms-fields">
+          <div class="sms-form-row sms-phone-row">
+          <div class="g-container">
+              <div class="basic-grey">
+                  <div class="form-group">
+                      <div class="Companies">
+                          <input class="code" type="text" placeholder=" +86" id="js-groupId" value="+86" onclick="SetInputNull()">
+                          <input id="mobileNum" value="" emptytip="{{sms.mobileNumber}}" type="hidden" class="frm-input">
+                          <input class="phoneinput" id="phone" type="tel" placeholder="{{sms.mobilePlaceholder}} ({{sms.mobilePlaceholderEn}})">
+                          <input type="hidden" id="groupId">
+                          <ul id="groupid">
+                              <li data-id="827"><a href="javascript:void(0)"> +86    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{sms.china}}</a></li>
+                              <li data-id="826"><a href="javascript:void(0)"> +852   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{sms.chinaHongKong}}</a></li>
+                              <li data-id="825"><a href="javascript:void(0)"> +853   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{sms.chinaMacao}}</a></li>
+                              <li data-id="824"><a href="javascript:void(0)"> +886   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{sms.chinaTaiwan}}</a></li>
+                              <li data-id="815"><a href="javascript:void(0)"> +244   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Angola</a></li>
+                              <li data-id="814"><a href="javascript:void(0)"> +93    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Afghanistan</a></li>
+                              <li data-id="813"><a href="javascript:void(0)"> +355   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Albania</a></li>
+                              <li data-id="812"><a href="javascript:void(0)"> +213   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Algeria</a></li>
+                              <li data-id="811"><a href="javascript:void(0)"> +376   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Andorra</a></li>
+                              <li data-id="810"><a href="javascript:void(0)"> +1264   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Anguilla</a></li>
+                              <li data-id="809"><a href="javascript:void(0)"> +1268   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Antigua and Barbuda</a></li>
+                              <li data-id="808"><a href="javascript:void(0)"> +54   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Argentina</a></li>
+                              <li data-id="807"><a href="javascript:void(0)"> +374   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Armenia</a></li>
+                              <li data-id="806"><a href="javascript:void(0)"> +247   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Ascension</a></li>
+                              <li data-id="805"><a href="javascript:void(0)"> +61   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Australia</a></li>
+                              <li data-id="804"><a href="javascript:void(0)"> +43   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Austria</a></li>
+                              <li data-id="803"><a href="javascript:void(0)"> +994   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Azerbaijan</a></li>
+
+                              <li data-id="802"><a href="javascript:void(0)"> +1242   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Bahamas</a></li>
+                              <li data-id="801"><a href="javascript:void(0)"> +973   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Bahrain</a></li>
+                              <li data-id="800"><a href="javascript:void(0)"> +880   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Bangladesh</a></li>
+                              <li data-id="799"><a href="javascript:void(0)"> +1246   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Barbados</a></li>
+                              <li data-id="798"><a href="javascript:void(0)"> +375   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Belarus</a></li>
+                              <li data-id="813"><a href="javascript:void(0)"> +32   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Belgium</a></li>
+                              <li data-id="812"><a href="javascript:void(0)"> +501   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Belize</a></li>
+                              <li data-id="811"><a href="javascript:void(0)"> +229   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Benin</a></li>
+                              <li data-id="813"><a href="javascript:void(0)"> +1441   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Bermuda Is.</a></li>
+                              <li data-id="812"><a href="javascript:void(0)"> +591   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Bolivia</a></li>
+                              <li data-id="811"><a href="javascript:void(0)"> +267   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Botswana</a></li>
+                              <li data-id="813"><a href="javascript:void(0)"> +55   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Brazil</a></li>
+                              <li data-id="812"><a href="javascript:void(0)"> +673   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Brunei</a></li>
+                              <li data-id="811"><a href="javascript:void(0)"> +359   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Bulgaria</a></li>
+                              <li data-id="813"><a href="javascript:void(0)"> +226   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Burkina-faso</a></li>
+                              <li data-id="812"><a href="javascript:void(0)"> +95   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Burma</a></li>
+                              <li data-id="811"><a href="javascript:void(0)"> +257   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Burundi</a></li>
+
+                              <li data-id="813"><a href="javascript:void(0)"> +237   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Cameroon</a></li>
+                              <li data-id="812"><a href="javascript:void(0)"> +1   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Canada</a></li>
+                              <li data-id="811"><a href="javascript:void(0)"> +1345   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Cayman Is.</a></li>
+                              <li data-id="813"><a href="javascript:void(0)"> +236   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Central African Republic</a></li>
+                              <li data-id="812"><a href="javascript:void(0)"> +235   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Chad</a></li>
+                              <li data-id="811"><a href="javascript:void(0)"> +56   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Chile</a></li>
+                              <li data-id="813"><a href="javascript:void(0)"> +57   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Colombia</a></li>
+                              <li data-id="812"><a href="javascript:void(0)"> +242   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Congo</a></li>
+                              <li data-id="811"><a href="javascript:void(0)"> +682   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Cook Is.</a></li>
+                              <li data-id="813"><a href="javascript:void(0)"> +506   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Costa Rica</a></li>
+                              <li data-id="812"><a href="javascript:void(0)"> +53   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Cuba</a></li>
+                              <li data-id="811"><a href="javascript:void(0)"> +357   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Cyprus</a></li>
+                              <li data-id="798"><a href="javascript:void(0)"> +420   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Czech Republic</a></li>
+
+                              <li data-id="813"><a href="javascript:void(0)"> +45   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Denmark</a></li>
+                              <li data-id="812"><a href="javascript:void(0)"> +253   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Djibouti</a></li>
+                              <li data-id="811"><a href="javascript:void(0)"> +1890   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Dominica Rep.</a></li>
+                              <li data-id="813"><a href="javascript:void(0)"> +593   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Ecuador</a></li>
+                              <li data-id="812"><a href="javascript:void(0)"> +20   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Egypt</a></li>
+                              <li data-id="811"><a href="javascript:void(0)"> +503   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;EI Salvador</a></li>
+                              <li data-id="813"><a href="javascript:void(0)"> +372   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Estonia</a></li>
+                              <li data-id="812"><a href="javascript:void(0)"> +251   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Ethiopia</a></li>
+                              <li data-id="811"><a href="javascript:void(0)"> +679   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Fiji</a></li>
+                              <li data-id="813"><a href="javascript:void(0)"> +358   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Finland</a></li>
+                              <li data-id="812"><a href="javascript:void(0)"> +33   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;France</a></li>
+                              <li data-id="811"><a href="javascript:void(0)"> +594   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;French Guiana</a></li>
+                              <li data-id="813"><a href="javascript:void(0)"> +241   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Gabon</a></li>
+                              <li data-id="812"><a href="javascript:void(0)"> +220   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Gambia</a></li>
+                              <li data-id="811"><a href="javascript:void(0)"> +995   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Georgia</a></li>
+                              <li data-id="813"><a href="javascript:void(0)"> +49   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Germany</a></li>
+                              <li data-id="812"><a href="javascript:void(0)"> +233   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Ghana</a></li>
+                              <li data-id="811"><a href="javascript:void(0)"> +350   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Gibraltar</a></li>
+                              <li data-id="813"><a href="javascript:void(0)"> +30   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Greece</a></li>
+                              <li data-id="812"><a href="javascript:void(0)"> +1809   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Grenada</a></li>
+                              <li data-id="811"><a href="javascript:void(0)"> +1671   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Guam</a></li>
+                              <li data-id="813"><a href="javascript:void(0)"> +502   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Guatemala</a></li>
+                              <li data-id="812"><a href="javascript:void(0)"> +224   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Guinea</a></li>
+                              <li data-id="811"><a href="javascript:void(0)"> +592   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Guyana</a></li>
+                              <li data-id="813"><a href="javascript:void(0)"> +509   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Haiti</a></li>
+                              <li data-id="812"><a href="javascript:void(0)"> +504   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Honduras</a></li>
+                              <li data-id="811"><a href="javascript:void(0)"> +36   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Hungary</a></li>
+
+                              <li data-id="813"><a href="javascript:void(0)"> +354   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Iceland</a></li>
+                              <li data-id="812"><a href="javascript:void(0)"> +91   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;India</a></li>
+                              <li data-id="811"><a href="javascript:void(0)"> +62   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Indonesia</a></li>
+                              <li data-id="813"><a href="javascript:void(0)"> +98   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Iran</a></li>
+                              <li data-id="812"><a href="javascript:void(0)"> +964   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Iraq</a></li>
+                              <li data-id="811"><a href="javascript:void(0)"> +353   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Ireland</a></li>
+                              <li data-id="813"><a href="javascript:void(0)"> +972   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Israel</a></li>
+                              <li data-id="812"><a href="javascript:void(0)"> +39   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Italy</a></li>
+                              <li data-id="811"><a href="javascript:void(0)"> +225   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Ivory Coast</a></li>
+                              <li data-id="813"><a href="javascript:void(0)"> +1876   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Jamaica</a></li>
+                              <li data-id="812"><a href="javascript:void(0)"> +81   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Japan</a></li>
+                              <li data-id="811"><a href="javascript:void(0)"> +962   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Jordan</a></li>
+                              <li data-id="813"><a href="javascript:void(0)"> +855   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Kampuchea (Cambodia )</a></li>
+                              <li data-id="812"><a href="javascript:void(0)"> +327   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Kazakstan</a></li>
+                              <li data-id="811"><a href="javascript:void(0)"> +254   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Kenya</a></li>
+                              <li data-id="813"><a href="javascript:void(0)"> +82   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Korea</a></li>
+                              <li data-id="812"><a href="javascript:void(0)"> +965   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Kuwait</a></li>
+                              <li data-id="811"><a href="javascript:void(0)"> +331   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Kyrgyzstan</a></li>
+                              <li data-id="813"><a href="javascript:void(0)"> +856   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Laos</a></li>
+                              <li data-id="812"><a href="javascript:void(0)"> +371   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Latvia</a></li>
+                              <li data-id="811"><a href="javascript:void(0)"> +961   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Lebanon</a></li>
+                              <li data-id="813"><a href="javascript:void(0)"> +266   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Lesotho</a></li>
+                              <li data-id="812"><a href="javascript:void(0)"> +231   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Liberia</a></li>
+                              <li data-id="811"><a href="javascript:void(0)"> +218   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Libya</a></li>
+                              <li data-id="813"><a href="javascript:void(0)"> +423   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Liechtenstein</a></li>
+                              <li data-id="812"><a href="javascript:void(0)"> +370   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Lithuania</a></li>
+                              <li data-id="811"><a href="javascript:void(0)"> +352   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Luxembourg</a></li>
+
+                              <li data-id="813"><a href="javascript:void(0)"> +261   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Madagascar</a></li>
+                              <li data-id="812"><a href="javascript:void(0)"> +265   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Malawi</a></li>
+                              <li data-id="811"><a href="javascript:void(0)"> +60   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Malaysia</a></li>
+                              <li data-id="813"><a href="javascript:void(0)"> +960   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Maldives</a></li>
+                              <li data-id="812"><a href="javascript:void(0)"> +223   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Mali</a></li>
+                              <li data-id="811"><a href="javascript:void(0)"> +356   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Malta</a></li>
+                              <li data-id="813"><a href="javascript:void(0)"> +1670   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Mariana Is</a></li>
+                              <li data-id="812"><a href="javascript:void(0)"> +596   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Martinique</a></li>
+                              <li data-id="811"><a href="javascript:void(0)"> +230   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Mauritius</a></li>
+                              <li data-id="813"><a href="javascript:void(0)"> +52   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Mexico</a></li>
+                              <li data-id="811"><a href="javascript:void(0)"> +377   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Monaco</a></li>
+                              <li data-id="813"><a href="javascript:void(0)"> +976   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Mongolia</a></li>
+                              <li data-id="812"><a href="javascript:void(0)"> +1664   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Montserrat Is</a></li>
+                              <li data-id="811"><a href="javascript:void(0)"> +212   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Morocco</a></li>
+                              <li data-id="813"><a href="javascript:void(0)"> +258   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Mozambique</a></li>
+                              <li data-id="812"><a href="javascript:void(0)"> +264   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Namibia</a></li>
+                              <li data-id="811"><a href="javascript:void(0)"> +674   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Nauru</a></li>
+                              <li data-id="813"><a href="javascript:void(0)"> +977   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Nepal</a></li>
+                              <li data-id="812"><a href="javascript:void(0)"> +599   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Netheriands Antilles</a></li>
+                              <li data-id="811"><a href="javascript:void(0)"> +31   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Netherlands</a></li>
+                              <li data-id="813"><a href="javascript:void(0)"> +64   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;New Zealand</a></li>
+                              <li data-id="812"><a href="javascript:void(0)"> +505   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Nicaragua</a></li>
+                              <li data-id="811"><a href="javascript:void(0)"> +227   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Niger</a></li>
+                              <li data-id="813"><a href="javascript:void(0)"> +234   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Nigeria</a></li>
+                              <li data-id="812"><a href="javascript:void(0)"> +850   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;North Korea</a></li>
+                              <li data-id="811"><a href="javascript:void(0)"> +47   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Norway</a></li>
+                              <li data-id="813"><a href="javascript:void(0)"> +968   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Oman</a></li>
+
+                              <li data-id="812"><a href="javascript:void(0)"> +92   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Pakistan</a></li>
+                              <li data-id="812"><a href="javascript:void(0)"> +970   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Palestine</a></li>
+                              <li data-id="811"><a href="javascript:void(0)"> +507   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Panama</a></li>
+                              <li data-id="813"><a href="javascript:void(0)"> +675   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Papua New Cuinea</a></li>
+                              <li data-id="812"><a href="javascript:void(0)"> +595   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Paraguay</a></li>
+                              <li data-id="811"><a href="javascript:void(0)"> +51   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Peru</a></li>
+                              <li data-id="813"><a href="javascript:void(0)"> +63   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Philippines</a></li>
+                              <li data-id="812"><a href="javascript:void(0)"> +48   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Poland</a></li>
+                              <li data-id="811"><a href="javascript:void(0)"> +689   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;French Polynesia</a></li>
+                              <li data-id="813"><a href="javascript:void(0)"> +351   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Portugal</a></li>
+                              <li data-id="812"><a href="javascript:void(0)"> +1787   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Puerto Rico</a></li>
+                              <li data-id="811"><a href="javascript:void(0)"> +974   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Qatar</a></li>
+                              <li data-id="812"><a href="javascript:void(0)"> +373   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Republic of Moldova</a></li>
+                              <li data-id="813"><a href="javascript:void(0)"> +262   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Reunion</a></li>
+                              <li data-id="812"><a href="javascript:void(0)"> +40   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Romania</a></li>
+                              <li data-id="811"><a href="javascript:void(0)"> +7   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Russia</a></li>
+                              <li data-id="813"><a href="javascript:void(0)"> +1758   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Saint Lueia</a></li>
+                              <li data-id="812"><a href="javascript:void(0)"> +1784   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Saint Vincent</a></li>
+                              <li data-id="811"><a href="javascript:void(0)"> +684   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Samoa Eastern</a></li>
+                              <li data-id="813"><a href="javascript:void(0)"> +685   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Samoa Western</a></li>
+                              <li data-id="812"><a href="javascript:void(0)"> +378   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;San Marino</a></li>
+                              <li data-id="811"><a href="javascript:void(0)"> +239   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Sao Tome and Principe</a></li>
+                              <li data-id="813"><a href="javascript:void(0)"> +966   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Saudi Arabia</a></li>
+                              <li data-id="812"><a href="javascript:void(0)"> +221   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Senegal</a></li>
+                              <li data-id="811"><a href="javascript:void(0)"> +248   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Seychelles</a></li>
+                              <li data-id="813"><a href="javascript:void(0)"> +232   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Sierra Leone</a></li>
+                              <li data-id="812"><a href="javascript:void(0)"> +65   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Singapore</a></li>
+                              <li data-id="811"><a href="javascript:void(0)"> +421   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Slovakia</a></li>
+                              <li data-id="813"><a href="javascript:void(0)"> +386   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Slovenia</a></li>
+                              <li data-id="812"><a href="javascript:void(0)"> +677   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Solomon Is</a></li>
+                              <li data-id="811"><a href="javascript:void(0)"> +252   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Somali</a></li>
+                              <li data-id="813"><a href="javascript:void(0)"> +27   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;South Africa</a></li>
+                              <li data-id="812"><a href="javascript:void(0)"> +34   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Spain</a></li>
+                              <li data-id="811"><a href="javascript:void(0)"> +94   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Sri Lanka</a></li>
+                              <li data-id="813"><a href="javascript:void(0)"> +1758   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;St.Lucia</a></li>
+                              <li data-id="812"><a href="javascript:void(0)"> +1784   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;St.Vincent</a></li>
+                              <li data-id="813"><a href="javascript:void(0)"> +249   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Sudan</a></li>
+                              <li data-id="812"><a href="javascript:void(0)"> +597   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Suriname</a></li>
+                              <li data-id="811"><a href="javascript:void(0)"> +268   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Swaziland</a></li>
+                              <li data-id="813"><a href="javascript:void(0)"> +46   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Sweden</a></li>
+                              <li data-id="812"><a href="javascript:void(0)"> +41   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Switzerland</a></li>
+                              <li data-id="811"><a href="javascript:void(0)"> +963   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Syria</a></li>
+
+                              <li data-id="813"><a href="javascript:void(0)"> +992   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Tajikstan</a></li>
+                              <li data-id="812"><a href="javascript:void(0)"> +255   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Tanzania</a></li>
+                              <li data-id="811"><a href="javascript:void(0)"> +66   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Thailand</a></li>
+                              <li data-id="813"><a href="javascript:void(0)"> +228   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Togo</a></li>
+                              <li data-id="812"><a href="javascript:void(0)"> +676   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Tonga</a></li>
+                              <li data-id="811"><a href="javascript:void(0)"> +1809   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Trinidad and Tobago</a></li>
+                              <li data-id="813"><a href="javascript:void(0)"> +216   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Tunisia</a></li>
+                              <li data-id="812"><a href="javascript:void(0)"> +90   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Turkey</a></li>
+                              <li data-id="811"><a href="javascript:void(0)"> +993   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Turkmenistan</a></li>
+                              <li data-id="813"><a href="javascript:void(0)"> +256   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Uganda</a></li>
+                              <li data-id="812"><a href="javascript:void(0)"> +380   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Ukraine</a></li>
+                              <li data-id="811"><a href="javascript:void(0)"> +971   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;United Arab Emirates</a></li>
+                              <li data-id="813"><a href="javascript:void(0)"> +44   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;United Kiongdom</a></li>
+                              <li data-id="812"><a href="javascript:void(0)"> +1   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;United States of America</a></li>
+                              <li data-id="811"><a href="javascript:void(0)"> +598   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Uruguay</a></li>
+                              <li data-id="813"><a href="javascript:void(0)"> +998   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Uzbekistan</a></li>
+                              <li data-id="812"><a href="javascript:void(0)"> +58   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Venezuela</a></li>
+                              <li data-id="811"><a href="javascript:void(0)"> +84   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Vietnam</a></li>
+                              <li data-id="813"><a href="javascript:void(0)"> +967   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Yemen</a></li>
+                              <li data-id="812"><a href="javascript:void(0)"> +381   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Yugoslavia</a></li>
+                              <li data-id="811"><a href="javascript:void(0)"> +263   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Zimbabwe</a></li>
+                              <li data-id="813"><a href="javascript:void(0)"> +243   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Zaire</a></li>
+                              <li data-id="812"><a href="javascript:void(0)"> +260   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Zambia</a></li>
+
+
+                          </ul>
+                      </div>
+                  </div>
+              </div>
+
+          </div>
+          </div>
+
+          <div class="sms-form-row captcha-row">
+            <div class="sms-field-shell captcha-field">
+              <input id="validCode" value="" placeholder="{{sms.captchaPlaceholder}} ({{sms.captchaPlaceholderEn}})" type="text" class="frm-input" maxlength="4" />
+            </div>
+            <img id="validCodeImg" src="/portalauth/verificationcode" onclick="changeValidCode()" alt="{{sms.captchaAlt}}" />
+          </div>
+
+          <div class="sms-form-row verify-row">
+            <div class="verify-input-shell">
+              <input id="password" value="" placeholder="{{sms.codePlaceholder}} ({{sms.codePlaceholderEn}})" maxlength="128" type="password" class="frm-input pwdinput" />
+            </div>
+            <div class="code-button">
+              <span id="getpasswordLabel" class="code-button-label">
+                <span class="button-primary">{{sms.getCode}}</span>
+                <span class="button-secondary">{{sms.getCodeEn}}</span>
+              </span>
+              <input id="getpassword" onclick="getPassCodeWithCountry();" type="button" value="{{sms.getCode}}" class="frm-button code-button-control" aria-label="{{sms.getCode}}" />
+            </div>
+          </div>
+        </div>
+
+        <div class="agreement-row">
+          <img class="agreement-check" id="agreeCheck" role="checkbox" aria-checked="false" onclick="toggleAgreeCheck($(this));" src="assets/uncheck.svg" alt="{{sms.agreementUnchecked}}" />
+          <div class="agreement-copy">
+            <span>{{sms.agreement}}</span>
+            <small>{{sms.agreementEn}}</small>
+            <a class="agreement-notice-link" id="readmeLink" onclick="turnReadmePage();return false;" href="#">{{common.userNotice}}（{{common.userNoticeEn}}）</a>
+          </div>
+        </div>
+
+        <div class="login-button">
+          <span class="login-button-label">
+            <span class="button-primary">{{common.login}}</span>
+            <span class="button-secondary">{{common.loginEn}}</span>
+          </span>
+          <input id="loginBtn" onclick="SMSAuthWithCountry();" type="button" value="{{common.login}}" class="frm-button login-button-control" aria-label="{{common.login}}" />
+        </div>
+
+      </section>
+    </main>
+  </body>
+</html>

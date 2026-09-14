@@ -1,0 +1,1578 @@
+.frm-input {
+	width: 260px;
+	padding: 8px 10px;
+	border: 1px solid #CBDAE5;
+	border-radius: 2px;
+	color: white;
+	font-size: 16px;
+
+	background-color: #88AAC2;
+}
+
+#getpassword {
+	background-color: #88F7D1;
+	width: 86px;
+	margin-left: 10px;
+	height: 42px;
+	border: 0;
+	font-size: 16px;
+
+	border-radius: 2px;
+}
+
+.frm-button {
+	background-color: #88E1F7;
+	width: 280px;
+	height: 42px;
+	color: white;
+	border: 0;
+	font-size: 16px;
+
+	border-radius: 2px;
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+}
+
+.success-span {
+	display: block;
+	font-size: 20px;
+
+	background-color: #88E1F7;
+	color: white;
+	width: 250px;
+	margin: 0 auto;
+	padding: 10px;
+	border-radius: 30px;
+}
+
+#readmeLink {
+	text-decoration: none;
+}
+
+#turnBackLink {
+	color: white;
+	font-size: 15px;
+	text-decoration: none;
+	position: absolute;
+	left: 10px;
+	top: 22px;
+}
+
+::-webkit-input-placeholder {
+	color: #fff;
+}
+
+:-moz-placeholder {
+	color: #fff;
+}
+
+::-moz-placeholder {
+	color: #fff;
+}
+
+:-ms-input-placeholder {
+	color: #fff;
+}
+
+/* Authentication layout from the reference portal. */
+input::-webkit-input-placeholder{
+            color:#3EAAD8;
+            letter-spacing: 1px;
+        }
+        input::-moz-placeholder{   /* Mozilla Firefox 19+ */
+            color:#3EAAD8;
+            letter-spacing: 1px;
+        }
+        input:-moz-placeholder{    /* Mozilla Firefox 4 to 18 */
+            color:#3EAAD8;
+            letter-spacing: 1px;
+        }
+        input:-ms-input-placeholder{  /* Internet Explorer 10-11 */ 
+            color:#3EAAD8;
+            letter-spacing: 1px;
+        }
+
+ul li {
+list-style:none;
+}
+.basic-grey {
+width:302px;
+margin:0px auto;
+}
+.basic-grey .Companies {
+position:relative;
+}
+.basic-grey .Companies ul {
+    text-align: left;
+position:absolute;
+    background-color: #fff;
+height:210px;
+width:300px;
+overflow-y:auto;
+border:1px solid #DDD;
+    border-radius: 5px;
+display:none;
+}
+.basic-grey .Companies ul li {
+padding:3px 12px;
+}
+.basic-grey .Companies ul li:hover {
+background-color:#bebebe;
+cursor:pointer;
+}
+.basic-grey .Companies ul li.top {
+position:absolute;
+top:0;
+}
+
+:root {
+  --wifi-ink: #082344;
+  --wifi-muted: #848aab;
+  --wifi-blue: #007aff;
+  --wifi-blue-disabled: rgba(0, 122, 255, 0.55);
+  --wifi-line: #d8dce5;
+  --wifi-panel: rgba(250, 252, 255, 0.94);
+  --wifi-white: #ffffff;
+}
+
+html,
+body {
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  margin: 0;
+  overflow: hidden;
+}
+
+body.wifi-page {
+  width: 100vw;
+  height: 100vh;
+  height: 100dvh;
+  min-width: 320px;
+  min-height: 0;
+  overflow: hidden;
+  background: #dceeff url("assets/background.png") center bottom / cover no-repeat fixed;
+  color: var(--wifi-ink);
+  font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", Arial, sans-serif;
+  letter-spacing: 0;
+}
+
+.wifi-page *,
+.wifi-page *::before,
+.wifi-page *::after {
+  box-sizing: border-box;
+  letter-spacing: 0;
+}
+
+.wifi-page button,
+.wifi-page input {
+  font: inherit;
+}
+
+.wifi-page button,
+.wifi-page a {
+  -webkit-tap-highlight-color: transparent;
+}
+
+.wifi-page button:active,
+.wifi-page .entry-option:active {
+  transform: translateY(1px);
+}
+
+.wifi-shell {
+  width: 100%;
+  max-width: 920px;
+  height: 100vh;
+  height: 100dvh;
+  min-height: 0;
+  margin: 0 auto;
+  padding: 0 14px 30px;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior-y: contain;
+  -webkit-overflow-scrolling: touch;
+}
+
+.welcome-block {
+  width: 100%;
+  margin: 14px auto 13px;
+  text-align: center;
+}
+
+.welcome-block h1 {
+  margin: 0;
+  color: var(--wifi-ink);
+  font-size: 28px;
+  font-weight: 600;
+  line-height: 35px;
+}
+
+.welcome-block p,
+.bilingual-subtitle {
+  max-width: 330px;
+  margin: 5px auto 0;
+  color: var(--wifi-muted);
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 18px;
+}
+
+.entry-shell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.entry-logo {
+  display: block;
+  width: 49px;
+  height: 53px;
+  margin: 18px auto 26px;
+  object-fit: contain;
+}
+
+.entry-card,
+.auth-card,
+.passport-page .content {
+  width: 100%;
+  border: 1px solid rgba(255, 255, 255, 0.82);
+  border-radius: 30px;
+  background: var(--wifi-panel);
+  box-shadow: 0 16px 42px rgba(37, 72, 112, 0.12);
+}
+
+.entry-card {
+  max-width: 700px;
+  padding: clamp(28px, 7vw, 52px) clamp(22px, 7vw, 58px) 28px;
+}
+
+.entry-card-title {
+  margin: 0;
+  text-align: center;
+  color: var(--wifi-ink);
+  font-size: clamp(20px, 5vw, 29px);
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.entry-options {
+  display: grid;
+  margin-top: 38px;
+}
+
+.entry-option {
+  display: grid;
+  grid-template-columns: 64px 1fr 24px;
+  align-items: center;
+  min-height: 76px;
+  padding: 8px 22px 8px 8px;
+  border-radius: 999px;
+  background: var(--wifi-white);
+  box-shadow: 0 10px 24px rgba(34, 64, 98, 0.09);
+  color: var(--wifi-ink);
+  text-decoration: none;
+}
+
+.entry-option-icon {
+  width: 56px;
+  height: 56px;
+}
+
+.entry-option-copy {
+  min-width: 0;
+  text-align: center;
+}
+
+.entry-option-copy strong,
+.entry-option-copy span {
+  display: block;
+}
+
+.entry-option-copy strong {
+  font-size: clamp(18px, 4.5vw, 24px);
+  font-weight: 600;
+  line-height: 1.25;
+}
+
+.entry-option-copy span {
+  margin-top: 2px;
+  color: var(--wifi-muted);
+  font-size: clamp(12px, 3.4vw, 16px);
+  line-height: 1.3;
+}
+
+.entry-option-arrow {
+  display: block;
+  width: 14px;
+  height: 14px;
+  border-top: 2px solid #87909d;
+  border-right: 2px solid #87909d;
+}
+
+.entry-option-arrow {
+  transform: rotate(45deg);
+}
+
+.detail-shell {
+  --detail-gutter: 14px;
+  padding-top: 0;
+}
+
+.detail-nav {
+  position: sticky;
+  z-index: 10;
+  top: 0;
+  display: flex;
+  align-items: center;
+  height: 44px;
+  margin-right: calc(0px - var(--detail-gutter));
+  margin-bottom: 0;
+  margin-left: calc(0px - var(--detail-gutter));
+  padding: 0 var(--detail-gutter);
+  background-image: url("assets/background.png");
+  background-position: center bottom;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-size: cover;
+}
+
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#turnBackLink.back-link {
+  position: static;
+  top: auto;
+  left: auto;
+  color: inherit;
+  font-size: inherit;
+}
+
+.back-icon {
+  display: block;
+  width: 16px;
+  height: 16px;
+  object-fit: contain;
+}
+
+.auth-card {
+  width: 100%;
+  max-width: 700px;
+  margin: 0 auto;
+  padding: 21px 18px 39px;
+  border-radius: 24px;
+}
+
+.auth-heading {
+  margin-bottom: 13px;
+  text-align: center;
+}
+
+.auth-heading h2 {
+  margin: 0;
+  color: var(--wifi-ink);
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 24px;
+}
+
+.auth-heading p {
+  margin: 1px 0 0;
+  color: var(--wifi-muted);
+  font-size: 14px;
+  line-height: 18px;
+}
+
+.sms-notice {
+  display: flex;
+  align-items: start;
+  width: 100%;
+  margin: 0 0 18px;
+  color: #ff8a2b;
+  font-size: 14px;
+  line-height: 20px;
+  text-align: left;
+}
+
+.sms-notice-icon {
+  flex: 0 0 16px;
+  width: 16px;
+  height: 16px;
+  margin-top: 1px;
+  margin-right: 7px;
+  object-fit: contain;
+}
+
+.sms-notice-copy {
+  min-width: 0;
+}
+
+.sms-notice-copy span,
+.sms-notice-copy small {
+  display: block;
+}
+
+.sms-notice-copy small {
+  margin-top: 1px;
+  color: inherit;
+  font-size: 1em;
+  line-height: inherit;
+}
+
+.sms-fields {
+  display: block;
+}
+
+.sms-form-row {
+  display: flex;
+  min-width: 0;
+}
+
+.sms-form-row + .sms-form-row {
+  margin-top: 18px;
+}
+
+.sms-form-row > :first-child {
+  min-width: 0;
+  flex: 1 1 auto;
+}
+
+.sms-form-row > :last-child:not(:first-child) {
+  flex: 0 0 100px;
+  width: 100px;
+  margin-left: 10px;
+}
+
+.sms-phone-row {
+  display: block;
+}
+
+.sms-field-shell {
+  position: relative;
+  min-width: 0;
+  overflow: hidden;
+  border: 1px solid var(--wifi-line);
+  border-radius: 14px;
+  background: var(--wifi-white);
+}
+
+.sms-page .sms-field-shell .frm-input,
+.sms-page .verify-input-shell .frm-input {
+  width: 100% !important;
+  height: 44px !important;
+  margin: 0 !important;
+  padding: 0 12px !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  outline: none;
+  background: transparent !important;
+  color: var(--wifi-ink) !important;
+  font-size: 14px !important;
+  font-weight: 400 !important;
+  line-height: normal !important;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.sms-page .sms-phone-field .frm-input,
+.sms-page .captcha-field .frm-input,
+.sms-page .verify-input-shell .frm-input {
+  padding-left: 44px !important;
+}
+
+#validCodeImg {
+  display: block;
+  width: 100%;
+  height: 44px;
+  border: 1px solid var(--wifi-line);
+  border-radius: 14px;
+  background: var(--wifi-white);
+  object-fit: contain;
+  cursor: pointer;
+}
+
+.sms-page .g-container,
+.sms-page .basic-grey,
+.sms-page .form-group,
+.sms-page .Companies {
+  width: 100% !important;
+  margin: 0 !important;
+}
+
+.sms-page .Companies {
+  position: relative;
+  display: flex;
+  min-height: 44px;
+  overflow: visible;
+  border: 1px solid var(--wifi-line);
+  border-radius: 14px;
+  background: var(--wifi-white);
+}
+
+.sms-page .code,
+.sms-page .phoneinput,
+.sms-page .pwdinput {
+  width: 100% !important;
+  height: 44px !important;
+  margin: 0 !important;
+  padding: 0 12px !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  outline: none;
+  background: transparent !important;
+  color: var(--wifi-ink) !important;
+  font-size: 14px !important;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.sms-page .code {
+  flex: 0 0 106px;
+  width: 106px !important;
+  border-right: 1px solid #e5e7ed !important;
+  color: var(--wifi-muted) !important;
+  text-align: left;
+}
+
+.sms-page .phoneinput {
+  min-width: 0;
+  flex: 1 1 auto;
+}
+
+.sms-page input::placeholder {
+  color: var(--wifi-muted) !important;
+  font-size: 14px !important;
+  font-weight: 400 !important;
+  line-height: normal !important;
+  opacity: 1;
+}
+
+.sms-page .Companies ul {
+  position: absolute !important;
+  z-index: 20;
+  top: 48px;
+  left: 0;
+  width: 100% !important;
+  height: min(300px, 42vh) !important;
+  margin: 0 !important;
+  padding: 8px 0 !important;
+  overflow-y: auto;
+  border: 1px solid var(--wifi-line) !important;
+  border-radius: 12px !important;
+  background: var(--wifi-white) !important;
+  box-shadow: 0 12px 26px rgba(24, 51, 82, 0.16);
+}
+
+.sms-page .Companies ul li {
+  min-height: 38px;
+  padding: 8px 14px !important;
+  line-height: 22px;
+}
+
+.sms-page .Companies ul a {
+  color: var(--wifi-ink);
+  text-decoration: none;
+}
+
+.verify-input-shell {
+  min-width: 0;
+  overflow: hidden;
+  border: 1px solid var(--wifi-line);
+  border-radius: 14px;
+  background: var(--wifi-white);
+}
+
+.code-button,
+.login-button,
+.form_btn {
+  border: 0 !important;
+  border-radius: 14px !important;
+  color: var(--wifi-white);
+  text-align: center;
+  cursor: pointer;
+}
+
+.code-button {
+  position: relative;
+  display: flex;
+  overflow: hidden;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 44px;
+  min-height: 44px;
+  padding: 2px 12px;
+  background: var(--wifi-blue);
+  font-size: 13px !important;
+  white-space: nowrap;
+}
+
+.code-button-label {
+  width: 100%;
+  pointer-events: none;
+}
+
+.code-button .button-primary {
+  font-size: 14px;
+}
+
+.code-button-control {
+  position: absolute;
+  z-index: 3;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.code-button-control:disabled {
+  cursor: not-allowed;
+}
+
+.sms-page #getpassword {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  background: transparent;
+}
+
+.login-button {
+  position: relative;
+  display: flex;
+  overflow: hidden;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.login-button-label {
+  width: 100%;
+  pointer-events: none;
+}
+
+.login-button-control {
+  position: absolute;
+  z-index: 3;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.code-button span,
+.login-button span,
+.form_btn span {
+  display: block;
+}
+
+.button-primary {
+  font-size: 15px;
+  line-height: 15px;
+}
+
+.button-secondary {
+  margin-top: 1px;
+  font-size: 12px;
+  line-height: 14px;
+}
+
+.agreement-row {
+  display: flex;
+  align-items: start;
+  margin-top: 20px;
+}
+
+.agreement-check {
+  flex: 0 0 16px;
+  width: 16px !important;
+  height: 16px !important;
+  margin-right: 8px;
+  margin-top: 0;
+  border-radius: 4px;
+}
+
+.agreement-copy {
+  color: var(--wifi-ink);
+  font-size: 14px;
+  line-height: 16px;
+}
+
+.agreement-copy span,
+.agreement-copy small {
+  display: block;
+}
+
+.agreement-copy small {
+  margin-top: 6px;
+  color: var(--wifi-muted);
+  font-size: 11px;
+  line-height: 11px;
+}
+
+.agreement-notice-link {
+  display: block;
+  margin-top: 8px;
+  color: #007aff;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 16px;
+  text-decoration: none;
+}
+
+.login-button,
+.form_btn {
+  width: 100% !important;
+  height: 44px !important;
+  min-height: 44px !important;
+  margin-top: 28px;
+  padding: 0 16px;
+  border-radius: 12px !important;
+  background: var(--wifi-blue-disabled);
+  font-size: 15px !important;
+}
+
+.form_btn {
+  flex-direction: column !important;
+  align-items: center;
+  justify-content: center;
+}
+
+.passport-page .new_box {
+  display: block !important;
+  width: min(100%, 920px) !important;
+  min-height: 100vh !important;
+  min-height: 100dvh !important;
+  margin: 0 auto;
+  padding: 36px clamp(18px, 5vw, 54px) 38px;
+  overflow: visible !important;
+}
+
+.passport-page .new_box_title {
+  height: auto !important;
+  padding: 0 !important;
+  background: transparent !important;
+  color: var(--wifi-ink) !important;
+}
+
+.passport-page .content,
+.passport-page .form_box {
+  width: 100% !important;
+}
+
+.passport-page .content {
+  max-width: 700px;
+  margin: 0 auto;
+  padding: clamp(26px, 7vw, 46px) clamp(20px, 6vw, 44px) 30px !important;
+}
+
+.passport-page .pr_title_text {
+  color: var(--wifi-ink) !important;
+  font-size: clamp(22px, 5.2vw, 30px) !important;
+  font-weight: 600 !important;
+}
+
+.passport-page .pr_box,
+.passport-page .pr_title {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  align-items: center;
+}
+
+.passport-page .pr_btn {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.passport-page .pr_btn .btn_img {
+  position: absolute;
+  z-index: 2;
+}
+
+.passport-page .pr_btn .bg_img {
+  z-index: 1;
+}
+
+.passport-page .pr_title_text small,
+.passport-page .pr_title_tip small {
+  display: block;
+  margin-top: 4px;
+  color: var(--wifi-muted);
+  font-size: 0.64em;
+  font-weight: 400;
+}
+
+.passport-page .pr_btn {
+  width: 100% !important;
+  margin: 24px 0 12px !important;
+}
+
+.passport-page .pr_btn .bg_img {
+  width: 100% !important;
+  max-height: 265px;
+  object-fit: contain;
+}
+
+.passport-page .pr_btn .btn_img {
+  width: 62px !important;
+  height: 62px;
+  padding: 15px;
+  border-radius: 50%;
+  background: rgba(31, 38, 45, 0.68);
+  object-fit: contain;
+}
+
+.passport-page .pr_title_tip {
+  color: var(--wifi-ink) !important;
+  text-align: center !important;
+  font-size: 14px !important;
+}
+
+.passport-page .form_box {
+  margin-top: 20px;
+}
+
+.passport-page .form_item {
+  min-height: 72px !important;
+  height: auto !important;
+  padding: 12px 0;
+  border-bottom: 1px solid #e5e7ed !important;
+}
+
+.passport-page .form_item .label {
+  width: 112px !important;
+  color: var(--wifi-ink) !important;
+  font-size: 15px !important;
+  line-height: 1.25;
+}
+
+.passport-page .form_item .label small {
+  display: block;
+  margin-top: 3px;
+  color: var(--wifi-muted);
+  font-size: 11px;
+  font-weight: 400;
+}
+
+.passport-page .form_item .input {
+  min-width: 0;
+  height: 48px !important;
+  padding: 0 8px !important;
+  color: var(--wifi-ink) !important;
+  font-size: 15px !important;
+}
+
+.passport-page .form_item input::placeholder {
+  color: var(--wifi-muted) !important;
+  opacity: 1;
+}
+
+.passport-page .form_item .select_icon {
+  width: 26px !important;
+  height: 26px !important;
+}
+
+.passport-page .form_item .select_list {
+  bottom: 70px !important;
+  max-height: 300px;
+  border-color: var(--wifi-line) !important;
+  border-radius: 12px !important;
+  box-shadow: 0 12px 26px rgba(24, 51, 82, 0.16);
+}
+
+.passport-page #error_label {
+  right: 8px !important;
+}
+
+.passport-page .otherfun,
+.sms-page .index,
+.passport-page .new_box > .href {
+  display: none !important;
+}
+
+.passport-page .infoMsg,
+.passport-page .errorMsg {
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+@media (max-width: 520px) {
+  .detail-shell {
+    --detail-gutter: 14px;
+  }
+
+  .wifi-shell,
+  .passport-page .new_box {
+    padding-right: 14px;
+    padding-left: 14px;
+  }
+
+  .entry-logo {
+    margin-top: 4px;
+    margin-bottom: 20px;
+  }
+
+  .entry-card {
+    padding: 30px 18px 24px;
+  }
+
+  .entry-options {
+    margin-top: 28px;
+  }
+
+  .entry-option {
+    grid-template-columns: 58px 1fr 20px;
+    min-height: 70px;
+    padding-right: 18px;
+  }
+
+  .entry-option-icon {
+    width: 52px;
+    height: 52px;
+  }
+
+  .sms-page .Companies {
+    grid-template-columns: 92px minmax(0, 1fr);
+  }
+
+  .sms-page .code,
+  .sms-page .phoneinput,
+  .sms-page .pwdinput {
+    padding-right: 12px !important;
+    padding-left: 12px !important;
+    font-size: 14px !important;
+  }
+
+  .passport-page .form_item .label {
+    width: 96px !important;
+  }
+}
+
+@media (max-width: 359px) {
+  .welcome-block h1 {
+    font-size: 25px;
+  }
+
+  .auth-card {
+    padding-right: 14px;
+    padding-left: 14px;
+  }
+}
+
+@media (max-height: 680px) {
+  .wifi-shell,
+  .passport-page .new_box {
+    padding-top: 24px;
+  }
+
+  .detail-shell,
+  .passport-page .new_box {
+    padding-top: 0;
+  }
+
+  .entry-logo {
+    margin-top: 0;
+    margin-bottom: 14px;
+  }
+
+  .welcome-block {
+    margin-top: 6px;
+  }
+
+  .entry-card {
+    padding-top: 24px;
+    padding-bottom: 22px;
+  }
+
+  .auth-card,
+  .passport-page .content {
+    padding-top: 16px;
+    padding-bottom: 24px;
+  }
+}
+
+.sms-page .Companies::before,
+.sms-page .captcha-field::before,
+.sms-page .verify-input-shell::before {
+  position: absolute;
+  z-index: 2;
+  top: 50%;
+  content: "";
+  pointer-events: none;
+  background: var(--wifi-blue);
+  transform: translateY(-50%);
+  -webkit-mask-position: center;
+  mask-position: center;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-size: contain;
+  mask-size: contain;
+}
+
+.sms-page .Companies::before {
+  left: 12px;
+  width: 16px;
+  height: 16px;
+  -webkit-mask-image: url("assets/phone.svg");
+  mask-image: url("assets/phone.svg");
+}
+
+.sms-page .Companies::after {
+  position: absolute;
+  z-index: 2;
+  top: 17px;
+  left: 88px;
+  width: 7px;
+  height: 7px;
+  border-right: 1px solid var(--wifi-muted);
+  border-bottom: 1px solid var(--wifi-muted);
+  content: "";
+  pointer-events: none;
+  transform: rotate(45deg);
+}
+
+.sms-page .captcha-field::before {
+  left: 12px;
+  width: 16px;
+  height: 16px;
+  -webkit-mask-image: url("assets/photo.svg");
+  mask-image: url("assets/photo.svg");
+}
+
+.sms-page .verify-input-shell {
+  position: relative;
+}
+
+.sms-page .verify-input-shell::before {
+  left: 12px;
+  width: 16px;
+  height: 16px;
+  -webkit-mask-image: url("assets/code.svg");
+  mask-image: url("assets/code.svg");
+}
+
+.sms-page .code {
+  padding-right: 22px !important;
+  padding-left: 40px !important;
+}
+
+.sms-page .pwdinput {
+  padding-left: 44px !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wifi-page * {
+    scroll-behavior: auto !important;
+    transition: none !important;
+  }
+}
+
+/* Shared result and notice layouts use the same frame as SMS authentication. */
+.success-page .detail-shell,
+.notice-page .detail-shell {
+  display: flex;
+  flex-direction: column;
+}
+
+.success-card,
+.notice-card {
+  flex: 0 0 auto;
+  padding: 16px 18px 14px;
+}
+
+.success-heading,
+.notice-heading {
+  margin-bottom: 18px;
+}
+
+.success-visual {
+  display: block;
+  width: min(88%, 273px);
+  height: auto;
+  aspect-ratio: 545 / 292;
+  margin: 0 auto 14px;
+  object-fit: contain;
+}
+
+.success-message {
+  text-align: center;
+}
+
+.success-message h3,
+.success-message p {
+  margin: 0;
+}
+
+.success-message h3 {
+  color: var(--wifi-ink);
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 24px;
+}
+
+.success-message p {
+  color: var(--wifi-muted);
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 18px;
+}
+
+.portal-action {
+  position: relative;
+  display: flex;
+  width: 100%;
+  height: 44px;
+  margin-top: 26px;
+  overflow: hidden;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(196, 196, 196, 0.55);
+  border-radius: 12px;
+  background: var(--wifi-blue);
+  color: var(--wifi-white);
+  text-align: center;
+}
+
+.portal-action-label,
+.portal-action-label strong,
+.portal-action-label small {
+  display: block;
+  pointer-events: none;
+}
+
+.portal-action-label strong {
+  font-size: 15px;
+  font-weight: 400;
+  line-height: 15px;
+}
+
+.portal-action-label small {
+  margin-top: 1px;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 17px;
+}
+
+.portal-action-control {
+  position: absolute;
+  z-index: 2;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.portal-action:active {
+  transform: translateY(1px);
+}
+
+.portal-action:focus-within {
+  outline: 2px solid rgba(0, 119, 255, 0.35);
+  outline-offset: 2px;
+}
+
+.success-card {
+  padding-bottom: 30px;
+}
+
+.notice-page .detail-shell {
+  padding-bottom: 14px;
+  overflow-y: hidden;
+}
+
+.notice-page .welcome-block {
+  flex: 0 0 auto;
+  margin-bottom: 12px;
+}
+
+.notice-card {
+  display: flex;
+  min-height: 0;
+  flex: 1 1 auto;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.notice-heading {
+  flex: 0 0 auto;
+  margin-bottom: 4px;
+}
+
+.notice-copy {
+  min-height: 0;
+  padding-right: 3px;
+  overflow-x: hidden;
+  overflow-y: auto;
+  flex: 1 1 auto;
+  overscroll-behavior-y: contain;
+  -webkit-overflow-scrolling: touch;
+}
+
+.notice-section {
+  margin-top: 8px;
+}
+
+.notice-section p {
+  margin: 0;
+}
+
+.notice-cn {
+  color: var(--wifi-ink);
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 20px;
+  text-align: justify;
+}
+
+.notice-en {
+  margin-top: 4px !important;
+  color: var(--wifi-muted);
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 16px;
+  text-align: justify;
+}
+
+.notice-action {
+  flex: 0 0 44px;
+  margin-top: 12px;
+}
+
+@media (max-height: 680px) {
+  .success-card,
+  .notice-card {
+    padding-top: 14px;
+  }
+
+  .success-heading {
+    margin-bottom: 10px;
+  }
+
+  .success-visual {
+    width: min(72%, 236px);
+    margin-bottom: 8px;
+  }
+
+  .success-card .portal-action {
+    margin-top: 16px;
+  }
+}
+
+/* Shared source: PC presentation follows the 1920 x 1080 portal artwork. */
+.back-text {
+  display: none;
+}
+
+.device-pc.sms-page {
+  background-image: url("assets/background-pc.png");
+  background-position: center center;
+  background-attachment: fixed;
+}
+
+.device-pc.sms-page .detail-shell {
+  display: block;
+  width: 100%;
+  max-width: none;
+  padding: 118px 32px 30px;
+  overflow-y: auto;
+}
+
+.device-pc.sms-page .detail-nav {
+  position: fixed;
+  z-index: 30;
+  top: 40px;
+  left: 40px;
+  width: 140px;
+  height: 60px;
+  margin: 0;
+  padding: 0;
+  border: 1px solid rgba(255, 255, 255, 0.92);
+  border-radius: 32px;
+  background: rgba(255, 255, 255, 0.7);
+  box-shadow: 0 15px 30px rgba(0, 11, 59, 0.08);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+}
+
+.device-pc.sms-page .back-link {
+  width: 100%;
+  height: 100%;
+  color: var(--wifi-ink);
+  text-decoration: none;
+}
+
+.device-pc.sms-page .back-icon {
+  width: 24px;
+  height: 24px;
+  margin-right: 12px;
+}
+
+.device-pc.sms-page .back-text {
+  display: inline;
+  font-size: 24px;
+  font-weight: 600;
+  line-height: 1;
+}
+
+.device-pc.sms-page .welcome-block {
+  margin: 0 auto 42px;
+}
+
+.device-pc.sms-page .welcome-block h1 {
+  font-size: 44px;
+  line-height: 53px;
+}
+
+.device-pc.sms-page .welcome-block p {
+  max-width: none;
+  margin-top: 6px;
+  color: var(--wifi-ink);
+  font-size: 22px;
+  line-height: 28px;
+}
+
+.device-pc.sms-page .auth-card {
+  width: 580px;
+  max-width: calc(100vw - 64px);
+  margin: 0 auto;
+  padding: 34px 44px 54px;
+  border-radius: 36px;
+  background: rgba(250, 252, 255, 0.94);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+}
+
+.device-pc.sms-page .auth-heading {
+  margin-bottom: 28px;
+}
+
+.device-pc.sms-page .auth-heading h2 {
+  font-size: 28px;
+  line-height: 36px;
+}
+
+.device-pc.sms-page .auth-heading p {
+  margin-top: 4px;
+  font-size: 20px;
+  line-height: 25px;
+}
+
+.device-pc.sms-page .sms-notice {
+  margin-bottom: 30px;
+  font-size: 20px;
+  line-height: 25px;
+}
+
+.device-pc.sms-page .sms-notice-icon {
+  flex-basis: 24px;
+  width: 24px;
+  height: 24px;
+  margin-top: 2px;
+  margin-right: 9px;
+}
+
+.device-pc.sms-page .sms-notice-copy small {
+  margin-top: 2px;
+  font-size: 16px;
+  line-height: 21px;
+}
+
+.device-pc.sms-page .sms-form-row + .sms-form-row {
+  margin-top: 24px;
+}
+
+.device-pc.sms-page .Companies,
+.device-pc.sms-page .sms-field-shell,
+.device-pc.sms-page .verify-input-shell {
+  min-height: 68px !important;
+  border-radius: 18px;
+}
+
+.device-pc.sms-page .code,
+.device-pc.sms-page .phoneinput,
+.device-pc.sms-page .pwdinput,
+.device-pc.sms-page .sms-field-shell .frm-input,
+.device-pc.sms-page .verify-input-shell .frm-input {
+  height: 68px !important;
+  font-size: 18px !important;
+}
+
+.device-pc.sms-page input::placeholder {
+  font-size: 18px !important;
+}
+
+.device-pc.sms-page .code {
+  flex-basis: 138px;
+  width: 138px !important;
+  padding-left: 52px !important;
+}
+
+.device-pc.sms-page .Companies::before,
+.device-pc.sms-page .captcha-field::before,
+.device-pc.sms-page .verify-input-shell::before {
+  left: 16px;
+  width: 24px;
+  height: 24px;
+}
+
+.device-pc.sms-page .Companies::after {
+  top: 27px;
+  left: 110px;
+  width: 9px;
+  height: 9px;
+}
+
+.device-pc.sms-page .phoneinput,
+.device-pc.sms-page .captcha-field .frm-input,
+.device-pc.sms-page .verify-input-shell .frm-input {
+  padding-left: 56px !important;
+}
+
+.device-pc.sms-page #validCodeImg {
+  height: 68px;
+  border-radius: 18px;
+}
+
+.device-pc.sms-page .sms-form-row > :last-child:not(:first-child) {
+  flex-basis: 144px;
+  width: 144px;
+  margin-left: 16px;
+}
+
+.device-pc.sms-page .code-button {
+  height: 68px;
+  min-height: 68px;
+  border-radius: 18px !important;
+}
+
+.device-pc.sms-page .code-button .button-primary {
+  font-size: 18px;
+}
+
+.device-pc.sms-page .button-secondary {
+  font-size: 16px;
+  line-height: 18px;
+}
+
+.device-pc.sms-page .agreement-row {
+  margin-top: 26px;
+}
+
+.device-pc.sms-page .agreement-check {
+  flex-basis: 24px;
+  width: 24px !important;
+  height: 24px !important;
+  margin-top: 0;
+  margin-right: 12px;
+  border-radius: 6px;
+}
+
+.device-pc.sms-page .agreement-copy {
+  font-size: 20px;
+  line-height: 24px;
+}
+
+.device-pc.sms-page .agreement-copy small {
+  margin-top: 4px;
+  font-size: 16px;
+  line-height: 16px;
+}
+
+.device-pc.sms-page .agreement-notice-link {
+  margin-top: 8px;
+  font-size: 20px;
+  line-height: 24px;
+}
+
+.device-pc.sms-page .login-button {
+  height: 68px !important;
+  min-height: 68px !important;
+  margin-top: 32px;
+  border-radius: 18px !important;
+}
+
+.device-pc.sms-page .login-button .button-primary {
+  font-size: 20px;
+}
+
+.device-pc.sms-page.success-page .detail-shell,
+.device-pc.sms-page.notice-page .detail-shell {
+  padding-top: 70px;
+}
+
+.device-pc.sms-page.success-page .welcome-block,
+.device-pc.sms-page.notice-page .welcome-block {
+  margin-bottom: 32px;
+}
+
+.device-pc.sms-page .success-card,
+.device-pc.sms-page .notice-card {
+  padding: 32px 44px 40px;
+}
+
+.device-pc.sms-page .success-visual {
+  width: 317px;
+  max-width: 100%;
+}
+
+.device-pc.sms-page .success-message h3 {
+  font-size: 22px;
+}
+
+.device-pc.sms-page .success-message p,
+.device-pc.sms-page .notice-en {
+  font-size: 14px;
+}
+
+.device-pc.sms-page .notice-card {
+  height: min(720px, calc(100vh - 230px));
+  min-height: 430px;
+}
+
+.device-pc.sms-page .notice-cn {
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+@media (max-height: 900px) {
+  .device-pc.sms-page .detail-shell {
+    padding-top: 32px;
+  }
+
+  .device-pc.sms-page .welcome-block {
+    margin-bottom: 20px;
+  }
+
+  .device-pc.sms-page .welcome-block h1 {
+    font-size: 34px;
+    line-height: 42px;
+  }
+
+  .device-pc.sms-page .welcome-block p {
+    font-size: 16px;
+    line-height: 22px;
+  }
+
+  .device-pc.sms-page .auth-card {
+    padding-top: 24px;
+    padding-bottom: 30px;
+  }
+}

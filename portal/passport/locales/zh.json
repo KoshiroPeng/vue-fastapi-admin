@@ -11,9 +11,12 @@
   "common.traditional": "繁",
   "common.languageSwitch": "语言切换",
   "passport.welcome": "欢迎使用深圳机场 Wi-Fi",
+  "passport.entranceFolder": "entrance_zh",
   "passport.authentication": "护照认证",
   "passport.captureWarning": "如果无法拍照，请复制链接到浏览器中打开",
   "passport.copyLink": "复制链接",
+  "passport.copySuccess": "链接复制成功",
+  "passport.copyFailed": "链接复制失败，请长按地址栏复制",
   "passport.captureTip": "确保证件清晰完整",
   "passport.number": "护照编号",
   "passport.invalidNumber": "护照号码不合法",
@@ -22,7 +25,7 @@
   "passport.scanOrEnter": "扫描或输入",
   "passport.scanOrSelect": "扫描或选择",
   "passport.scan": "扫描识别",
-  "passport.agreement": "我已阅读并同意机场 Wi-Fi 使用条款",
+  "passport.agreement": "我已阅读机场wifi使用条款",
   "passport.agreementChecked": "已同意",
   "passport.agreementUnchecked": "未同意",
   "passport.otherMethods": "其他登录方式 >>",
@@ -32,5 +35,7 @@
   "agreement.introEnd": "或修订。如不同意本协议，请立即关闭浏览器及结束连线并停止继续使用本服务。",
   "agreement.item1": "使用者须遵守所在国家或地区所适用的所有法律、法规。",
   "agreement.item2": "使用者须配备支持Wi-Fi的无线装置及相关软件才能使用本服务。建议使用服务时，采用提供较佳数据保护功能的加密连结通道。",
-  "agreement.item3": "使用者不得利用本服务浏览或存取淫亵、不雅或非法内容的网页。"
+  "agreement.item3": "使用者不得利用本服务浏览或存取淫亵、不雅或非法内容的网页。",
+  "agreement.agree": "同意",
+  "success.accessNow": "现在即可免费上网"
 }

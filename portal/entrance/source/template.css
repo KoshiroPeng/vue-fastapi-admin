@@ -1,0 +1,496 @@
+:root {
+  --wifi-ink: #082344;
+  --wifi-muted: #848aab;
+  --wifi-blue: #0077ff;
+  --wifi-line: rgba(255, 255, 255, 0.78);
+  --wifi-panel: rgba(250, 252, 255, 0.93);
+}
+
+html,
+body {
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  margin: 0;
+  overflow: hidden;
+}
+
+body.wifi-page {
+  width: 100vw;
+  height: 100vh;
+  height: 100dvh;
+  min-width: 320px;
+  min-height: 0;
+  overflow: hidden;
+  color: var(--wifi-ink);
+  background-color: #dceeff;
+  background-position: center bottom;
+  background-repeat: no-repeat;
+  background-size: cover;
+  font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", Arial, sans-serif;
+}
+
+body.device-phone {
+  background-image: url("assets/airport-bg.png");
+}
+
+body.device-pc {
+  background-image: url("assets/airport-bg-pc.png");
+  background-position: center center;
+}
+
+.wifi-page *,
+.wifi-page *::before,
+.wifi-page *::after {
+  box-sizing: border-box;
+  letter-spacing: 0;
+}
+
+.wifi-page a {
+  -webkit-tap-highlight-color: transparent;
+}
+
+.wifi-page a:focus-visible {
+  outline: 3px solid rgba(0, 119, 255, 0.55);
+  outline-offset: 3px;
+}
+
+.wifi-shell {
+  height: 100%;
+  min-height: 0;
+  margin: 0 auto;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior-y: contain;
+  -webkit-overflow-scrolling: touch;
+}
+
+.entry-shell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.welcome-block {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  text-align: center;
+}
+
+.entry-logo {
+  display: block;
+  flex: none;
+  object-fit: contain;
+}
+
+.welcome-copy h1 {
+  margin: 0;
+  color: var(--wifi-ink);
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.welcome-copy p,
+.entry-heading p {
+  color: var(--wifi-muted);
+  font-weight: 400;
+  line-height: 1.4;
+}
+
+.entry-card {
+  width: 100%;
+  border: 1px solid var(--wifi-line);
+  background: var(--wifi-panel);
+  box-shadow: 0 16px 42px rgba(37, 72, 112, 0.12);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+}
+
+.entry-heading {
+  text-align: center;
+}
+
+.entry-heading h2 {
+  margin: 0;
+  color: var(--wifi-ink);
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.entry-options {
+  display: block;
+}
+
+.entry-option {
+  display: grid;
+  align-items: center;
+  color: var(--wifi-ink);
+  background: #fff;
+  box-shadow: 0 10px 24px rgba(34, 64, 98, 0.09);
+  text-decoration: none;
+  transition: transform 150ms ease, box-shadow 150ms ease;
+}
+
+.entry-option + .entry-option {
+  margin-top: 16px;
+}
+
+.entry-option:hover {
+  box-shadow: 0 13px 28px rgba(34, 64, 98, 0.14);
+  transform: translateY(-1px);
+}
+
+.entry-option:active {
+  box-shadow: 0 6px 14px rgba(34, 64, 98, 0.1);
+  transform: translateY(1px);
+}
+
+.entry-option-icon {
+  object-fit: contain;
+}
+
+.entry-option-copy {
+  min-width: 0;
+  text-align: center;
+}
+
+.entry-option-copy strong,
+.entry-option-copy span {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.entry-option-copy strong {
+  font-weight: 600;
+  line-height: 1.25;
+}
+
+.entry-option-copy span {
+  margin-top: 2px;
+  color: var(--wifi-muted);
+  line-height: 1.3;
+}
+
+.entry-option-arrow {
+  display: block;
+  width: 14px;
+  height: 14px;
+  border-top: 2px solid #87909d;
+  border-right: 2px solid #87909d;
+  transform: rotate(45deg);
+}
+
+.language-switch {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  overflow: hidden;
+  border-radius: 999px;
+  background: #f1f2f6;
+}
+
+.lang-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--wifi-muted);
+  text-decoration: none;
+}
+
+.lang-link.is-active,
+.lang-link[aria-current="page"] {
+  color: var(--wifi-blue);
+  background: #dcecff;
+}
+
+.device-phone .wifi-shell {
+  width: min(100%, 920px);
+  padding: 42px clamp(16px, 5vw, 54px) 34px;
+}
+
+.device-phone .welcome-block {
+  flex-direction: column;
+  margin: 0 auto 24px;
+}
+
+.device-phone .entry-logo {
+  width: 49px;
+  height: 53px;
+  margin: 0 auto 26px;
+}
+
+.device-phone .welcome-copy h1 {
+  font-size: clamp(29px, 7.5vw, 42px);
+}
+
+.device-phone .welcome-copy p {
+  margin: 9px 0 0;
+  font-size: clamp(14px, 3.8vw, 18px);
+}
+
+.device-phone .entry-card {
+  max-width: 700px;
+  padding: clamp(28px, 7vw, 52px) clamp(18px, 6vw, 58px) 28px;
+  border-radius: 30px;
+}
+
+.device-phone .entry-heading h2 {
+  font-size: clamp(22px, 5.5vw, 30px);
+}
+
+.device-phone .entry-heading p {
+  margin: 9px 0 0;
+  font-size: clamp(14px, 3.8vw, 18px);
+}
+
+.device-phone .entry-options {
+  margin-top: 36px;
+}
+
+.device-phone .entry-option {
+  grid-template-columns: 64px minmax(0, 1fr) 24px;
+  min-height: 76px;
+  padding: 8px 20px 8px 8px;
+  border-radius: 999px;
+}
+
+.device-phone .entry-option-icon {
+  width: 56px;
+  height: 56px;
+}
+
+.device-phone .entry-option-copy strong {
+  font-size: clamp(18px, 4.8vw, 24px);
+}
+
+.device-phone .entry-option-copy span {
+  font-size: clamp(12px, 3.5vw, 16px);
+}
+
+.device-phone .language-switch {
+  width: 132px;
+  margin: 30px auto 0;
+}
+
+.device-phone .lang-link {
+  min-height: 40px;
+  font-size: 17px;
+}
+
+.device-pc .wifi-shell {
+  width: 100%;
+  max-width: none;
+  padding: clamp(76px, 9.6vh, 104px) 32px 18px;
+}
+
+.device-pc .welcome-block {
+  width: auto;
+  margin: 0 auto;
+}
+
+.device-pc .entry-logo {
+  width: 82px;
+  height: 90px;
+  margin-right: 28px;
+}
+
+.device-pc .welcome-copy {
+  text-align: left;
+}
+
+.device-pc .welcome-copy h1 {
+  font-size: 42px;
+}
+
+.device-pc .welcome-copy p {
+  margin: 6px 0 0;
+  color: var(--wifi-ink);
+  font-size: 18px;
+}
+
+.device-pc .entry-card {
+  width: 580px;
+  max-width: calc(100vw - 64px);
+  margin-top: clamp(48px, 6.5vh, 70px);
+  padding: 34px 48px 20px;
+  border-radius: 36px;
+  background: rgba(250, 252, 255, 0.94);
+}
+
+.device-pc .entry-heading h2 {
+  font-size: 28px;
+}
+
+.device-pc .entry-heading p {
+  margin: 6px 0 0;
+  font-size: 18px;
+}
+
+.device-pc .entry-options {
+  margin-top: 40px;
+}
+
+.device-pc .entry-option {
+  grid-template-columns: 88px minmax(0, 1fr) 24px;
+  min-height: 94px;
+  padding: 7px 24px 7px 7px;
+  border-radius: 999px;
+}
+
+.device-pc .entry-option + .entry-option {
+  margin-top: 24px;
+}
+
+.device-pc .entry-option-icon {
+  width: 80px;
+  height: 80px;
+}
+
+.device-pc .entry-option-copy strong {
+  font-size: 24px;
+}
+
+.device-pc .entry-option-copy span {
+  font-size: 16px;
+}
+
+.device-pc .language-switch {
+  width: 132px;
+  margin: 28px auto 0;
+}
+
+.device-pc .lang-link {
+  min-height: 40px;
+  font-size: 18px;
+}
+
+@media (max-width: 460px) {
+  .device-phone .wifi-shell {
+    padding-top: 36px;
+  }
+
+  .device-phone .entry-card {
+    border-radius: 28px;
+  }
+
+  .device-phone .entry-option {
+    grid-template-columns: 58px minmax(0, 1fr) 20px;
+    min-height: 72px;
+    padding-right: 16px;
+  }
+
+  .device-phone .entry-option + .entry-option {
+    margin-top: 12px;
+  }
+
+  .device-phone .entry-option-icon {
+    width: 52px;
+    height: 52px;
+  }
+}
+
+@media (max-width: 360px) {
+  .device-phone .wifi-shell {
+    padding-right: 12px;
+    padding-left: 12px;
+  }
+
+  .device-phone .entry-option-copy strong {
+    font-size: 17px;
+  }
+
+  .device-phone .entry-option-copy span {
+    font-size: 11px;
+  }
+}
+
+@media (max-height: 820px) {
+  .device-pc .wifi-shell {
+    padding: 20px 24px 14px;
+  }
+
+  .device-pc .entry-logo {
+    width: 56px;
+    height: 62px;
+    margin-right: 20px;
+  }
+
+  .device-pc .welcome-copy h1 {
+    font-size: 32px;
+  }
+
+  .device-pc .welcome-copy p {
+    margin-top: 4px;
+    font-size: 14px;
+  }
+
+  .device-pc .entry-card {
+    width: 500px;
+    margin-top: 20px;
+    padding: 20px 36px 14px;
+    border-radius: 28px;
+  }
+
+  .device-pc .entry-heading h2 {
+    font-size: 22px;
+  }
+
+  .device-pc .entry-heading p {
+    margin-top: 4px;
+    font-size: 14px;
+  }
+
+  .device-pc .entry-options {
+    margin-top: 18px;
+  }
+
+  .device-pc .entry-option {
+    grid-template-columns: 64px minmax(0, 1fr) 20px;
+    min-height: 64px;
+    padding: 4px 18px 4px 4px;
+  }
+
+  .device-pc .entry-option + .entry-option {
+    margin-top: 10px;
+  }
+
+  .device-pc .entry-option-icon {
+    width: 56px;
+    height: 56px;
+  }
+
+  .device-pc .entry-option-copy strong {
+    font-size: 20px;
+  }
+
+  .device-pc .entry-option-copy span {
+    font-size: 14px;
+  }
+
+  .device-pc .language-switch {
+    width: 116px;
+    margin-top: 14px;
+  }
+
+  .device-pc .lang-link {
+    min-height: 32px;
+    font-size: 16px;
+  }
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  .entry-card {
+    background: #fafdff;
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .entry-option {
+    transition: none;
+  }
+}
