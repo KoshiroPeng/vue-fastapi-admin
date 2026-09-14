@@ -19,7 +19,7 @@
   "sms.mobilePlaceholder": "手机号",
   "sms.mobileNumber": "手机号码",
   "sms.codePlaceholder": "验证码",
-  "sms.captchaPlaceholder": "图片验证码",
+  "sms.captchaPlaceholder": "图形验证码",
   "sms.captchaAlt": "点击更换图片验证码",
   "sms.getCode": "获取验证码",
   "sms.agreement": "我已阅读机场wifi使用条款",

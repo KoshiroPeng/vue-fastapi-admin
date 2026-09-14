@@ -1,12 +1,21 @@
 const fs = require('fs')
 const http = require('http')
+const os = require('os')
 const path = require('path')
 const { readLocale, renderProjectText } = require('./scripts/locales')
 
 const ROOT_DIR = __dirname
 const MODE = process.argv.includes('--dev') ? 'dev' : 'preview'
 const START_PORT = Number.parseInt(process.env.PORT || process.env.PREVIEW_PORT || '3300', 10)
-const HOST = process.env.PREVIEW_HOST || '127.0.0.1'
+
+function readArgument(name) {
+  const index = process.argv.indexOf(name)
+  if (index === -1) return null
+  const value = process.argv[index + 1]
+  return value && !value.startsWith('--') ? value : null
+}
+
+const HOST = readArgument('--host') || process.env.PREVIEW_HOST || '0.0.0.0'
 
 const excludedDirectories = new Set(['.git', 'node_modules', 'phone-ui'])
 const projectLabels = {
@@ -376,5 +385,34 @@ try {
   console.warn(`Automatic reload is unavailable: ${error.message}`)
 }
 
-function listen(port) { const server = http.createServer(requestHandler); server.on('error', (error) => { if (error.code === 'EADDRINUSE' && port < START_PORT + 20) { listen(port + 1); return } throw error }); server.listen(port, HOST, () => { console.log(`Wi-Fi portal ${MODE}: http://${HOST}:${port}`); console.log('Press Ctrl+C to stop.') }) }
+function getAccessUrls(port) {
+  const hosts = new Set()
+  if (HOST === '0.0.0.0' || HOST === '::') {
+    hosts.add('localhost')
+    for (const addresses of Object.values(os.networkInterfaces())) {
+      for (const address of addresses || []) {
+        if (address.family === 'IPv4' && !address.internal) hosts.add(address.address)
+      }
+    }
+  } else {
+    hosts.add(HOST)
+  }
+  return Array.from(hosts, (host) => `http://${host}:${port}`)
+}
+
+function listen(port) {
+  const server = http.createServer(requestHandler)
+  server.on('error', (error) => {
+    if (error.code === 'EADDRINUSE' && port < START_PORT + 20) {
+      listen(port + 1)
+      return
+    }
+    throw error
+  })
+  server.listen(port, HOST, () => {
+    console.log(`Wi-Fi portal ${MODE}:`)
+    for (const url of getAccessUrls(port)) console.log(`  ${url}`)
+    console.log('Press Ctrl+C to stop.')
+  })
+}
 listen(START_PORT)
