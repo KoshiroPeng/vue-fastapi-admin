@@ -193,7 +193,7 @@ body {
 }
 
 .pr_title_warning {
-  margin: 5px 0;
+  margin: 0;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -486,8 +486,8 @@ body {
 :root {
   --wifi-ink: #082344;
   --wifi-muted: #848aab;
-  --wifi-blue: #0077ff;
-  --wifi-blue-disabled: rgba(0, 119, 255, 0.5);
+  --wifi-blue: #007aff;
+  --wifi-blue-disabled: rgba(0, 122, 255, 0.55);
   --wifi-line: #d8dce5;
   --wifi-panel: rgba(250, 252, 255, 0.94);
   --wifi-white: #ffffff;
@@ -509,7 +509,7 @@ body.wifi-page {
   min-width: 320px;
   min-height: 0;
   overflow: hidden;
-  background: #dceeff url("assets/background.png") center bottom / cover no-repeat;
+  background: #dceeff url("assets/background.png") center bottom / cover no-repeat fixed;
   color: var(--wifi-ink);
   font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", Arial, sans-serif;
   letter-spacing: 0;
@@ -533,17 +533,18 @@ body.wifi-page {
 }
 
 .wifi-page button:active,
-.wifi-page .entry-option:active,
-.wifi-page .lang-link:active {
+.wifi-page .entry-option:active {
   transform: translateY(1px);
 }
 
 .wifi-shell {
-  width: min(100%, 920px);
-  height: 100%;
+  width: 100%;
+  max-width: 920px;
+  height: 100vh;
+  height: 100dvh;
   min-height: 0;
   margin: 0 auto;
-  padding: 46px clamp(18px, 5vw, 54px) 38px;
+  padding: 0 14px 30px;
   overflow-x: hidden;
   overflow-y: auto;
   overscroll-behavior-y: contain;
@@ -551,25 +552,27 @@ body.wifi-page {
 }
 
 .welcome-block {
-  margin: 0 auto 28px;
+  width: 100%;
+  margin: 14px auto 13px;
   text-align: center;
 }
 
 .welcome-block h1 {
   margin: 0;
   color: var(--wifi-ink);
-  font-size: clamp(28px, 6.8vw, 42px);
+  font-size: 28px;
   font-weight: 600;
-  line-height: 1.25;
+  line-height: 35px;
 }
 
 .welcome-block p,
 .bilingual-subtitle {
-  margin: 8px 0 0;
+  max-width: 330px;
+  margin: 5px auto 0;
   color: var(--wifi-muted);
-  font-size: clamp(13px, 3.6vw, 18px);
+  font-size: 14px;
   font-weight: 400;
-  line-height: 1.4;
+  line-height: 18px;
 }
 
 .entry-shell {
@@ -672,60 +675,6 @@ body.wifi-page {
   transform: rotate(45deg);
 }
 
-.language-switch {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  width: 124px;
-  margin: 30px auto 0;
-  overflow: hidden;
-  border-radius: 999px;
-  background: #f1f2f6;
-}
-
-.lang-link {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 40px;
-  color: var(--wifi-muted);
-  font-size: 16px;
-  text-decoration: none;
-}
-
-.lang-link.is-active {
-  background: #dcecff;
-  color: var(--wifi-blue);
-}
-
-.device-phone .language-switch {
-  position: relative;
-  grid-template-columns: repeat(2, 51px);
-  justify-content: space-between;
-  width: 132px;
-  overflow: visible;
-  border-radius: 0;
-  background: transparent;
-}
-
-.device-phone .language-switch::after {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  color: #a7adb5;
-  content: "\21cc";
-  font-size: 20px;
-  transform: translate(-50%, -50%);
-}
-
-.device-phone .lang-link {
-  min-height: 28px;
-  font-size: 18px;
-}
-
-.device-phone .lang-link.is-active {
-  background: transparent;
-}
-
 .detail-shell {
   --detail-gutter: clamp(18px, 5vw, 54px);
   padding-top: 0;
@@ -739,7 +688,7 @@ body.wifi-page {
   align-items: center;
   height: 44px;
   margin-right: calc(0px - var(--detail-gutter));
-  margin-bottom: 4px;
+  margin-bottom: 0;
   margin-left: calc(0px - var(--detail-gutter));
   padding: 0 var(--detail-gutter);
   background-image: url("assets/background.png");
@@ -765,8 +714,8 @@ body.wifi-page {
 
 .back-icon {
   display: block;
-  width: 18px;
-  height: 18px;
+  width: 16px;
+  height: 16px;
   object-fit: contain;
 }
 
@@ -922,21 +871,20 @@ body.wifi-page {
 }
 
 .button-primary {
-  font-size: 17px;
-  line-height: 1.25;
+  font-size: 15px;
+  line-height: 15px;
 }
 
 .button-secondary {
-  margin-top: 2px;
+  margin-top: 1px;
   font-size: 12px;
-  line-height: 1.15;
+  line-height: 14px;
 }
 
 .agreement-row {
-  display: grid;
-  grid-template-columns: 16px minmax(0, 1fr);
+  display: flex;
   align-items: start;
-  margin-top: 24px;
+  margin-top: 20px;
 }
 
 .passport-page .agreement-row {
@@ -945,15 +893,16 @@ body.wifi-page {
 }
 
 .agreement-check {
+  flex: 0 0 16px;
   width: 16px !important;
   height: 16px !important;
-  margin-top: 0;
+  margin: 0 8px 0 0;
   border-radius: 4px;
 }
 
 .agreement-copy {
   min-width: 0;
-  margin-left: 8px;
+  margin-left: 0;
   color: var(--wifi-ink);
   font-size: 14px;
   line-height: 16px;
@@ -984,12 +933,13 @@ body.wifi-page {
 .login-button,
 .form_btn {
   width: 100% !important;
-  height: 52px !important;
-  min-height: 52px !important;
-  margin-top: 26px;
-  padding: 8px 16px;
+  height: 44px !important;
+  min-height: 44px !important;
+  margin-top: 28px;
+  padding: 0 16px;
+  border-radius: 12px !important;
   background: var(--wifi-blue-disabled);
-  font-size: 17px !important;
+  font-size: 15px !important;
 }
 
 .form_btn {
@@ -998,18 +948,16 @@ body.wifi-page {
   justify-content: center;
 }
 
-.auth-language-switch {
-  margin-top: 22px;
-}
-
 .passport-page .new_box {
-  --detail-gutter: clamp(18px, 5vw, 54px);
+  --detail-gutter: 14px;
   display: block !important;
-  width: min(100%, 920px) !important;
-  height: 100% !important;
+  width: 100% !important;
+  max-width: 920px;
+  height: 100vh !important;
+  height: 100dvh !important;
   min-height: 0 !important;
   margin: 0 auto;
-  padding: 0 clamp(18px, 5vw, 54px) 26px;
+  padding: 0 14px 30px;
   overflow-x: hidden !important;
   overflow-y: auto !important;
   overscroll-behavior-y: contain;
@@ -1030,10 +978,11 @@ body.wifi-page {
 }
 
 .passport-page .content {
-  --passport-card-gutter: clamp(20px, 6vw, 44px);
+  --passport-card-gutter: 18px;
   max-width: 700px;
   margin: 0 auto;
-  padding: 24px var(--passport-card-gutter) 22px !important;
+  padding: 21px var(--passport-card-gutter) 39px !important;
+  border-radius: 24px;
   -webkit-mask-image:
     radial-gradient(circle at left center, transparent 0 10px, #000 10.5px),
     radial-gradient(circle at right center, transparent 0 10px, #000 10.5px);
@@ -1050,9 +999,12 @@ body.wifi-page {
 
 .passport-page .pr_title_text {
   width: 100%;
+  margin-bottom: 13px;
   color: var(--wifi-ink) !important;
-  font-size: clamp(22px, 5.2vw, 30px) !important;
+  padding: 0 !important;
+  font-size: 18px !important;
   font-weight: 600 !important;
+  line-height: 24px !important;
   text-align: center !important;
 }
 
@@ -1081,7 +1033,15 @@ body.wifi-page {
   z-index: 1;
 }
 
-.passport-page .pr_title_text small,
+.passport-page .pr_title_text small {
+  display: block;
+  margin-top: 1px;
+  color: var(--wifi-muted);
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 18px;
+}
+
 .passport-page .pr_title_tip small {
   display: block;
   margin-top: 4px;
@@ -1099,7 +1059,7 @@ body.wifi-page {
 .passport-page .pr_title_warning {
   display: flex !important;
   width: 100%;
-  margin: 18px 0 0;
+  margin-bottom: 18px;
 }
 
 .passport-page .pr_title_warning_tips {
@@ -1108,15 +1068,15 @@ body.wifi-page {
   width: 100%;
   color: #ff8a2b;
   font-size: 14px;
-  line-height: 1.45;
+  line-height: 20px;
 }
 
 .passport-page .pr_title_warning_img {
-  flex: 0 0 20px;
-  width: 20px;
-  height: 20px;
+  flex: 0 0 16px;
+  width: 16px;
+  height: 16px;
   margin-top: 1px;
-  margin-right: 10px;
+  margin-right: 7px;
   object-fit: contain;
 }
 
@@ -1126,18 +1086,22 @@ body.wifi-page {
 }
 
 .passport-page .passport-warning-copy small {
-  margin-top: 2px;
+  margin-top: 1px;
   color: inherit;
   font-size: 14px;
+  line-height: 20px;
 }
 
 .passport-page .pr_title_warning_copy {
   position: relative;
-  flex: 0 0 20px;
-  width: 20px;
-  height: 20px;
+  display: flex;
+  flex: 0 0 16px;
+  width: 16px;
+  height: 16px;
   margin-left: 10px;
   margin-top: 1px;
+  align-items: center;
+  justify-content: center;
   padding: 0;
   border: 0;
   outline: none;
@@ -1147,8 +1111,8 @@ body.wifi-page {
 
 .passport-page .pr_title_warning_copy img {
   display: block;
-  width: 20px;
-  height: 20px;
+  width: 16px;
+  height: 16px;
 }
 
 .passport-page .pr_title_warning_copy:focus {
@@ -1235,8 +1199,8 @@ body.wifi-page {
 }
 
 .passport-page .form_item .select_icon {
-  width: 26px !important;
-  height: 26px !important;
+  width: 16px !important;
+  height: 16px !important;
 }
 
 .passport-page .form_item .select_list {
@@ -1284,29 +1248,6 @@ body.wifi-page {
   }
 }
 
-.device-phone .welcome-block h1 {
-  font-size: 26px;
-}
-
-.device-phone .welcome-block p {
-  margin-top: 4px;
-  font-size: 13px;
-}
-
-.device-phone .auth-heading h2,
-.passport-page.device-phone .pr_title_text {
-  font-size: 20px !important;
-}
-
-.device-phone .auth-heading p {
-  font-size: 13px;
-}
-
-.device-phone .auth-card,
-.passport-page.device-phone .content {
-  border-radius: 26px;
-}
-
 @media (max-width: 520px) {
 
   .detail-shell,
@@ -1344,42 +1285,14 @@ body.wifi-page {
     height: 52px;
   }
 
-  .auth-card,
-  .passport-page .content {
-    border-radius: 26px;
-  }
-
   .passport-page .new_box {
     padding-top: 0;
-    padding-bottom: 18px;
+    padding-bottom: 30px;
   }
 
   .passport-page .detail-nav {
     height: 44px;
-    margin-bottom: 4px;
-  }
-
-  .passport-page .welcome-block {
-    margin-bottom: 10px;
-  }
-
-  .passport-page .welcome-block h1 {
-    font-size: 26px;
-  }
-
-  .passport-page .welcome-block p {
-    margin-top: 4px;
-    font-size: 13px;
-  }
-
-  .passport-page .content {
-    --passport-card-gutter: 16px;
-    padding: 16px !important;
-    border-radius: 26px;
-  }
-
-  .passport-page .pr_title_text {
-    font-size: 20px !important;
+    margin-bottom: 0;
   }
 
   .passport-page .pr_btn {
@@ -1444,16 +1357,12 @@ body.wifi-page {
   }
 
   .passport-page .form_item .select_icon {
-    width: 22px !important;
-    height: 22px !important;
+    width: 16px !important;
+    height: 16px !important;
   }
 
   .passport-page .form_item .select_list {
     bottom: 54px !important;
-  }
-
-  .passport-page .agreement-row {
-    margin-top: 10px;
   }
 
   .passport-page .agreement-copy {
@@ -1473,17 +1382,18 @@ body.wifi-page {
     line-height: 16px;
   }
 
-  .passport-page .form_btn {
-    min-height: 52px !important;
-    margin-top: 12px;
+}
+
+@media (max-width: 359px) {
+  .welcome-block h1 {
+    font-size: 25px;
   }
 
-  .passport-page .auth-language-switch {
-    margin-top: 12px;
-  }
-
-  .passport-page .auth-language-switch .lang-link {
-    min-height: 36px;
+  .auth-card,
+  .passport-page .content {
+    --passport-card-gutter: 14px;
+    padding-right: 14px !important;
+    padding-left: 14px !important;
   }
 }
 
@@ -1505,14 +1415,18 @@ body.wifi-page {
   }
 
   .welcome-block {
-    margin-bottom: 18px;
+    margin-top: 6px;
   }
 
-  .entry-card,
-  .auth-card,
-  .passport-page .content {
+  .entry-card {
     padding-top: 24px;
     padding-bottom: 22px;
+  }
+
+  .auth-card,
+  .passport-page .content {
+    padding-top: 16px !important;
+    padding-bottom: 24px !important;
   }
 }
 
@@ -1521,59 +1435,6 @@ body.wifi-page {
     scroll-behavior: auto !important;
     transition: none !important;
   }
-}
-
-body.wifi-page.language-switch--pill .language-switch {
-  grid-template-columns: repeat(2, 1fr);
-  justify-content: normal;
-  width: 124px;
-  overflow: hidden;
-  border-radius: 999px;
-  background: #f1f2f6;
-}
-
-body.wifi-page.language-switch--pill .language-switch::after {
-  content: none;
-}
-
-body.wifi-page.language-switch--pill .language-switch .lang-link {
-  min-height: 40px;
-  font-size: 16px;
-}
-
-body.wifi-page.language-switch--pill .language-switch .lang-link.is-active {
-  background: #dcecff;
-  color: var(--wifi-blue);
-}
-
-body.wifi-page.language-switch--inline .language-switch {
-  position: relative;
-  grid-template-columns: repeat(2, 51px);
-  justify-content: space-between;
-  width: 132px;
-  overflow: visible;
-  border-radius: 0;
-  background: transparent;
-}
-
-body.wifi-page.language-switch--inline .language-switch::after {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  color: #a7adb5;
-  content: "\21cc";
-  font-size: 20px;
-  transform: translate(-50%, -50%);
-}
-
-body.wifi-page.language-switch--inline .language-switch .lang-link {
-  min-height: 28px;
-  font-size: 18px;
-}
-
-body.wifi-page.language-switch--inline .language-switch .lang-link.is-active {
-  background: transparent;
-  color: var(--wifi-blue);
 }
 
 /* Shared result and notice layouts mirror the SMS portal pages. */
@@ -1792,7 +1653,7 @@ body.wifi-page.language-switch--inline .language-switch .lang-link.is-active {
   width: 100% !important;
   max-width: none;
   height: 100% !important;
-  padding: 32px 32px 24px;
+  padding: 118px 32px 30px;
   overflow-x: hidden !important;
   overflow-y: auto !important;
 }
@@ -1822,7 +1683,7 @@ body.wifi-page.language-switch--inline .language-switch .lang-link.is-active {
 }
 
 .device-pc.passport-page .back-icon {
-  width: 14px;
+  width: 24px;
   height: 24px;
   margin-right: 12px;
 }
@@ -1835,15 +1696,16 @@ body.wifi-page.language-switch--inline .language-switch .lang-link.is-active {
 }
 
 .device-pc.passport-page .welcome-block {
-  margin: 0 auto 30px;
+  margin: 0 auto 42px;
 }
 
 .device-pc.passport-page .welcome-block h1 {
   font-size: 44px;
-  line-height: 1.2;
+  line-height: 53px;
 }
 
 .device-pc.passport-page .welcome-block p {
+  max-width: none;
   margin-top: 6px;
   color: var(--wifi-ink);
   font-size: 22px;
@@ -1863,25 +1725,52 @@ body.wifi-page.language-switch--inline .language-switch .lang-link.is-active {
 
 .device-pc.passport-page .content {
   --passport-card-gutter: 44px;
-  padding: 28px var(--passport-card-gutter) 24px !important;
+  padding: 34px var(--passport-card-gutter) 54px !important;
 }
 
 .device-pc.passport-page .pr_title_text {
+  margin-bottom: 28px;
   font-size: 28px !important;
+  line-height: 36px !important;
 }
 
 .device-pc.passport-page .pr_title_text small {
-  margin-top: 5px;
-  font-size: 18px;
+  margin-top: 4px;
+  font-size: 20px;
+  line-height: 25px;
 }
 
 .device-pc.passport-page .pr_title_warning {
-  margin-top: 18px;
+  margin-bottom: 30px;
 }
 
-.device-pc.passport-page .pr_title_warning_tips,
+.device-pc.passport-page .pr_title_warning_img {
+  flex-basis: 24px;
+  width: 24px;
+  height: 24px;
+  margin-right: 9px;
+}
+
+.device-pc.passport-page .pr_title_warning_copy img {
+  width: 24px;
+  height: 24px;
+}
+
+.device-pc.passport-page .pr_title_warning_copy {
+  flex-basis: 24px;
+  width: 24px;
+  height: 24px;
+}
+
+.device-pc.passport-page .pr_title_warning_tips {
+  font-size: 20px;
+  line-height: 25px;
+}
+
 .device-pc.passport-page .passport-warning-copy small {
+  margin-top: 2px;
   font-size: 16px;
+  line-height: 21px;
 }
 
 .device-pc.passport-page .pr_btn {
@@ -1927,8 +1816,13 @@ body.wifi-page.language-switch--inline .language-switch .lang-link.is-active {
   font-size: 18px !important;
 }
 
+.device-pc.passport-page .form_item .select_icon {
+  width: 24px !important;
+  height: 24px !important;
+}
+
 .device-pc.passport-page .agreement-row {
-  margin-top: 18px;
+  margin-top: 26px;
 }
 
 .device-pc.passport-page .agreement-check {
@@ -1938,12 +1832,8 @@ body.wifi-page.language-switch--inline .language-switch .lang-link.is-active {
   border-radius: 6px;
 }
 
-.device-pc.passport-page .agreement-row {
-  grid-template-columns: 24px minmax(0, 1fr);
-}
-
 .device-pc.passport-page .agreement-copy {
-  margin-left: 12px;
+  margin-left: 0;
   font-size: 20px;
   line-height: 24px;
 }
@@ -1963,7 +1853,7 @@ body.wifi-page.language-switch--inline .language-switch .lang-link.is-active {
 .device-pc.passport-page .form_btn {
   height: 68px !important;
   min-height: 68px !important;
-  margin-top: 22px;
+  margin-top: 32px;
   border-radius: 18px !important;
 }
 
@@ -1972,11 +1862,8 @@ body.wifi-page.language-switch--inline .language-switch .lang-link.is-active {
 }
 
 .device-pc.passport-page .button-secondary {
-  font-size: 14px;
-}
-
-.device-pc.passport-page .auth-language-switch {
-  display: none;
+  font-size: 16px;
+  line-height: 18px;
 }
 
 .device-pc.passport-page.success-page .detail-shell,
@@ -2012,24 +1899,27 @@ body.wifi-page.language-switch--inline .language-switch .lang-link.is-active {
 @media (max-height: 900px) {
   .device-pc.passport-page .new_box,
   .device-pc.passport-page .detail-shell {
-    padding-top: 20px !important;
+    padding-top: 32px !important;
   }
 
-  .device-pc.passport-page .welcome-block {
-    margin-bottom: 18px;
+.device-pc.passport-page .welcome-block {
+    margin-bottom: 20px;
   }
 
   .device-pc.passport-page .welcome-block h1 {
     font-size: 34px;
+    line-height: 42px;
   }
 
   .device-pc.passport-page .welcome-block p {
     font-size: 16px;
+    line-height: 22px;
   }
 
   .device-pc.passport-page .content {
-    width: 540px !important;
-    padding-top: 20px !important;
+    min-height: 0;
+    padding-top: 24px !important;
+    padding-bottom: 30px !important;
   }
 
   .device-pc.passport-page .pr_btn .bg_img {

@@ -1,0 +1,84 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta http-equiv="pragma" content="no-cache" />
+    <meta http-equiv="cache-control" content="no-cache, no-store, must-revalidate" />
+    <meta http-equiv="expires" content="0" />
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=0.5, maximum-scale=2.0, user-scalable=no" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="format-detection" content="telephone=no" />
+    <link rel="stylesheet" href="../../../../material/custom/custom.css" type="text/css" />
+    <script type="text/javascript" src="../../../../material/custom/jquery-2.1.3.min.js"></script>
+    <script type="text/javascript" src="../../../../material/custom/detectMobileBrowser.js"></script>
+    <script type="text/javascript" src="../../../../material/custom/custom.js"></script>
+    <script>
+      var _configId;
+      var _isSocialPage;
+      var _isMobilePage = '{{device.isMobile}}'.toLowerCase() === 'true';
+    </script>
+    <script type="text/javascript" src="../../../../material/custom/lang/common-zh.js"></script>
+    <script type="text/javascript" src="../../../../material/custom/auth.js"></script>
+    <script type="text/javascript" src="../../../../material/custom/check.js"></script>
+    <script type="text/javascript" src="../../../../material/custom/lang/auth-zh.js"></script>
+    <link rel="stylesheet" href="template.css" type="text/css" />
+    <script type="text/javascript" src="template.js"></script>
+    <title>{{common.login}}</title>
+  </head>
+
+  <body class="wifi-page portal-auth-page wechat-page auth-page {{device.class}} language-zh">
+    <main class="wifi-shell detail-shell">
+      <nav class="detail-nav">
+        <a class="back-link" href="#" folder="{{wechat.entranceFolder}}" onclick="turnToLanPage($(this));return false;" aria-label="{{common.backToMethods}}">
+          <img class="back-icon" src="assets/back.svg" alt="" />
+          <span class="back-text">{{common.back}}</span>
+        </a>
+      </nav>
+
+      <header class="welcome-block">
+        <h1>{{wechat.welcome}}</h1>
+        <p>{{wechat.welcomeEn}}</p>
+      </header>
+
+      <section class="auth-card wechat-card">
+        <div class="auth-heading">
+          <h2>{{wechat.heading}}</h2>
+          <p>{{wechat.headingEn}}</p>
+        </div>
+
+        <div class="wechat-guide">
+          <img class="wechat-logo" src="assets/wechat.png" alt="" />
+          <ol class="wechat-steps">
+            <li>
+              <span class="step-number">1</span>
+              <span class="step-copy"><strong>{{wechat.step1}}</strong><small>{{wechat.step1En}}</small></span>
+            </li>
+            <li>
+              <span class="step-number">2</span>
+              <span class="step-copy"><strong>{{wechat.step2}}</strong><small>{{wechat.step2En}}</small></span>
+            </li>
+            <li>
+              <span class="step-number">3</span>
+              <span class="step-copy"><strong>{{wechat.step3}}</strong><small>{{wechat.step3En}}</small></span>
+            </li>
+          </ol>
+        </div>
+
+        <div class="agreement-row">
+          <img class="agreement-check" id="agreeCheck" role="checkbox" aria-checked="true" onclick="togglePortalAgreement(this)" src="assets/check.svg" alt="{{wechat.agreementChecked}}" />
+          <div class="agreement-copy">
+            <span>{{wechat.agreement}}</span>
+            <small>{{wechat.agreementEn}}</small>
+            <a class="agreement-notice-link" id="readmeLink" onclick="turnReadmePage();return false;" href="#">{{common.userNotice}}（{{common.userNoticeEn}}）</a>
+          </div>
+        </div>
+
+        <button id="loginBtn" class="login-button" type="button" onclick="wechatMiniProgramAuth()">
+          <span class="button-primary">{{wechat.open}}</span>
+          <span class="button-secondary">{{wechat.openEn}}</span>
+        </button>
+      </section>
+    </main>
+  </body>
+</html>

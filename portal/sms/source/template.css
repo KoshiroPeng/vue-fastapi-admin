@@ -129,8 +129,8 @@ top:0;
 :root {
   --wifi-ink: #082344;
   --wifi-muted: #848aab;
-  --wifi-blue: #0077ff;
-  --wifi-blue-disabled: rgba(0, 119, 255, 0.5);
+  --wifi-blue: #007aff;
+  --wifi-blue-disabled: rgba(0, 122, 255, 0.55);
   --wifi-line: #d8dce5;
   --wifi-panel: rgba(250, 252, 255, 0.94);
   --wifi-white: #ffffff;
@@ -152,7 +152,7 @@ body.wifi-page {
   min-width: 320px;
   min-height: 0;
   overflow: hidden;
-  background: #dceeff url("assets/background.png") center bottom / cover no-repeat;
+  background: #dceeff url("assets/background.png") center bottom / cover no-repeat fixed;
   color: var(--wifi-ink);
   font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", Arial, sans-serif;
   letter-spacing: 0;
@@ -176,47 +176,46 @@ body.wifi-page {
 }
 
 .wifi-page button:active,
-.wifi-page .entry-option:active,
-.wifi-page .lang-link:active {
+.wifi-page .entry-option:active {
   transform: translateY(1px);
 }
 
 .wifi-shell {
-  width: min(100%, 920px);
-  height: 100%;
+  width: 100%;
+  max-width: 920px;
+  height: 100vh;
+  height: 100dvh;
   min-height: 0;
   margin: 0 auto;
-  padding: 46px clamp(18px, 5vw, 54px) 38px;
+  padding: 0 14px 30px;
   overflow-x: hidden;
   overflow-y: auto;
   overscroll-behavior-y: contain;
   -webkit-overflow-scrolling: touch;
 }
 
-.device-pc .wifi-shell {
-  padding-top: 34px;
-}
-
 .welcome-block {
-  margin: 0 auto 28px;
+  width: 100%;
+  margin: 14px auto 13px;
   text-align: center;
 }
 
 .welcome-block h1 {
   margin: 0;
   color: var(--wifi-ink);
-  font-size: clamp(28px, 6.8vw, 42px);
+  font-size: 28px;
   font-weight: 600;
-  line-height: 1.25;
+  line-height: 35px;
 }
 
 .welcome-block p,
 .bilingual-subtitle {
-  margin: 8px 0 0;
+  max-width: 330px;
+  margin: 5px auto 0;
   color: var(--wifi-muted);
-  font-size: clamp(13px, 3.6vw, 18px);
+  font-size: 14px;
   font-weight: 400;
-  line-height: 1.4;
+  line-height: 18px;
 }
 
 .entry-shell {
@@ -315,60 +314,8 @@ body.wifi-page {
   transform: rotate(45deg);
 }
 
-.language-switch {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  width: 124px;
-  margin: 30px auto 0;
-  overflow: hidden;
-  border-radius: 999px;
-  background: #f1f2f6;
-}
-
-.lang-link {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 40px;
-  color: var(--wifi-muted);
-  font-size: 16px;
-  text-decoration: none;
-}
-
-.lang-link.is-active {
-  background: #dcecff;
-  color: var(--wifi-blue);
-}
-
-.device-phone .language-switch {
-  position: relative;
-  width: 132px;
-  overflow: visible;
-  border-radius: 0;
-  background: transparent;
-}
-
-.device-phone .language-switch::after {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  color: #a7adb5;
-  content: "\21cc";
-  font-size: 20px;
-  transform: translate(-50%, -50%);
-}
-
-.device-phone .lang-link {
-  min-height: 28px;
-  font-size: 18px;
-}
-
-.device-phone .lang-link.is-active {
-  background: transparent;
-}
-
 .detail-shell {
-  --detail-gutter: clamp(18px, 5vw, 54px);
+  --detail-gutter: 14px;
   padding-top: 0;
 }
 
@@ -380,7 +327,7 @@ body.wifi-page {
   align-items: center;
   height: 44px;
   margin-right: calc(0px - var(--detail-gutter));
-  margin-bottom: 4px;
+  margin-bottom: 0;
   margin-left: calc(0px - var(--detail-gutter));
   padding: 0 var(--detail-gutter);
   background-image: url("assets/background.png");
@@ -406,39 +353,37 @@ body.wifi-page {
 
 .back-icon {
   display: block;
-  width: 18px;
-  height: 18px;
+  width: 16px;
+  height: 16px;
   object-fit: contain;
 }
 
-.detail-shell .welcome-block {
-  margin-bottom: 18px;
-}
-
 .auth-card {
+  width: 100%;
   max-width: 700px;
   margin: 0 auto;
-  padding: clamp(26px, 7vw, 48px) clamp(20px, 6vw, 44px) 18px;
+  padding: 21px 18px 39px;
+  border-radius: 24px;
 }
 
 .auth-heading {
-  margin-bottom: 18px;
+  margin-bottom: 13px;
   text-align: center;
 }
 
 .auth-heading h2 {
   margin: 0;
   color: var(--wifi-ink);
-  font-size: clamp(22px, 5.2vw, 30px);
+  font-size: 18px;
   font-weight: 600;
-  line-height: 1.3;
+  line-height: 24px;
 }
 
 .auth-heading p {
-  margin: 7px 0 0;
+  margin: 1px 0 0;
   color: var(--wifi-muted);
-  font-size: clamp(13px, 3.5vw, 17px);
-  line-height: 1.4;
+  font-size: 14px;
+  line-height: 18px;
 }
 
 .sms-notice {
@@ -447,16 +392,17 @@ body.wifi-page {
   width: 100%;
   margin: 0 0 18px;
   color: #ff8a2b;
-  font-size: 15px;
-  line-height: 1.45;
+  font-size: 14px;
+  line-height: 20px;
   text-align: left;
 }
 
 .sms-notice-icon {
-  flex: 0 0 20px;
-  width: 20px;
-  height: 20px;
-  margin-right: 10px;
+  flex: 0 0 16px;
+  width: 16px;
+  height: 16px;
+  margin-top: 1px;
+  margin-right: 7px;
   object-fit: contain;
 }
 
@@ -470,7 +416,7 @@ body.wifi-page {
 }
 
 .sms-notice-copy small {
-  margin-top: 2px;
+  margin-top: 1px;
   color: inherit;
   font-size: 1em;
   line-height: inherit;
@@ -731,20 +677,20 @@ body.wifi-page {
 }
 
 .button-primary {
-  font-size: 17px;
-  line-height: 1.25;
+  font-size: 15px;
+  line-height: 15px;
 }
 
 .button-secondary {
-  margin-top: 2px;
+  margin-top: 1px;
   font-size: 12px;
-  line-height: 1.15;
+  line-height: 14px;
 }
 
 .agreement-row {
   display: flex;
   align-items: start;
-  margin-top: 18px;
+  margin-top: 20px;
 }
 
 .agreement-check {
@@ -787,22 +733,19 @@ body.wifi-page {
 .login-button,
 .form_btn {
   width: 100% !important;
-  height: 52px !important;
-  min-height: 52px !important;
-  margin-top: 18px;
-  padding: 8px 16px;
+  height: 44px !important;
+  min-height: 44px !important;
+  margin-top: 28px;
+  padding: 0 16px;
+  border-radius: 12px !important;
   background: var(--wifi-blue-disabled);
-  font-size: 17px !important;
+  font-size: 15px !important;
 }
 
 .form_btn {
   flex-direction: column !important;
   align-items: center;
   justify-content: center;
-}
-
-.auth-language-switch {
-  margin-top: 18px;
 }
 
 .passport-page .new_box {
@@ -967,52 +910,6 @@ body.wifi-page {
   transform: translateX(-50%);
 }
 
-.device-pc .welcome-block h1 {
-  font-size: 30px;
-}
-
-.device-pc .welcome-block p {
-  margin-top: 4px;
-  font-size: 14px;
-}
-
-.device-pc .auth-heading h2,
-.passport-page.device-pc .pr_title_text {
-  font-size: 25px !important;
-}
-
-.device-pc .auth-heading p {
-  font-size: 14px;
-}
-
-.device-pc .auth-card,
-.passport-page.device-pc .content {
-  border-radius: 30px;
-}
-
-.device-phone .welcome-block h1 {
-  font-size: 26px;
-}
-
-.device-phone .welcome-block p {
-  margin-top: 4px;
-  font-size: 13px;
-}
-
-.device-phone .auth-heading h2,
-.passport-page.device-phone .pr_title_text {
-  font-size: 20px !important;
-}
-
-.device-phone .auth-heading p {
-  font-size: 13px;
-}
-
-.device-phone .auth-card,
-.passport-page.device-phone .content {
-  border-radius: 26px;
-}
-
 @media (max-width: 520px) {
   .detail-shell {
     --detail-gutter: 14px;
@@ -1048,11 +945,6 @@ body.wifi-page {
     height: 52px;
   }
 
-  .auth-card,
-  .passport-page .content {
-    border-radius: 26px;
-  }
-
   .sms-page .Companies {
     grid-template-columns: 92px minmax(0, 1fr);
   }
@@ -1065,13 +957,19 @@ body.wifi-page {
     font-size: 14px !important;
   }
 
-  .sms-notice {
-    margin-bottom: 24px;
-    font-size: 14px;
-  }
-
   .passport-page .form_item .label {
     width: 96px !important;
+  }
+}
+
+@media (max-width: 359px) {
+  .welcome-block h1 {
+    font-size: 25px;
+  }
+
+  .auth-card {
+    padding-right: 14px;
+    padding-left: 14px;
   }
 }
 
@@ -1092,14 +990,18 @@ body.wifi-page {
   }
 
   .welcome-block {
-    margin-bottom: 18px;
+    margin-top: 6px;
   }
 
-  .entry-card,
-  .auth-card,
-  .passport-page .content {
+  .entry-card {
     padding-top: 24px;
     padding-bottom: 22px;
+  }
+
+  .auth-card,
+  .passport-page .content {
+    padding-top: 16px;
+    padding-bottom: 24px;
   }
 }
 
@@ -1123,8 +1025,8 @@ body.wifi-page {
 
 .sms-page .Companies::before {
   left: 12px;
-  width: 20px;
-  height: 20px;
+  width: 16px;
+  height: 16px;
   -webkit-mask-image: url("assets/phone.svg");
   mask-image: url("assets/phone.svg");
 }
@@ -1145,8 +1047,8 @@ body.wifi-page {
 
 .sms-page .captcha-field::before {
   left: 12px;
-  width: 20px;
-  height: 20px;
+  width: 16px;
+  height: 16px;
   -webkit-mask-image: url("assets/photo.svg");
   mask-image: url("assets/photo.svg");
 }
@@ -1157,8 +1059,8 @@ body.wifi-page {
 
 .sms-page .verify-input-shell::before {
   left: 12px;
-  width: 20px;
-  height: 20px;
+  width: 16px;
+  height: 16px;
   -webkit-mask-image: url("assets/code.svg");
   mask-image: url("assets/code.svg");
 }
@@ -1177,55 +1079,6 @@ body.wifi-page {
     scroll-behavior: auto !important;
     transition: none !important;
   }
-}
-
-body.wifi-page.language-switch--pill .language-switch {
-  width: 124px;
-  overflow: hidden;
-  border-radius: 999px;
-  background: #f1f2f6;
-}
-
-body.wifi-page.language-switch--pill .language-switch::after {
-  content: none;
-}
-
-body.wifi-page.language-switch--pill .language-switch .lang-link {
-  min-height: 40px;
-  font-size: 16px;
-}
-
-body.wifi-page.language-switch--pill .language-switch .lang-link.is-active {
-  background: #dcecff;
-  color: var(--wifi-blue);
-}
-
-body.wifi-page.language-switch--inline .language-switch {
-  position: relative;
-  width: 132px;
-  overflow: visible;
-  border-radius: 0;
-  background: transparent;
-}
-
-body.wifi-page.language-switch--inline .language-switch::after {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  color: #a7adb5;
-  content: "\21cc";
-  font-size: 20px;
-  transform: translate(-50%, -50%);
-}
-
-body.wifi-page.language-switch--inline .language-switch .lang-link {
-  min-height: 28px;
-  font-size: 18px;
-}
-
-body.wifi-page.language-switch--inline .language-switch .lang-link.is-active {
-  background: transparent;
-  color: var(--wifi-blue);
 }
 
 /* Shared result and notice layouts use the same frame as SMS authentication. */
@@ -1438,7 +1291,7 @@ body.wifi-page.language-switch--inline .language-switch .lang-link.is-active {
   display: block;
   width: 100%;
   max-width: none;
-  padding: 128px 32px 30px;
+  padding: 118px 32px 30px;
   overflow-y: auto;
 }
 
@@ -1467,7 +1320,7 @@ body.wifi-page.language-switch--inline .language-switch .lang-link.is-active {
 }
 
 .device-pc.sms-page .back-icon {
-  width: 14px;
+  width: 24px;
   height: 24px;
   margin-right: 12px;
 }
@@ -1485,10 +1338,11 @@ body.wifi-page.language-switch--inline .language-switch .lang-link.is-active {
 
 .device-pc.sms-page .welcome-block h1 {
   font-size: 44px;
-  line-height: 1.2;
+  line-height: 53px;
 }
 
 .device-pc.sms-page .welcome-block p {
+  max-width: none;
   margin-top: 6px;
   color: var(--wifi-ink);
   font-size: 22px;
@@ -1512,22 +1366,33 @@ body.wifi-page.language-switch--inline .language-switch .lang-link.is-active {
 
 .device-pc.sms-page .auth-heading h2 {
   font-size: 28px;
+  line-height: 36px;
 }
 
 .device-pc.sms-page .auth-heading p {
-  margin-top: 6px;
-  font-size: 18px;
+  margin-top: 4px;
+  font-size: 20px;
+  line-height: 25px;
 }
 
 .device-pc.sms-page .sms-notice {
   margin-bottom: 30px;
-  font-size: 18px;
-  line-height: 1.35;
+  font-size: 20px;
+  line-height: 25px;
 }
 
 .device-pc.sms-page .sms-notice-icon {
-  flex-basis: 20px;
+  flex-basis: 24px;
+  width: 24px;
+  height: 24px;
   margin-top: 2px;
+  margin-right: 9px;
+}
+
+.device-pc.sms-page .sms-notice-copy small {
+  margin-top: 2px;
+  font-size: 16px;
+  line-height: 21px;
 }
 
 .device-pc.sms-page .sms-form-row + .sms-form-row {
@@ -1603,7 +1468,8 @@ body.wifi-page.language-switch--inline .language-switch .lang-link.is-active {
 }
 
 .device-pc.sms-page .button-secondary {
-  font-size: 14px;
+  font-size: 16px;
+  line-height: 18px;
 }
 
 .device-pc.sms-page .agreement-row {
@@ -1645,10 +1511,6 @@ body.wifi-page.language-switch--inline .language-switch .lang-link.is-active {
 
 .device-pc.sms-page .login-button .button-primary {
   font-size: 20px;
-}
-
-.device-pc.sms-page .auth-language-switch {
-  display: none;
 }
 
 .device-pc.sms-page.success-page .detail-shell,
@@ -1701,10 +1563,12 @@ body.wifi-page.language-switch--inline .language-switch .lang-link.is-active {
 
   .device-pc.sms-page .welcome-block h1 {
     font-size: 34px;
+    line-height: 42px;
   }
 
   .device-pc.sms-page .welcome-block p {
     font-size: 16px;
+    line-height: 22px;
   }
 
   .device-pc.sms-page .auth-card {

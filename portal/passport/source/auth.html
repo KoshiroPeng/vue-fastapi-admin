@@ -59,7 +59,7 @@
   </head>
 
 
-  <body class="wifi-page passport-page {{device.class}} language-zh language-switch--pill">
+  <body class="wifi-page passport-page auth-page {{device.class}} language-zh">
     <script type="text/javascript">
       function togglePortalAgreement(image) {
         var wasChecked = image.getAttribute("aria-checked") !== "false";
@@ -82,7 +82,7 @@
             <div class="pr_title_text">{{passport.authentication}}<small>{{passport.authenticationEn}}</small></div>
             <div id="warningMsg" class="pr_title_warning">
               <div class="pr_title_warning_tips">
-                <img class="pr_title_warning_img" src="assets/warning.png" alt="">
+                <img class="pr_title_warning_img" src="assets/info.svg" alt="">
                 <div class="passport-warning-copy"><span>{{passport.captureWarning}}</span><small>{{passport.captureWarningEn}}</small></div>
                 <button type="button" class="pr_title_warning_copy" onclick="copyToClipboard()" aria-label="{{passport.copyLink}}"><img src="assets/copy.svg" alt=""></button>
               </div>
@@ -127,7 +127,6 @@
             <a href=" " onclick="turnToLanPage($(this));return false;" folder="/customize_new/IndexZH_Passport_B2" id="" style="color: #3EAAD8;"
               class="indextext">{{passport.otherMethods}}</a>
           </div>
-          <nav class="language-switch auth-language-switch" aria-label="{{common.languageSwitch}}"><a class="lang-link is-active" href="#" data-language="zh-cn" aria-current="page" onclick="return false;">{{common.simplified}}</a><a class="lang-link" href="../../passport_trl/phone/auth.html" data-href="../../passport_trl/phone/auth.html" data-language="zh-tw">{{common.traditional}}</a></nav>
         </div>
       </div>
       <div id="infoMsg" class="infoMsg">

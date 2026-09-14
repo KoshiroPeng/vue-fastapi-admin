@@ -27,7 +27,7 @@
     <title>{{common.login}}</title>
   </head>
 
-  <body class="wifi-page sms-page {{device.class}} language-zh language-switch--pill">
+  <body class="wifi-page sms-page auth-page {{device.class}} language-zh">
     <main class="wifi-shell detail-shell">
       <nav class="detail-nav">
         <a class="back-link" href="#" folder="{{sms.entranceFolder}}" onclick="turnToLanPage($(this));return false;" aria-label="{{common.backToMethods}}">
@@ -48,7 +48,7 @@
         </div>
 
         <div class="sms-notice" role="note">
-          <img class="sms-notice-icon" src="assets/warning.png" alt="" />
+          <img class="sms-notice-icon" src="assets/info.svg" alt="" />
           <div class="sms-notice-copy">
             <span>{{sms.notice}}</span>
             <small>{{sms.noticeEn}}</small>
@@ -314,10 +314,6 @@
           <input id="loginBtn" onclick="SMSAuthWithCountry();" type="button" value="{{common.login}}" class="frm-button login-button-control" aria-label="{{common.login}}" />
         </div>
 
-        <nav class="language-switch auth-language-switch" aria-label="{{common.languageSwitch}}">
-          <a class="lang-link" href="#" folder="{{sms.simplifiedFolder}}" data-language="zh-cn" onclick="turnToLanPage($(this));return false;">{{common.simplified}}</a>
-          <a class="lang-link" href="#" folder="{{sms.traditionalFolder}}" data-language="zh-tw" onclick="turnToLanPage($(this));return false;">{{common.traditional}}</a>
-        </nav>
       </section>
     </main>
   </body>
