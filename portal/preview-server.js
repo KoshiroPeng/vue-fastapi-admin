@@ -114,11 +114,21 @@ function scanPreviewGroups() {
         continue
       }
       const match = /^(auth|authSuccess|readme)\.(html|jsp)$/i.exec(entry.name)
-      if (!entry.isFile() || !match || nextSegments.length < 2) continue
-      const device = nextSegments[nextSegments.length - 2].toLowerCase()
-      if (!deviceLabels[device]) continue
+      if (!entry.isFile() || !match) continue
       const matchedPage = match[1].toLowerCase()
       const pageId = matchedPage === 'authsuccess' ? 'authSuccess' : matchedPage
+
+      if (nextSegments.length === 1) {
+        for (const language of ['zh', 'trl']) {
+          for (const device of deviceOrder) {
+            addPage(project, language, device, pageId, toPreviewPath(['__dev', project, language, device, entry.name]), 'source')
+          }
+        }
+        continue
+      }
+
+      const device = nextSegments[nextSegments.length - 2].toLowerCase()
+      if (!deviceLabels[device]) continue
       for (const language of ['zh', 'trl']) {
         addPage(project, language, device, pageId, toPreviewPath(['__dev', project, language, ...nextSegments]), 'source')
       }
@@ -260,12 +270,12 @@ function renderDashboard() {
   .selection { min-width: 0; flex: 1; } .selection-title, .selection-path { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; } .selection-title { font-size: 14px; font-weight: 650; } .selection-path { margin-top: 3px; color: var(--muted); font: 11px/1.2 Menlo, Consolas, monospace; }
   .open-link { flex: none; padding: 7px 10px; border: 1px solid #cfd6e0; border-radius: 4px; background: var(--panel); font-size: 12px; } .open-link:hover { border-color: #8eaeef; color: var(--accent-ink); }
   .stage { display: flex; align-items: center; justify-content: center; min-width: 0; min-height: 0; padding: 20px; overflow: auto; background: var(--canvas); }
-  .frame-shell { width: min(390px, 100%); height: min(844px, 100%); min-height: 600px; overflow: hidden; background: var(--panel); border: 1px solid #cbd2dc; box-shadow: 0 10px 28px rgba(51, 62, 78, .13); } iframe { display: block; width: 100%; height: 100%; border: 0; }
-  @media (max-width: 760px) { body { overflow: auto; } .workspace { grid-template-columns: 1fr; grid-template-rows: auto 78dvh; height: auto; min-height: 100%; } .sidebar { overflow: visible; } .project-nav { overflow: visible; } .project-list { grid-template-columns: repeat(2, minmax(0, 1fr)); } .toolbar { padding: 0 14px; } .stage { padding: 12px; } .frame-shell { height: 720px; } }
-  </style></head><body><div class="workspace"><aside class="sidebar"><header class="sidebar-header"><h1>${dashboardTitle}</h1><p class="summary">${dashboardSummary}</p></header><section class="filters" aria-label="页面筛选"><div class="filter-row"><span class="filter-label">语言</span><div class="segmented" data-filter="language"><button class="filter-button" type="button" data-value="zh">简体</button><button class="filter-button" type="button" data-value="trl">繁体</button></div></div><div class="filter-row"><span class="filter-label">设备</span><div class="segmented" data-filter="device"><button class="filter-button" type="button" data-value="phone">Phone</button><button class="filter-button" type="button" data-value="pc">PC</button></div></div><div class="filter-row"><span class="filter-label">页面</span><div class="segmented" data-filter="pageId"><button class="filter-button" type="button" data-value="auth">认证</button><button class="filter-button" type="button" data-value="authSuccess">成功</button><button class="filter-button" type="button" data-value="readme">须知</button></div></div></section><nav class="project-nav" aria-label="认证项目"><span class="project-label">认证项目</span><div class="project-list">${projects}</div></nav></aside><main class="preview-panel"><header class="toolbar"><div class="selection"><div class="selection-title" id="selection-title">${defaultTitle}</div><div class="selection-path" id="selection-path">${defaultPage}</div></div><a class="open-link" id="open-link" href="${defaultPage}" target="_blank" rel="noopener">新窗口打开</a></header><div class="stage"><div class="frame-shell"><iframe id="preview-frame" name="preview-frame" title="Wi-Fi 门户页面预览" src="${defaultPage}"></iframe></div></div></main></div><script>
-  const catalog = ${catalogJson}; const frame = document.getElementById('preview-frame'); const title = document.getElementById('selection-title'); const pathLabel = document.getElementById('selection-path'); const openLink = document.getElementById('open-link'); const projectButtons = Array.from(document.querySelectorAll('[data-project]')); const filterGroups = Array.from(document.querySelectorAll('[data-filter]')); let activePage = catalog.find((page) => page.path === ${JSON.stringify(defaultPage)}) || catalog[0];
+  .frame-shell { width: min(390px, 100%); height: min(844px, 100%); min-height: 600px; overflow: hidden; background: var(--panel); border: 1px solid #cbd2dc; box-shadow: 0 10px 28px rgba(51, 62, 78, .13); } .frame-shell.is-pc { width: min(1280px, 100%); height: auto; min-height: 0; aspect-ratio: 16 / 9; } iframe { display: block; width: 100%; height: 100%; border: 0; }
+  @media (max-width: 760px) { body { overflow: auto; } .workspace { grid-template-columns: 1fr; grid-template-rows: auto 78dvh; height: auto; min-height: 100%; } .sidebar { overflow: visible; } .project-nav { overflow: visible; } .project-list { grid-template-columns: repeat(2, minmax(0, 1fr)); } .toolbar { padding: 0 14px; } .stage { padding: 12px; } .frame-shell { height: 720px; } .frame-shell.is-pc { height: auto; } }
+  </style></head><body><div class="workspace"><aside class="sidebar"><header class="sidebar-header"><h1>${dashboardTitle}</h1><p class="summary">${dashboardSummary}</p></header><section class="filters" aria-label="页面筛选"><div class="filter-row"><span class="filter-label">语言</span><div class="segmented" data-filter="language"><button class="filter-button" type="button" data-value="zh">简体</button><button class="filter-button" type="button" data-value="trl">繁体</button></div></div><div class="filter-row"><span class="filter-label">设备</span><div class="segmented" data-filter="device"><button class="filter-button" type="button" data-value="phone">Phone</button><button class="filter-button" type="button" data-value="pc">PC</button></div></div><div class="filter-row"><span class="filter-label">页面</span><div class="segmented" data-filter="pageId"><button class="filter-button" type="button" data-value="auth">认证</button><button class="filter-button" type="button" data-value="authSuccess">成功</button><button class="filter-button" type="button" data-value="readme">须知</button></div></div></section><nav class="project-nav" aria-label="认证项目"><span class="project-label">认证项目</span><div class="project-list">${projects}</div></nav></aside><main class="preview-panel"><header class="toolbar"><div class="selection"><div class="selection-title" id="selection-title">${defaultTitle}</div><div class="selection-path" id="selection-path">${defaultPage}</div></div><a class="open-link" id="open-link" href="${defaultPage}" target="_blank" rel="noopener">新窗口打开</a></header><div class="stage"><div class="frame-shell" id="frame-shell"><iframe id="preview-frame" name="preview-frame" title="Wi-Fi 门户页面预览" src="${defaultPage}"></iframe></div></div></main></div><script>
+  const catalog = ${catalogJson}; const frame = document.getElementById('preview-frame'); const frameShell = document.getElementById('frame-shell'); const title = document.getElementById('selection-title'); const pathLabel = document.getElementById('selection-path'); const openLink = document.getElementById('open-link'); const projectButtons = Array.from(document.querySelectorAll('[data-project]')); const filterGroups = Array.from(document.querySelectorAll('[data-filter]')); let activePage = catalog.find((page) => page.path === ${JSON.stringify(defaultPage)}) || catalog[0];
   function findBest(preference) { const projectPages = catalog.filter((page) => page.project === preference.project); const candidates = projectPages.length ? projectPages : catalog; return candidates.find((page) => page.language === preference.language && page.device === preference.device && page.pageId === preference.pageId) || candidates.find((page) => page.language === preference.language && page.device === preference.device) || candidates.find((page) => page.language === preference.language && page.pageId === preference.pageId) || candidates.find((page) => page.device === preference.device && page.pageId === preference.pageId) || candidates[0]; }
-  function updateControls() { projectButtons.forEach((button) => button.classList.toggle('is-active', button.dataset.project === activePage.project)); filterGroups.forEach((group) => { const field = group.dataset.filter; group.querySelectorAll('[data-value]').forEach((button) => { button.classList.toggle('is-active', button.dataset.value === activePage[field]); button.disabled = !catalog.some((page) => page.project === activePage.project && page[field] === button.dataset.value); }); }); }
+  function updateControls() { frameShell.classList.toggle('is-pc', activePage.device === 'pc'); projectButtons.forEach((button) => button.classList.toggle('is-active', button.dataset.project === activePage.project)); filterGroups.forEach((group) => { const field = group.dataset.filter; group.querySelectorAll('[data-value]').forEach((button) => { button.classList.toggle('is-active', button.dataset.value === activePage[field]); button.disabled = !catalog.some((page) => page.project === activePage.project && page[field] === button.dataset.value); }); }); }
   function selectPage(page, navigate = true) { if (!page) return; activePage = page; title.textContent = page.title; pathLabel.textContent = page.path; openLink.href = page.path; updateControls(); if (navigate && frame.getAttribute('src') !== page.path) frame.src = page.path; const url = new URL(window.location.href); url.searchParams.set('page', page.path); window.history.replaceState(null, '', url); }
   projectButtons.forEach((button) => button.addEventListener('click', () => selectPage(findBest({ ...activePage, project: button.dataset.project })))); filterGroups.forEach((group) => group.querySelectorAll('[data-value]').forEach((button) => button.addEventListener('click', () => selectPage(findBest({ ...activePage, [group.dataset.filter]: button.dataset.value })))))
   frame.addEventListener('load', () => { try { const page = catalog.find((item) => item.path === frame.contentWindow.location.pathname); if (page && page.path !== activePage.path) selectPage(page, false); } catch {} });
@@ -287,13 +297,13 @@ function resolvePreviewFile(pathname) {
 }
 
 function resolveDevFile(pathname) {
-  const match = /^\/__dev\/([a-z0-9-]+)\/(zh|trl)\/(.+)$/i.exec(pathname)
+  const match = /^\/__dev\/([a-z0-9-]+)\/(zh|trl)\/(phone|pc)\/(.+)$/i.exec(pathname)
   if (!match) return null
-  const [, projectName, language, relativePath] = match
+  const [, projectName, language, device, relativePath] = match
   if (!getLocalizableProjects().includes(projectName)) return null
   const sourceDir = path.join(ROOT_DIR, projectName, 'source')
-  const filePath = resolveWithin(sourceDir, relativePath)
-  return filePath ? { filePath, language, projectName, relativePath } : null
+  const filePath = resolveWithin(sourceDir, relativePath) || resolveWithin(path.join(sourceDir, device), relativePath)
+  return filePath ? { device, filePath, language, projectName, relativePath } : null
 }
 
 function renderDevText(file, source) {
@@ -301,6 +311,7 @@ function renderDevText(file, source) {
   const locale = readLocale(projectDir, file.language)
   const rendered = renderProjectText(source, {
     activeLanguage: file.language,
+    device: file.device,
     filePath: file.filePath,
     hrefForLanguage: (language, device, pageName) => `/__dev/${file.projectName}/${language}/${device}/${pageName}`,
     locale,

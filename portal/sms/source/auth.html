@@ -16,7 +16,7 @@
     <script>
       var _configId;
       var _isSocialPage;
-      var _isMobilePage = true;
+      var _isMobilePage = '{{device.isMobile}}'.toLowerCase() === 'true';
     </script>
     <script type="text/javascript" src="../../../../material/custom/lang/common-zh.js"></script>
     <script type="text/javascript" src="../../../../material/custom/auth.js"></script>
@@ -27,11 +27,12 @@
     <title>{{common.login}}</title>
   </head>
 
-  <body class="wifi-page sms-page device-phone language-zh language-switch--pill">
+  <body class="wifi-page sms-page {{device.class}} language-zh language-switch--pill">
     <main class="wifi-shell detail-shell">
       <nav class="detail-nav">
         <a class="back-link" href="#" folder="{{sms.entranceFolder}}" onclick="turnToLanPage($(this));return false;" aria-label="{{common.backToMethods}}">
           <img class="back-icon" src="assets/back.svg" alt="" />
+          <span class="back-text">{{common.back}}</span>
         </a>
       </nav>
 

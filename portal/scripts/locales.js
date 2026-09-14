@@ -41,8 +41,8 @@ function findPlaceholders(source) {
   return Array.from(source.matchAll(PLACEHOLDER_PATTERN), (match) => match[1])
 }
 
-function localizeLanguageLinks(source, projectName, filePath, activeLanguage, hrefForLanguage) {
-  const device = path.basename(path.dirname(filePath))
+function localizeLanguageLinks(source, projectName, filePath, activeLanguage, hrefForLanguage, explicitDevice) {
+  const device = explicitDevice || path.basename(path.dirname(filePath))
   const pageName = path.basename(filePath)
 
   return source.replace(/<a\b[^>]*data-language="(zh-cn|zh-tw)"[^>]*>/g, (tag, language) => {
@@ -91,14 +91,28 @@ function localizeLanguageLinks(source, projectName, filePath, activeLanguage, hr
 }
 
 function renderProjectText(source, options) {
-  const { activeLanguage, filePath, hrefForLanguage, locale, projectName } = options
+  const { activeLanguage, device, filePath, hrefForLanguage, locale, projectName } = options
   let rendered = source
+  const deviceValues = device
+    ? {
+        'device.class': `device-${device}`,
+        'device.isMobile': device === 'phone' ? 'true' : 'false'
+      }
+    : null
+
+  rendered = rendered.replace(PLACEHOLDER_PATTERN, (placeholder, key) => {
+    if (!key.startsWith('device.')) return placeholder
+    if (!deviceValues || !(key in deviceValues)) {
+      throw new Error(`Unknown device key "${key}" in ${filePath}`)
+    }
+    return deviceValues[key]
+  })
   if (activeLanguage === 'trl') {
     rendered = rendered.replace(/_zh(?=\/|\\|["'])/g, '_trl')
     rendered = rendered.replace(/\blanguage-zh\b/g, 'language-trl')
   }
   rendered = renderLocale(rendered, locale, filePath)
-  return localizeLanguageLinks(rendered, projectName, filePath, activeLanguage, hrefForLanguage)
+  return localizeLanguageLinks(rendered, projectName, filePath, activeLanguage, hrefForLanguage, device)
 }
 
 module.exports = { findPlaceholders, readLocale, readLocales, renderLocale, renderProjectText }

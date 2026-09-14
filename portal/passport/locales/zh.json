@@ -11,6 +11,7 @@
   "common.traditional": "繁",
   "common.languageSwitch": "语言切换",
   "passport.welcome": "欢迎使用深圳机场 Wi-Fi",
+  "passport.entranceFolder": "entrance_zh",
   "passport.authentication": "护照认证",
   "passport.captureWarning": "如果无法拍照，请复制链接到浏览器中打开",
   "passport.copyLink": "复制链接",

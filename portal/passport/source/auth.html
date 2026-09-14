@@ -35,7 +35,7 @@
     <script>
       var _configId;
       var _isSocialPage;
-      var _isMobilePage = true;
+      var _isMobilePage = '{{device.isMobile}}'.toLowerCase() === 'true';
     </script>
     <script
       type="text/javascript"
@@ -59,7 +59,7 @@
   </head>
 
 
-  <body class="wifi-page passport-page device-phone language-zh language-switch--pill">
+  <body class="wifi-page passport-page {{device.class}} language-zh language-switch--pill">
     <script type="text/javascript">
       function togglePortalAgreement(image) {
         var wasChecked = image.getAttribute("aria-checked") !== "false";
@@ -74,7 +74,7 @@
       }
     </script>
     <div class="new_box">
-      <nav class="detail-nav"><a class="back-link" href="/entrance/dist/entrance_zh/phone/auth.html" aria-label="{{common.backToMethods}}"><img class="back-icon" src="assets/back.svg" alt=""></a></nav>
+      <nav class="detail-nav"><a class="back-link" href="#" folder="{{passport.entranceFolder}}" onclick="turnToLanPage($(this));return false;" aria-label="{{common.backToMethods}}"><img class="back-icon" src="assets/back.svg" alt=""><span class="back-text">{{common.back}}</span></a></nav>
       <header class="welcome-block"><h1>{{passport.welcome}}</h1><p>{{passport.welcomeEn}}</p></header>
       <div class="content">
         <div class="pr_box">

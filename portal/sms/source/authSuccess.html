@@ -33,7 +33,7 @@
     <script>
       var _configId;
       var _isSocialPage;
-      var _isMobilePage = true;
+      var _isMobilePage = '{{device.isMobile}}'.toLowerCase() === 'true';
     </script>
 
     <script
@@ -52,11 +52,12 @@
     <script type="text/javascript" src="template.js"></script>
     <title>{{common.loginSuccess}}</title>
   </head>
-  <body class="wifi-page sms-page success-page device-phone">
+  <body class="wifi-page sms-page success-page {{device.class}}">
     <main class="wifi-shell detail-shell">
       <nav class="detail-nav">
         <a class="back-link" href="#" onclick="logout();return false;" aria-label="{{common.back}}">
           <img class="back-icon" src="assets/back.svg" alt="" />
+          <span class="back-text">{{common.back}}</span>
         </a>
       </nav>
 

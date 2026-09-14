@@ -1758,3 +1758,253 @@ body.wifi-page.language-switch--inline .language-switch .lang-link.is-active {
     margin-top: 16px;
   }
 }
+
+/* Shared source: PC presentation follows the 1920 x 1080 portal artwork. */
+.back-text {
+  display: none;
+}
+
+.device-pc.passport-page {
+  background-image: url("assets/background-pc.png");
+  background-position: center center;
+  background-attachment: fixed;
+}
+
+.device-pc.passport-page .new_box,
+.device-pc.passport-page .detail-shell {
+  display: block !important;
+  width: 100% !important;
+  max-width: none;
+  height: 100% !important;
+  padding: 32px 32px 24px;
+  overflow-x: hidden !important;
+  overflow-y: auto !important;
+}
+
+.device-pc.passport-page .detail-nav {
+  position: fixed;
+  z-index: 30;
+  top: 40px;
+  left: 40px;
+  width: 140px;
+  height: 60px;
+  margin: 0;
+  padding: 0;
+  border: 1px solid rgba(255, 255, 255, 0.92);
+  border-radius: 32px;
+  background: rgba(255, 255, 255, 0.7);
+  box-shadow: 0 15px 30px rgba(0, 11, 59, 0.08);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+}
+
+.device-pc.passport-page .back-link {
+  width: 100%;
+  height: 100%;
+  color: var(--wifi-ink);
+  text-decoration: none;
+}
+
+.device-pc.passport-page .back-icon {
+  width: 14px;
+  height: 24px;
+  margin-right: 12px;
+}
+
+.device-pc.passport-page .back-text {
+  display: inline;
+  font-size: 24px;
+  font-weight: 600;
+  line-height: 1;
+}
+
+.device-pc.passport-page .welcome-block {
+  margin: 0 auto 30px;
+}
+
+.device-pc.passport-page .welcome-block h1 {
+  font-size: 44px;
+  line-height: 1.2;
+}
+
+.device-pc.passport-page .welcome-block p {
+  margin-top: 6px;
+  color: var(--wifi-ink);
+  font-size: 22px;
+  line-height: 28px;
+}
+
+.device-pc.passport-page .content,
+.device-pc.passport-page .auth-card {
+  width: 580px !important;
+  max-width: calc(100vw - 64px);
+  margin: 0 auto;
+  border-radius: 36px;
+  background: rgba(250, 252, 255, 0.94);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+}
+
+.device-pc.passport-page .content {
+  --passport-card-gutter: 44px;
+  padding: 28px var(--passport-card-gutter) 24px !important;
+}
+
+.device-pc.passport-page .pr_title_text {
+  font-size: 28px !important;
+}
+
+.device-pc.passport-page .pr_title_text small {
+  margin-top: 5px;
+  font-size: 18px;
+}
+
+.device-pc.passport-page .pr_title_warning {
+  margin-top: 18px;
+}
+
+.device-pc.passport-page .pr_title_warning_tips,
+.device-pc.passport-page .passport-warning-copy small {
+  font-size: 16px;
+}
+
+.device-pc.passport-page .pr_btn {
+  margin-top: 14px !important;
+}
+
+.device-pc.passport-page .pr_btn .bg_img {
+  max-height: 300px;
+}
+
+.device-pc.passport-page .pr_title_tip {
+  font-size: 17px !important;
+}
+
+.device-pc.passport-page .pr_title_tip small {
+  font-size: 14px;
+}
+
+.device-pc.passport-page .form_box {
+  margin-top: 8px;
+}
+
+.device-pc.passport-page .form_item {
+  min-height: 72px !important;
+  padding: 8px 0;
+}
+
+.device-pc.passport-page .form_item .label {
+  width: 156px !important;
+  font-size: 18px !important;
+}
+
+.device-pc.passport-page .form_item .label small {
+  font-size: 14px;
+}
+
+.device-pc.passport-page .form_item .input {
+  height: 54px !important;
+  font-size: 18px !important;
+}
+
+.device-pc.passport-page .form_item input::placeholder {
+  font-size: 18px !important;
+}
+
+.device-pc.passport-page .agreement-row {
+  margin-top: 18px;
+}
+
+.device-pc.passport-page .agreement-check {
+  flex-basis: 26px;
+  width: 26px !important;
+  height: 26px !important;
+  margin-top: 1px;
+  margin-right: 12px;
+}
+
+.device-pc.passport-page .agreement-copy {
+  font-size: 18px;
+}
+
+.device-pc.passport-page .agreement-copy small {
+  margin-top: 2px;
+  font-size: 14px;
+}
+
+.device-pc.passport-page .form_btn {
+  height: 68px !important;
+  min-height: 68px !important;
+  margin-top: 22px;
+  border-radius: 18px !important;
+}
+
+.device-pc.passport-page .form_btn .button-primary {
+  font-size: 20px;
+}
+
+.device-pc.passport-page .button-secondary {
+  font-size: 14px;
+}
+
+.device-pc.passport-page .auth-language-switch {
+  display: none;
+}
+
+.device-pc.passport-page.success-page .detail-shell,
+.device-pc.passport-page.notice-page .detail-shell {
+  padding-top: 70px !important;
+}
+
+.device-pc.passport-page.success-page .welcome-block,
+.device-pc.passport-page.notice-page .welcome-block {
+  margin-bottom: 32px;
+}
+
+.device-pc.passport-page .success-card,
+.device-pc.passport-page .notice-card {
+  padding: 32px 44px 40px;
+}
+
+.device-pc.passport-page .success-visual {
+  width: 317px;
+  max-width: 100%;
+}
+
+.device-pc.passport-page .notice-card {
+  height: min(720px, calc(100vh - 230px));
+  min-height: 430px;
+}
+
+.device-pc.passport-page .notice-cn {
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+@media (max-height: 900px) {
+  .device-pc.passport-page .new_box,
+  .device-pc.passport-page .detail-shell {
+    padding-top: 20px !important;
+  }
+
+  .device-pc.passport-page .welcome-block {
+    margin-bottom: 18px;
+  }
+
+  .device-pc.passport-page .welcome-block h1 {
+    font-size: 34px;
+  }
+
+  .device-pc.passport-page .welcome-block p {
+    font-size: 16px;
+  }
+
+  .device-pc.passport-page .content {
+    width: 540px !important;
+    padding-top: 20px !important;
+  }
+
+  .device-pc.passport-page .pr_btn .bg_img {
+    max-height: 240px;
+  }
+}

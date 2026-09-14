@@ -13,7 +13,7 @@
     <script type="text/javascript" src="../../../../material/custom/custom.js"></script>
     <script>
       var _configId;
-      var _isMobilePage = true;
+      var _isMobilePage = '{{device.isMobile}}'.toLowerCase() === 'true';
       var _isSocialPage;
     </script>
     <script type="text/javascript" src="../../../../material/custom/lang/common-zh.js"></script>
@@ -23,12 +23,14 @@
     <title>{{common.authentication}}</title>
   </head>
 
-  <body class="wifi-page entry-page device-phone language-zh">
+  <body class="wifi-page entry-page {{device.class}} language-zh">
     <main class="wifi-shell entry-shell">
       <header class="welcome-block">
         <img class="entry-logo" src="assets/airport-logo.png" alt="{{common.airport}}" />
-        <h1>{{entrance.welcome}}</h1>
-        <p>{{entrance.welcomeEn}}</p>
+        <div class="welcome-copy">
+          <h1>{{entrance.welcome}}</h1>
+          <p>{{entrance.welcomeEn}}</p>
+        </div>
       </header>
 
       <section class="entry-card" aria-labelledby="entry-title">
@@ -48,7 +50,7 @@
             <span class="entry-option-copy"><strong>{{entrance.passport}}</strong><span>{{entrance.passportEn}}</span></span>
             <span class="entry-option-arrow" aria-hidden="true"></span>
           </a>
-          <!-- <a class="entry-option" href="#" folder="{{entrance.wechatFolder}}" data-method="wechat" onclick="turnToLanPage($(this)); return false;">
+          <a class="entry-option" href="#" folder="{{entrance.wechatFolder}}" data-method="wechat" onclick="turnToLanPage($(this)); return false;">
             <img src="assets/wechat.png" alt="" class="entry-option-icon" />
             <span class="entry-option-copy"><strong>{{entrance.wechat}}</strong><span>{{entrance.wechatEn}}</span></span>
             <span class="entry-option-arrow" aria-hidden="true"></span>
@@ -62,7 +64,7 @@
             <img src="assets/kiosk-account.png" alt="" class="entry-option-icon" />
             <span class="entry-option-copy"><strong>{{entrance.kiosk}}</strong><span>{{entrance.kioskEn}}</span></span>
             <span class="entry-option-arrow" aria-hidden="true"></span>
-          </a> -->
+          </a>
         </nav>
 
         <nav class="language-switch" aria-label="{{common.languageSwitch}}">

@@ -260,7 +260,6 @@ body.wifi-page {
 
 .entry-options {
   display: grid;
-  gap: 18px;
   margin-top: 38px;
 }
 
@@ -347,7 +346,6 @@ body.wifi-page {
   width: 132px;
   overflow: visible;
   border-radius: 0;
-  gap: 30px;
   background: transparent;
 }
 
@@ -1177,7 +1175,6 @@ body.wifi-page.language-switch--pill .language-switch {
   width: 124px;
   overflow: hidden;
   border-radius: 999px;
-  gap: 0;
   background: #f1f2f6;
 }
 
@@ -1200,7 +1197,6 @@ body.wifi-page.language-switch--inline .language-switch {
   width: 132px;
   overflow: visible;
   border-radius: 0;
-  gap: 30px;
   background: transparent;
 }
 
@@ -1416,5 +1412,286 @@ body.wifi-page.language-switch--inline .language-switch .lang-link.is-active {
 
   .success-card .portal-action {
     margin-top: 16px;
+  }
+}
+
+/* Shared source: PC presentation follows the 1920 x 1080 portal artwork. */
+.back-text {
+  display: none;
+}
+
+.device-pc.sms-page {
+  background-image: url("assets/background-pc.png");
+  background-position: center center;
+  background-attachment: fixed;
+}
+
+.device-pc.sms-page .detail-shell {
+  display: block;
+  width: 100%;
+  max-width: none;
+  padding: 128px 32px 30px;
+  overflow-y: auto;
+}
+
+.device-pc.sms-page .detail-nav {
+  position: fixed;
+  z-index: 30;
+  top: 40px;
+  left: 40px;
+  width: 140px;
+  height: 60px;
+  margin: 0;
+  padding: 0;
+  border: 1px solid rgba(255, 255, 255, 0.92);
+  border-radius: 32px;
+  background: rgba(255, 255, 255, 0.7);
+  box-shadow: 0 15px 30px rgba(0, 11, 59, 0.08);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+}
+
+.device-pc.sms-page .back-link {
+  width: 100%;
+  height: 100%;
+  color: var(--wifi-ink);
+  text-decoration: none;
+}
+
+.device-pc.sms-page .back-icon {
+  width: 14px;
+  height: 24px;
+  margin-right: 12px;
+}
+
+.device-pc.sms-page .back-text {
+  display: inline;
+  font-size: 24px;
+  font-weight: 600;
+  line-height: 1;
+}
+
+.device-pc.sms-page .welcome-block {
+  margin: 0 auto 42px;
+}
+
+.device-pc.sms-page .welcome-block h1 {
+  font-size: 44px;
+  line-height: 1.2;
+}
+
+.device-pc.sms-page .welcome-block p {
+  margin-top: 6px;
+  color: var(--wifi-ink);
+  font-size: 22px;
+  line-height: 28px;
+}
+
+.device-pc.sms-page .auth-card {
+  width: 580px;
+  max-width: calc(100vw - 64px);
+  margin: 0 auto;
+  padding: 34px 44px 54px;
+  border-radius: 36px;
+  background: rgba(250, 252, 255, 0.94);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+}
+
+.device-pc.sms-page .auth-heading {
+  margin-bottom: 28px;
+}
+
+.device-pc.sms-page .auth-heading h2 {
+  font-size: 28px;
+}
+
+.device-pc.sms-page .auth-heading p {
+  margin-top: 6px;
+  font-size: 18px;
+}
+
+.device-pc.sms-page .sms-notice {
+  margin-bottom: 30px;
+  font-size: 18px;
+  line-height: 1.35;
+}
+
+.device-pc.sms-page .sms-notice-icon {
+  flex-basis: 20px;
+  margin-top: 2px;
+}
+
+.device-pc.sms-page .sms-form-row + .sms-form-row {
+  margin-top: 24px;
+}
+
+.device-pc.sms-page .Companies,
+.device-pc.sms-page .sms-field-shell,
+.device-pc.sms-page .verify-input-shell {
+  min-height: 68px !important;
+  border-radius: 18px;
+}
+
+.device-pc.sms-page .code,
+.device-pc.sms-page .phoneinput,
+.device-pc.sms-page .pwdinput,
+.device-pc.sms-page .sms-field-shell .frm-input,
+.device-pc.sms-page .verify-input-shell .frm-input {
+  height: 68px !important;
+  font-size: 18px !important;
+}
+
+.device-pc.sms-page input::placeholder {
+  font-size: 18px !important;
+}
+
+.device-pc.sms-page .code {
+  flex-basis: 138px;
+  width: 138px !important;
+  padding-left: 52px !important;
+}
+
+.device-pc.sms-page .Companies::before,
+.device-pc.sms-page .captcha-field::before,
+.device-pc.sms-page .verify-input-shell::before {
+  left: 16px;
+  width: 24px;
+  height: 24px;
+}
+
+.device-pc.sms-page .Companies::after {
+  top: 27px;
+  left: 110px;
+  width: 9px;
+  height: 9px;
+}
+
+.device-pc.sms-page .phoneinput,
+.device-pc.sms-page .captcha-field .frm-input,
+.device-pc.sms-page .verify-input-shell .frm-input {
+  padding-left: 56px !important;
+}
+
+.device-pc.sms-page #validCodeImg {
+  height: 68px;
+  border-radius: 18px;
+}
+
+.device-pc.sms-page .sms-form-row > :last-child:not(:first-child) {
+  flex-basis: 144px;
+  width: 144px;
+  margin-left: 16px;
+}
+
+.device-pc.sms-page .code-button {
+  height: 68px;
+  min-height: 68px;
+  border-radius: 18px !important;
+}
+
+.device-pc.sms-page .code-button .button-primary {
+  font-size: 18px;
+}
+
+.device-pc.sms-page .button-secondary {
+  font-size: 14px;
+}
+
+.device-pc.sms-page .agreement-row {
+  margin-top: 26px;
+}
+
+.device-pc.sms-page .agreement-check {
+  flex-basis: 26px;
+  width: 26px !important;
+  height: 26px !important;
+  margin-top: 1px;
+  margin-right: 12px;
+}
+
+.device-pc.sms-page .agreement-copy {
+  font-size: 18px;
+}
+
+.device-pc.sms-page .agreement-copy small {
+  margin-top: 2px;
+  font-size: 14px;
+}
+
+.device-pc.sms-page .login-button {
+  height: 68px !important;
+  min-height: 68px !important;
+  margin-top: 32px;
+  border-radius: 18px !important;
+}
+
+.device-pc.sms-page .login-button .button-primary {
+  font-size: 20px;
+}
+
+.device-pc.sms-page .auth-language-switch {
+  display: none;
+}
+
+.device-pc.sms-page.success-page .detail-shell,
+.device-pc.sms-page.notice-page .detail-shell {
+  padding-top: 70px;
+}
+
+.device-pc.sms-page.success-page .welcome-block,
+.device-pc.sms-page.notice-page .welcome-block {
+  margin-bottom: 32px;
+}
+
+.device-pc.sms-page .success-card,
+.device-pc.sms-page .notice-card {
+  padding: 32px 44px 40px;
+}
+
+.device-pc.sms-page .success-visual {
+  width: 317px;
+  max-width: 100%;
+}
+
+.device-pc.sms-page .success-message h3 {
+  font-size: 22px;
+}
+
+.device-pc.sms-page .success-message p,
+.device-pc.sms-page .notice-en {
+  font-size: 14px;
+}
+
+.device-pc.sms-page .notice-card {
+  height: min(720px, calc(100vh - 230px));
+  min-height: 430px;
+}
+
+.device-pc.sms-page .notice-cn {
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+@media (max-height: 900px) {
+  .device-pc.sms-page .detail-shell {
+    padding-top: 32px;
+  }
+
+  .device-pc.sms-page .welcome-block {
+    margin-bottom: 20px;
+  }
+
+  .device-pc.sms-page .welcome-block h1 {
+    font-size: 34px;
+  }
+
+  .device-pc.sms-page .welcome-block p {
+    font-size: 16px;
+  }
+
+  .device-pc.sms-page .auth-card {
+    padding-top: 24px;
+    padding-bottom: 30px;
   }
 }

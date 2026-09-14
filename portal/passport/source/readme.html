@@ -37,7 +37,7 @@
     <script>
       var _configId;
       var _isSocialPage;
-      var _isMobilePage = true;
+      var _isMobilePage = '{{device.isMobile}}'.toLowerCase() === 'true';
     </script>
 
     <script
@@ -56,17 +56,18 @@
     <script type="text/javascript" src="template.js"></script>
     <title>{{common.userNotice}}</title>
   </head>
-  <body class="wifi-page sms-page notice-page device-phone">
+  <body class="wifi-page passport-page notice-page {{device.class}}">
     <main class="wifi-shell detail-shell">
       <nav class="detail-nav">
         <a id="turnBackLink" class="back-link" href="#" onclick="turnRegisterPage();return false;" aria-label="{{common.back}}">
           <img class="back-icon" src="assets/back.svg" alt="" />
+          <span class="back-text">{{common.back}}</span>
         </a>
       </nav>
 
       <header class="welcome-block">
-        <h1>{{sms.welcome}}</h1>
-        <p>{{sms.welcomeEn}}</p>
+        <h1>{{passport.welcome}}</h1>
+        <p>{{passport.welcomeEn}}</p>
       </header>
 
       <section class="auth-card notice-card">
