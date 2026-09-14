@@ -129,6 +129,8 @@ chmod 600 /etc/vue-fastapi-admin/app.env
 
 先在 MySQL 中创建数据库和最小权限业务账号，再在 `/etc/vue-fastapi-admin/app.env` 中明文填写 MySQL、Redis、`SECRET_KEY`、CORS 来源和业务密钥。该文件只保存在服务器，不得提交到仓库。两台应用服务器必须连接同一套 MySQL 和 Redis。
 
+第三方小程序继续使用既有契约：`POST /secoWS/service/NewGuestManagerServices` 原样转发 SOAP/XML，`GET /PortalServer/AppPortalAuth` 根据 `messageType=authRequest` 或 `messageType=syncPortalAuthResultRequest` 原样转发查询参数和 JSON 响应。上游地址分别由 `MINI_PROGRAM_GUEST_SERVICE_URL` 和 `MINI_PROGRAM_PORTAL_AUTH_URL` 配置。该链路与登机牌、护照使用的 JSON 访客创建适配器相互独立。
+
 `APP_BIND_IP=0.0.0.0` 允许另一台服务器上的 Nginx 访问后端端口。防火墙必须限制 `19001`、`19002` 只允许 Nginx 服务器访问。`APP_DOCKER_SUBNET` 必须与现场已有网段不冲突。
 
 ### 初始化数据库

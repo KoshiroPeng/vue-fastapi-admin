@@ -7,6 +7,8 @@ def test_kiosk_credentials_are_excluded_from_body_audit_logging() -> None:
 
     assert "/api/v1/kiosk/" in audit_middleware.kwargs["exclude_paths"]
     assert "/api/v1/portal/" in audit_middleware.kwargs["exclude_paths"]
+    assert "/secoWS/service/NewGuestManagerServices" in audit_middleware.kwargs["exclude_paths"]
+    assert "/PortalServer/AppPortalAuth" in audit_middleware.kwargs["exclude_paths"]
 
 
 def test_audit_sanitizer_redacts_nested_credentials_and_pii() -> None:

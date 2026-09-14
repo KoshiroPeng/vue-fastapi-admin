@@ -16,6 +16,8 @@ def test_runtime_config_summary_never_exposes_secrets() -> None:
         KIOSK_HMAC_SECRET="kiosk-secret-value",
         PII_HASH_SECRET="pii-hash-secret-value",
         AUTH_PASSPORT_ENABLED=False,
+        MINI_PROGRAM_GUEST_SERVICE_URL="https://nce.example/guest",
+        MINI_PROGRAM_PORTAL_AUTH_URL="https://nce.example/auth",
     )
 
     summary = build_runtime_config_summary(config)
@@ -30,6 +32,9 @@ def test_runtime_config_summary_never_exposes_secrets() -> None:
     assert summary.auth_methods["kiosk"] is True
     assert summary.auth_methods["passport"] is False
     assert summary.nce_kick_enabled is False
+    assert summary.mini_program_guest_service_configured is True
+    assert summary.mini_program_portal_auth_configured is True
+    assert summary.mini_program_tls_verify is True
     assert "nce-secret-value" not in serialized
     assert "kiosk-secret-value" not in serialized
     assert "pii-hash-secret-value" not in serialized

@@ -3,6 +3,7 @@ from fastapi.middleware import Middleware
 from fastapi.middleware.cors import CORSMiddleware
 from tortoise import Tortoise
 from app.api import api_router
+from app.api.mini_program import router as mini_program_router
 from app.core.exceptions import (
     DoesNotExist,
     DoesNotExistHandle,
@@ -43,6 +44,8 @@ def make_middlewares():
                 "/api/v1/base/access_token",
                 "/api/v1/kiosk/",
                 "/api/v1/portal/",
+                "/secoWS/service/NewGuestManagerServices",
+                "/PortalServer/AppPortalAuth",
                 "/docs",
                 "/openapi.json",
                 "/health/live",
@@ -65,6 +68,7 @@ def register_exceptions(app: FastAPI):
 
 def register_routers(app: FastAPI, prefix: str = "/api"):
     app.include_router(api_router, prefix=prefix)
+    app.include_router(mini_program_router)
 
 
 async def init_db():
