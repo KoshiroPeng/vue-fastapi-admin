@@ -25,7 +25,7 @@
   "passport.scanOrEnter": "扫描或输入",
   "passport.scanOrSelect": "扫描或选择",
   "passport.scan": "扫描识别",
-  "passport.agreement": "我已阅读并同意机场 Wi-Fi 使用条款",
+  "passport.agreement": "我已阅读机场wifi使用条款",
   "passport.agreementChecked": "已同意",
   "passport.agreementUnchecked": "未同意",
   "passport.otherMethods": "其他登录方式 >>",

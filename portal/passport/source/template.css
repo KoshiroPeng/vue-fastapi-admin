@@ -48,7 +48,6 @@
 
 #readmeLink {
   text-decoration: none;
-  color: #3CBAFF;
 }
 
 #turnBackLink {
@@ -935,7 +934,7 @@ body.wifi-page {
 
 .agreement-row {
   display: grid;
-  grid-template-columns: 20px minmax(0, 1fr);
+  grid-template-columns: 16px minmax(0, 1fr);
   align-items: start;
   margin-top: 24px;
 }
@@ -946,19 +945,18 @@ body.wifi-page {
 }
 
 .agreement-check {
-  width: 18px !important;
-  height: 18px !important;
-  margin-top: 2px;
+  width: 16px !important;
+  height: 16px !important;
+  margin-top: 0;
   border-radius: 4px;
 }
 
 .agreement-copy {
   min-width: 0;
-  margin-left: 10px;
+  margin-left: 8px;
   color: var(--wifi-ink);
   font-size: 14px;
-  line-height: 1.35;
-  text-decoration: none;
+  line-height: 16px;
 }
 
 .agreement-copy span,
@@ -967,10 +965,20 @@ body.wifi-page {
 }
 
 .agreement-copy small {
-  margin-top: 3px;
+  margin-top: 6px;
   color: var(--wifi-muted);
   font-size: 11px;
-  line-height: 1.35;
+  line-height: 11px;
+}
+
+.agreement-notice-link {
+  display: block;
+  margin-top: 8px;
+  color: #007aff;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 16px;
+  text-decoration: none;
 }
 
 .login-button,
@@ -1449,12 +1457,20 @@ body.wifi-page {
   }
 
   .passport-page .agreement-copy {
-    font-size: 12px;
+    font-size: 14px;
+    line-height: 16px;
   }
 
   .passport-page .agreement-copy small {
-    margin-top: 1px;
-    font-size: 10px;
+    margin-top: 6px;
+    font-size: 11px;
+    line-height: 11px;
+  }
+
+  .passport-page .agreement-notice-link {
+    margin-top: 8px;
+    font-size: 14px;
+    line-height: 16px;
   }
 
   .passport-page .form_btn {
@@ -1916,20 +1932,32 @@ body.wifi-page.language-switch--inline .language-switch .lang-link.is-active {
 }
 
 .device-pc.passport-page .agreement-check {
-  flex-basis: 26px;
-  width: 26px !important;
-  height: 26px !important;
-  margin-top: 1px;
-  margin-right: 12px;
+  width: 24px !important;
+  height: 24px !important;
+  margin-top: 0;
+  border-radius: 6px;
+}
+
+.device-pc.passport-page .agreement-row {
+  grid-template-columns: 24px minmax(0, 1fr);
 }
 
 .device-pc.passport-page .agreement-copy {
-  font-size: 18px;
+  margin-left: 12px;
+  font-size: 20px;
+  line-height: 24px;
 }
 
 .device-pc.passport-page .agreement-copy small {
-  margin-top: 2px;
-  font-size: 14px;
+  margin-top: 4px;
+  font-size: 16px;
+  line-height: 16px;
+}
+
+.device-pc.passport-page .agreement-notice-link {
+  margin-top: 8px;
+  font-size: 20px;
+  line-height: 24px;
 }
 
 .device-pc.passport-page .form_btn {

@@ -114,7 +114,14 @@
             <img class="select_icon" id="select_icon" onclick="openSelectList()" src="assets/down.png" alt="">
             <div class="select_list" id="select_list"></div>
           </div>
-          <div class="agreement-row"><img class="agreement-check" id="agreeCheck" role="checkbox" aria-checked="true" onclick="togglePortalAgreement(this)" src="assets/check.svg" alt="{{passport.agreementChecked}}"><a class="agreement-copy" id="readmeLink" onclick="turnReadmePage();return false" href="#"><span>{{passport.agreement}}</span><small>{{passport.agreementEn}}</small></a></div>
+          <div class="agreement-row">
+            <img class="agreement-check" id="agreeCheck" role="checkbox" aria-checked="true" onclick="togglePortalAgreement(this)" src="assets/check.svg" alt="{{passport.agreementChecked}}">
+            <div class="agreement-copy">
+              <span>{{passport.agreement}}</span>
+              <small>{{passport.agreementEn}}</small>
+              <a class="agreement-notice-link" id="readmeLink" onclick="turnReadmePage();return false" href="#">{{common.userNotice}}（{{common.userNoticeEn}}）</a>
+            </div>
+          </div>
           <div class="form_btn" id="clickLoginBtn" onclick="onekeyLogin()"><span class="button-primary">{{common.login}}</span><span class="button-secondary">{{common.loginEn}}</span></div>
           <div class="otherfun">
             <a href=" " onclick="turnToLanPage($(this));return false;" folder="/customize_new/IndexZH_Passport_B2" id="" style="color: #3EAAD8;"

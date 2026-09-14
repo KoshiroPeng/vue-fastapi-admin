@@ -299,10 +299,11 @@
 
         <div class="agreement-row">
           <img class="agreement-check" id="agreeCheck" role="checkbox" aria-checked="false" onclick="toggleAgreeCheck($(this));" src="assets/uncheck.svg" alt="{{sms.agreementUnchecked}}" />
-          <a class="agreement-copy" id="readmeLink" onclick="turnReadmePage();return false;" href="#">
+          <div class="agreement-copy">
             <span>{{sms.agreement}}</span>
             <small>{{sms.agreementEn}}</small>
-          </a>
+            <a class="agreement-notice-link" id="readmeLink" onclick="turnReadmePage();return false;" href="#">{{common.userNotice}}（{{common.userNoticeEn}}）</a>
+          </div>
         </div>
 
         <div class="login-button">
