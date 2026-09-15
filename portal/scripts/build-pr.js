@@ -3,8 +3,8 @@ const path = require('path')
 const { minify } = require('terser')
 
 const ROOT_DIR = path.resolve(__dirname, '..')
-const SOURCE_PATH = path.join(ROOT_DIR, 'pp-ocr', 'index.js')
-const OUTPUT_DIR = path.join(ROOT_DIR, 'pp-ocr', 'dist')
+const SOURCE_PATH = path.join(ROOT_DIR, 'pr', 'index.js')
+const OUTPUT_DIR = path.join(ROOT_DIR, 'pr', 'dist')
 const OUTPUT_PATH = path.join(OUTPUT_DIR, 'index.min.js')
 
 async function build() {
