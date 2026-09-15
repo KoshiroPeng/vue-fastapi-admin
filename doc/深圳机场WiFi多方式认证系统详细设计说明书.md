@@ -240,18 +240,20 @@ sequenceDiagram
     认证前置服务-->>Portal认证页面: 4. 返回小程序跳转参数与页面轮询地址
     Portal认证页面-->>用户终端: 5. 展示微信小程序认证入口或二维码
     用户终端->>微信小程序: 6. 点击或扫码进入小程序
-    微信小程序->>微信平台: 7. 调用 wx.login/getPhoneNumber 获取临时 code
-    微信平台-->>微信小程序: 8. 返回微信临时授权 code
-    微信小程序->>NCEPortal认证API: 9. POST /portalauth/socialAuthResult
-    NCEPortal认证API-->>微信小程序: 10. 返回 success/token/psessionid 或错误码
-    微信小程序->>NCEPortal认证API: 11. POST /portalauth/syncPortalResult
-    NCEPortal认证API->>NCEPortal认证API: 12. 完成 Portal 认证与网络放行
-    NCEPortal认证API-->>微信小程序: 13. 返回认证结果
-    微信小程序->>认证前置服务: 14. 回写本系统展示状态
-    认证前置服务->>认证前置服务: 15. 校验回写签名并写入短时事务状态
-    Portal认证页面->>认证前置服务: 16. 轮询查询认证事务状态
-    认证前置服务-->>Portal认证页面: 17. 返回展示状态
-    Portal认证页面-->>用户终端: 18. 页面展示成功或失败原因
+    微信小程序->>认证前置服务: 7. SOAP addGuestAccount 添加访客
+    认证前置服务->>NCEPortal认证API: 8. 原样转发 SOAP WebService 请求
+    NCEPortal认证API-->>微信小程序: 9. 原样返回 SOAP 响应与 HTTP 状态
+    微信小程序->>认证前置服务: 10. GET AppPortalAuth messageType=authRequest
+    认证前置服务->>NCEPortal认证API: 11. 原样转发认证请求
+    NCEPortal认证API-->>微信小程序: 12. 返回 resultCode/statusCode/sessionId
+    微信小程序->>认证前置服务: 13. GET AppPortalAuth messageType=syncPortalAuthResultRequest
+    认证前置服务->>NCEPortal认证API: 14. 原样转发结果同步请求
+    NCEPortal认证API-->>微信小程序: 15. 返回 resultCode/portalAuthStatus
+    微信小程序->>认证前置服务: 16. 回写本系统展示状态
+    认证前置服务->>认证前置服务: 17. 校验回写签名并写入短时事务状态
+    Portal认证页面->>认证前置服务: 18. 轮询查询认证事务状态
+    认证前置服务-->>Portal认证页面: 19. 返回展示状态
+    Portal认证页面-->>用户终端: 20. 页面展示成功或失败原因
 ```
 
 #### 3.1.2 关键技术实现要点
@@ -261,10 +263,10 @@ sequenceDiagram
    window.location.href = wxScheme;
    ```
 2. **双模兼容体验**：针对非微信内置环境或不支持 URL Scheme 的机型，页面动态提供微信小程序二维码供扫码上网。
-3. **NCE Portal接口为准入主链路**：小程序必须按 NCE 文档调用 `POST /portalauth/socialAuthResult` 和 `POST /portalauth/syncPortalResult`。`socialAuthResult` 成功返回的 `token` 与 `psessionid` 是第二步查询认证结果的必要凭据。
-4. **真实业务参数不能伪造**：`state` 必须来自 NCE Portal/扫码认证流程生成的真实唯一标识；`code` 必须来自微信小程序 `wx.login()` 或 `getPhoneNumber()` 返回的临时授权码；`pushPageId` 必须来自 NCE Portal 定制页面。测试时手工填写 `test-state`、`test-code` 只能验证接口可达，不能完成业务放行。
+3. **小程序兼容接口为准入主链路**：小程序依次调用 SOAP `addGuestAccount`、GET `authRequest` 和 GET `syncPortalAuthResultRequest`。创建访客响应不转换为 JSON，后两个操作保留既有 JSON 字段。
+4. **协议实现必须分离**：小程序添加访客使用 SOAP WebService；登机牌、护照继续使用 NCE 北向 JSON 客户端，禁止共用响应模型或在兼容代理中转换字段。
 5. **状态回写接收**：本系统提供微信认证状态回写接口，接收第三方小程序返回的认证结果、事务编号和终端标识。后端必须校验签名、时间戳和随机数，防止伪造回写与重放请求。该状态回写只负责本系统页面状态或调用摘要，不作为 NCE 放行依据。
-6. **页面成功态展示**：认证成功后，本系统页面展示“登录成功”。页面成功态必须以 NCE `syncPortalResult` 成功为依据；第三方小程序只能把该成功结果回写给本系统，不能只以本系统 `authTxId` 存在或普通请求到达作为成功条件。
+6. **页面成功态展示**：认证成功后，本系统页面展示“登录成功”。页面成功态必须以 `resultCode=0` 且 `portalAuthStatus=1` 为依据；第三方小程序只能把该成功结果回写给本系统，不能只以本系统 `authTxId` 存在或普通请求到达作为成功条件。
 7. **状态兜底查询**：为处理小程序状态回写延迟、用户提前返回页面、弱网等情况，Portal 页面保留状态查询轮询能力。页面每 2 秒查询一次，超过 60 秒未成功则提示用户重试或切换其他认证方式。
 8. **短时状态存储**：微信状态回写只允许写入 Redis 等短时缓存，TTL 固定为 5 分钟，仅保存 `authTxId`、认证结果、脱敏终端标识和过期时间，不落地旅客业务数据。
 
@@ -703,7 +705,7 @@ NCE RADIUS 日志中登机牌、护照、取号机可能都表现为普通访客
 | NCE Mock | 模拟 Token、创建访客、RADIUS 日志返回 |
 | 登机牌验证 Mock | 模拟三要素验证通过、未通过、超时和不在适用范围 |
 | OCR Mock | 模拟护照识别成功/失败 |
-| 微信认证 Mock | 模拟 `socialAuthResult`、`syncPortalResult`、成功状态回写、失败状态回写、重复状态回写 |
+| 微信认证 Mock | 模拟 SOAP 添加访客、`authRequest`、`syncPortalAuthResultRequest`、成功状态回写、失败状态回写、重复状态回写 |
 | 取号机 Mock | 模拟取号机创建访客请求 |
 
 Mock 要求：
@@ -728,15 +730,16 @@ Mock 要求：
 | 登机牌三要素验证接口 | 第三方登机牌验证系统 | 本系统 FastAPI | 校验航班号、座位号、证件后四位是否属于同一有效登机牌 | 6.8 |
 | OCR 识别接口 | 第三方 OCR 服务 | 本系统 FastAPI | 护照图片识别与 MRZ 基础校验 | 6.9 |
 | NCE 北向 API | 华为 iMaster NCE-Campus | 本系统 FastAPI | 获取 Token、创建访客、查询用户和 RADIUS 日志 | 6.10.1 至 6.10.4 |
-| NCE Portal 认证 API | 华为 iMaster NCE-Campus Portal | 第三方微信小程序、Portal 页面 | 微信小程序放行、短信认证、账号密码 Portal 准入 | 6.10.5 |
+| 小程序兼容认证 API | 本系统 FastAPI 代理 NCE Portal | 第三方微信小程序 | SOAP 添加访客、账号密码认证、认证结果同步 | 6.10.5 |
 | 管理台接口 | 本系统 FastAPI | Vue 管理后台 | 统计、日志、在线用户、健康状态、运行配置摘要 | 7.1、11.2，详细实现随管理后台模块补充 |
 
 ### 6.2 本系统需要开发的接口
-本系统需要开发的接口分为三组：
+本系统需要开发的接口分为四组：
 
 1. **旅客 Portal 接口**：服务本系统移动端页面，包括登机牌、护照、微信认证事务和状态查询。接口详细契约以第 6.6 节为准。
 2. **取号机接口**：服务机场现场取号机，由取号机调用本系统创建访客账号。接口详细契约以第 6.7 节为准。
 3. **管理后台接口**：服务 Vue 管理后台，主要用于运维统计、日志查询、在线用户、外部服务健康度和运行配置摘要。该类接口复用现有后台 JWT、菜单权限和 API 权限体系，不面向旅客或第三方小程序直接开放。
+4. **第三方小程序兼容接口**：保持既有 SOAP 与 GET JSON 契约不变，由本系统固定代理到配置的 NCE 上游。接口详细契约以第 6.10.5 节为准。
 
 ### 6.3 本系统调用的第三方接口
 本系统后端需要调用的第三方接口包括登机牌三要素验证接口、OCR 服务和 NCE 北向 API：
@@ -750,7 +753,7 @@ Mock 要求：
 第三方直接调用关系需要特别区分：
 
 - 机场现场取号机调用本系统取号机接口，创建 24 小时访客账号。
-- 第三方微信小程序必须先直接调用 NCE Portal 认证 API：`/portalauth/socialAuthResult` 与 `/portalauth/syncPortalResult`。
+- 第三方微信小程序调用本系统兼容路径 `/secoWS/service/NewGuestManagerServices` 与 `/PortalServer/AppPortalAuth`，由本系统原样代理到 NCE。
 - 第三方微信小程序只有在确认 NCE Portal 放行成功后，必须调用本系统状态回写接口，用于 Portal 页面展示认证结果。
 
 微信小程序状态回写接口不是 NCE 准入接口。若小程序只回写本系统但没有完成 NCE Portal 放行，页面不得展示“已成功联网”。
@@ -818,7 +821,7 @@ Mock 要求：
 - **发起跳转 Path**: `POST /api/v1/portal/wechat/auth/start`
 - **状态回写 Path**: `POST /api/v1/portal/wechat/auth/callback`
 - **状态查询 Path**: `GET /api/v1/portal/wechat/auth/status?authTxId=xxx`
-- **接口定位**: 本组接口只负责本系统 Portal 页面跳转、短时状态展示和联调辅助。微信小程序真正完成网络准入时，必须调用 NCE Portal 南向接口 `socialAuthResult` 与 `syncPortalResult`。
+- **接口定位**: 本组接口只负责本系统 Portal 页面跳转、短时状态展示和联调辅助。微信小程序真正完成网络准入时，按第 6.10.5 节依次完成添加访客、认证和结果同步。
 - **状态回写 Headers**:
   - `Content-Type: application/json`
   - `X-Wx-Signature`: 第三方小程序签名
@@ -1031,13 +1034,14 @@ POST
 
 ### 6.10 华为 iMaster NCE-Campus 接口封装契约
 
-*注：本章节接口规范与实测集合（`New Collection.postman_collection.json`）及 NCE Portal 小程序认证文档对齐。NCE 北向接口基地址通过环境变量 `NCE_BASE_URL` 配置，当前验证环境实测为 `https://172.16.4.107:18002`；NCE Portal 小程序认证接口通过 `NCE_PORTAL_AUTH_BASE_URL` 配置，当前验证环境实测为 `https://172.16.4.107:19008`。账号、密码、Token、站点 ID、用户组 ID 等敏感或环境相关参数不得写入代码。*
+*注：NCE 北向 JSON 接口与第三方小程序兼容接口分开配置和实现。北向接口基地址通过 `NCE_BASE_URL` 配置；小程序 SOAP 添加访客与 Portal 认证上游分别通过 `MINI_PROGRAM_GUEST_SERVICE_URL`、`MINI_PROGRAM_PORTAL_AUTH_URL` 配置。账号、密码、Token、站点 ID、用户组 ID 等敏感或环境相关参数不得写入代码。*
 
 #### 6.10.0 NCE 网络平面与关键配置来源
 | 配置项 | 示例值 | 获取方式与说明 |
 | :--- | :--- | :--- |
 | `NCE_BASE_URL` | `https://172.16.4.107:18002` | 北向接口访问地址，和管理面、Portal 认证面端口区分配置 |
-| `NCE_PORTAL_AUTH_BASE_URL` | `https://172.16.4.107:19008` | NCE Portal 南向认证接口地址，用于微信小程序 `socialAuthResult` / `syncPortalResult` |
+| `MINI_PROGRAM_GUEST_SERVICE_URL` | `https://wifi3.szairport.com:8443/secoWS/service/NewGuestManagerServices` | 小程序 SOAP 添加访客上游地址 |
+| `MINI_PROGRAM_PORTAL_AUTH_URL` | `https://wifi5.szairport.com:8445/PortalServer/AppPortalAuth` | 小程序认证与结果同步上游地址 |
 | 管理面地址 | `https://172.16.4.107:18102` | 用于登录管理控制台，不等同于北向 API 地址 |
 | 现场 Portal/业务入口地址 | 待现场确认 | 不作为当前微信小程序联调的认证接口；微信小程序放行以 `19008` 的 Portal 认证 API 为准 |
 | `NCE_USERNAME` / `NCE_PASSWORD` | 不在文档中明文保存 | 使用租户侧“三方系统接入用户”获取北向 Token |
@@ -1287,88 +1291,53 @@ POST
 | **642** | 短信动态验证码错误或为空 | 提示验证码错误 |
 | **643** | 短信动态验证码过期 | 提示验证码失效，重新获取 |
 
-#### 6.10.5 微信小程序 NCE Portal 认证接口
-*本接口来自 iMaster NCE-Campus Portal 认证链路，和 `18002` 北向 API 不同。它不使用 `x-access-token`，请求必须从真实 Portal/微信小程序流程中取得认证上下文。*
+#### 6.10.5 第三方小程序兼容认证接口
+*第三方小程序保持既有三个操作的入参与出参不变。本系统提供固定路径兼容代理，将请求转发到配置的 NCE 上游并原样返回响应。小程序访客创建使用 SOAP WebService，与登机牌、护照使用的 JSON 访客创建接口分开实现。*
 
-##### 1. 提交微信小程序认证结果
+##### 1. 添加访客
 * **调用方法**: `POST`
-* **Base URL**: `{{NCE_PORTAL_AUTH_BASE_URL}}`，当前验证环境为 `https://172.16.4.107:19008`
-* **URI**: `/portalauth/socialAuthResult`
-* **请求 Headers**:
-  * `Content-Type`: `application/x-www-form-urlencoded`
-* **请求 Body 类型**: `x-www-form-urlencoded`
+* **URI**: `/secoWS/service/NewGuestManagerServices`
+* **Content-Type**: `application/soap+xml`
+* **上游配置**: `MINI_PROGRAM_GUEST_SERVICE_URL`
+* **请求 Body**: 原样 SOAP XML，操作名为 `addGuestAccount`
 
-| 参数名称 | 必选 | 取值/来源 | 说明 |
-| :--- | :--- | :--- | :--- |
-| `authType` | 是 | 固定 `4` | 表示社交媒体认证 |
-| `socialAuthType` | 是 | 固定 `8` | 表示微信小程序认证 |
-| `ssid` | 是 | NCE Portal 会话参数 | 用户接入的 WiFi 名称 |
-| `uaddress` | 是 | NCE Portal 会话参数 | 终端 IP |
-| `umac` | 是 | NCE Portal 会话参数 | 终端 MAC |
-| `agreed` | 是 | 固定 `1` | 表示用户已勾选用户须知 |
-| `state` | 是 | NCE Portal/扫码流程生成 | 扫码认证唯一标识。不能由本系统或 Postman 随机伪造 |
-| `code` | 是 | 微信小程序运行时获取 | openid 场景来自 `wx.login()`；手机号场景来自 `getPhoneNumber()` |
-| `pushPageId` | 是 | NCE Portal 定制页面 | 绑定微信小程序认证的定制页面 ID |
-| `apmac` | 否 | Portal 设备上下文 | AP 设备推荐传 `apmac` 或 `esn` |
-| `esn` | 否 | Portal 设备上下文 | 多设备字段同时存在时优先级最高 |
-| `acip` | 否 | Portal 设备上下文 | 独立 WAC 或随板 AC 推荐传 `acip` 或 `esn` |
-| `armac` | 否 | Portal 设备上下文 | AR 设备推荐传 `armac` 或 `esn` |
-
-设备字段同时传入时，NCE 处理优先级为：`esn > apmac > armac > acip`。
-
-**Postman 联调示例（仅验证接口可达，不能完成业务放行）**:
-```text
-authType=4
-socialAuthType=8
-ssid=test
-uaddress=1.1.1.1
-umac=00-00-00-00-00-00
-agreed=1
-state=test-state-001
-code=test-code-001
-pushPageId=test-page-id
-```
-
-如果返回 `10330 state is invalid`，说明接口已经可达且格式正确，但 `state` 不是 NCE 当前缓存中的真实扫码认证标识。
-
-**成功响应示例**:
-```json
-{
-  "success": true,
-  "errorcode": "",
-  "psessionid": "PSESSIONID_VALUE",
-  "token": "XSRF_TOKEN_VALUE"
-}
-```
-
-##### 2. 查询/同步 Portal 认证结果
-* **调用方法**: `POST`
-* **Base URL**: `{{NCE_PORTAL_AUTH_BASE_URL}}`
-* **URI**: `/portalauth/syncPortalResult`
-* **请求 Headers**:
-  * `Content-Type`: `application/x-www-form-urlencoded`
-  * `X-XSRF-TOKEN`: `socialAuthResult` 成功响应中的 `token`
-  * `Cookie`: `PSESSIONID=socialAuthResult成功响应中的psessionid`
-* **请求 Body 类型**: `x-www-form-urlencoded`，可为空
-
-**成功响应示例**:
-```json
-{
-  "errorcode": 0,
-  "message": "true"
-}
-```
-
-##### 3. 联调错误码定位
-| 错误码 | 含义 | 排查方向 |
+| XML 字段 | 必选 | 说明 |
 | :--- | :--- | :--- |
-| `10324` | NCE 对接微信小程序配置参数校验失败 | 检查 App ID、APP Secret、绑定页面等社交媒体参数 |
-| `10325` | 微信小程序认证绑定的定制页面为空 | 检查 NCE Portal 页面定制与小程序绑定关系 |
-| `10328` | 扫码认证唯一标识 `state` 未传递 | Postman 或小程序请求中缺少 `state` |
-| `10329` | 缓存中查不到 `state` | `state` 已过期、不是同一次扫码流程，或 Portal 流程未生成 |
-| `10330` | 微信小程序返回失败或 `state` 无效 | 接口可达，但 `state/code/pushPageId` 不是有效业务值 |
-| `10331` | 微信小程序认证授权码为空 | 检查 `wx.login()` / `getPhoneNumber()` 是否成功返回 `code` |
-| `10333` | 页面未绑定微信小程序 | 检查 NCE 定制 Portal 页面是否绑定小程序 |
+| `account` | 是 | 访客账号 |
+| `authPolicy` | 是 | 认证策略，既有值为 `1` |
+| `changePwdAtNextLogin` | 是 | 下次登录是否修改密码，既有值为 `0` |
+| `orgName` | 是 | 访客组织，既有值为 `\Guest` |
+| `password` | 是 | 访客密码 |
+| `validBeginPeriod` | 是 | 有效期开始时间 |
+| `validPeriod` | 是 | 有效期结束时间 |
+
+SOAP Header 中的 WebService 用户名和密码由小程序既有报文提供，系统不在源码、日志或接口文档中保存明文。NCE 返回 HTTP `statusCode=200` 表示添加成功；响应状态、Content-Type 和 SOAP Body 均原样返回。
+
+##### 2. 发起 WiFi 认证
+* **调用方法**: `GET`
+* **URI**: `/PortalServer/AppPortalAuth`
+* **上游配置**: `MINI_PROGRAM_PORTAL_AUTH_URL`
+
+| Query 参数 | 必选 | 说明 |
+| :--- | :--- | :--- |
+| `messageType` | 是 | 固定为 `authRequest` |
+| `userName` | 是 | 访客账号 |
+| `password` | 是 | 访客密码 |
+
+响应原样返回 JSON：`{ resultCode, statusCode, sessionId }`。`resultCode=0` 表示接口调用成功，`sessionId` 用于下一步同步认证结果。
+
+##### 3. 同步认证结果
+* **调用方法**: `GET`
+* **URI**: `/PortalServer/AppPortalAuth`
+
+| Query 参数 | 必选 | 说明 |
+| :--- | :--- | :--- |
+| `messageType` | 是 | 固定为 `syncPortalAuthResultRequest` |
+| `sessionId` | 是 | 发起认证接口返回的 `sessionId` |
+
+响应原样返回 JSON：`{ resultCode, portalAuthStatus }`。`resultCode=0` 表示接口调用成功，`portalAuthStatus=1` 表示同步成功。
+
+兼容代理不修改上游业务状态码和响应字段。仅当本系统无法连接上游时返回 HTTP 502，调用超时时返回 HTTP 504，并携带稳定错误码和 `requestId`。
 
 ### 6.11 接口错误响应格式约定
 接口章节只定义错误响应格式，不重复维护完整错误码表。HTTP 状态码、内部错误码、旅客端提示文案和第三方错误映射统一以第 13 章为准。
@@ -1545,7 +1514,9 @@ web/src/
 | 变量名 | 示例 | 说明 |
 | :--- | :--- | :--- |
 | `NCE_BASE_URL` | `https://172.16.4.107:18002` | NCE 北向地址 |
-| `NCE_PORTAL_AUTH_BASE_URL` | `https://172.16.4.107:19008` | NCE Portal 南向认证地址，用于微信小程序认证放行 |
+| `NCE_PORTAL_AUTH_BASE_URL` | 按现场配置 | NCE Portal 新版认证地址，保留给非兼容链路使用 |
+| `MINI_PROGRAM_GUEST_SERVICE_URL` | `https://wifi3.szairport.com:8443/secoWS/service/NewGuestManagerServices` | 第三方小程序 SOAP 添加访客上游地址 |
+| `MINI_PROGRAM_PORTAL_AUTH_URL` | `https://wifi5.szairport.com:8445/PortalServer/AppPortalAuth` | 第三方小程序 WiFi 认证与结果同步上游地址 |
 | `NCE_USERNAME` | 不在文档写明文 | 三方系统接入用户 |
 | `NCE_PASSWORD` | 不在文档写明文 | 三方系统接入用户密码 |
 | `OCR_BASE_URL` | `http://IP:Port/xxx` | OCR 服务地址 |
@@ -1757,7 +1728,7 @@ INIT -> PENDING -> EXPIRED
 | 第二阶段 | Portal 骨架与短信原生流程 | 手机端能通过 NCE 短信认证上线 |
 | 第三阶段 | 护照 OCR + NCE 创建访客 | 护照识别成功后能完成 Portal 准入 |
 | 第四阶段 | 登机牌三要素验证 + NCE 创建访客 | 登机信息验证通过后能完成 Portal 准入 |
-| 第五阶段 | 微信跳转 + NCE Portal 放行 + 状态回写 + 状态查询 | 小程序完成 `socialAuthResult` / `syncPortalResult` 后，本系统页面显示登录成功 |
+| 第五阶段 | 微信跳转 + 小程序兼容认证 + 状态回写 + 状态查询 | 小程序完成添加访客、认证和结果同步后，本系统页面显示登录成功 |
 | 第六阶段 | 取号机创建 24 小时访客 | 小票账号首次登录后绑定单终端 |
 | 第七阶段 | 管理台统计、日志、健康监控 | 数据实时来自 NCE/OCR/调用摘要 |
 
@@ -1779,15 +1750,15 @@ INIT -> PENDING -> EXPIRED
 | TC-013 | 登机牌验证或 OCR 服务超时 | 返回统一超时提示，健康监控显示异常 |
 | TC-014 | 连续失败触发限流 | 返回 429，冷却后恢复 |
 | TC-015 | 日志脱敏检查 | 日志中无密码、Token、验证码、图片、姓名明文 |
-| TC-016 | 微信 `socialAuthResult` 接口可达性验证 | 使用 `x-www-form-urlencoded` 请求可收到 NCE 业务响应；若返回 `10328/10330`，说明接口可达但缺少真实 `state/code/pushPageId` |
-| TC-017 | 微信完整放行链路验证 | 使用真实 Portal 会话参数、真实微信 `code` 和有效 `pushPageId` 调通 `socialAuthResult`，再携带返回的 `token/psessionid` 调通 `syncPortalResult` |
+| TC-016 | 小程序兼容接口透传验证 | SOAP Body、Content-Type、查询参数、HTTP 状态和响应字段均未被改写 |
+| TC-017 | 微信完整放行链路验证 | SOAP 添加访客成功后取得 `sessionId`，再完成结果同步并收到 `portalAuthStatus=1` |
 
 ### 14.3 上线前检查清单
 - Postman 集合已变量化，不包含真实密码和长 Token；
 - NCE `siteId`、`userGroupId`、三方接入账号已确认；
 - 登机牌三要素验证接口地址、调用方标识、鉴权方式、结果码和测试数据已确认；
 - OCR `baseUrl`、`username`、护照 `typeId` 已确认；
-- 微信小程序 NCE Portal 地址、`state` 来源、`pushPageId`、状态回写地址、签名算法、重试规则已确认；
+- 微信小程序 SOAP 与 Portal 认证上游地址、状态回写地址、签名算法、重试规则已确认；
 - 取号机 IP 白名单和 HMAC 密钥已确认；
 - 管理台菜单和 API 权限已初始化；
 - 日志脱敏、限流、第三方超时和熔断策略已验证；

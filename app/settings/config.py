@@ -1,7 +1,7 @@
 import os
 import typing
 
-from pydantic import SecretStr, model_validator
+from pydantic import Field, SecretStr, model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -42,6 +42,14 @@ class Settings(BaseSettings):
     NCE_GUEST_USER_GROUP_ID: str | None = None
     NCE_TIMEOUT_MS: int = 2500
     NCE_KICK_ENABLED: bool = False
+
+    # Legacy third-party mini-program contract. It is intentionally separate
+    # from the JSON NCE adapter used by boarding-pass and passport flows.
+    MINI_PROGRAM_GUEST_SERVICE_URL: str | None = None
+    MINI_PROGRAM_PORTAL_AUTH_URL: str | None = None
+    MINI_PROGRAM_TIMEOUT_MS: int = Field(default=5000, gt=0, le=60000)
+    MINI_PROGRAM_TLS_VERIFY: bool = True
+    MINI_PROGRAM_MAX_SOAP_BODY_BYTES: int = Field(default=65536, gt=0, le=1048576)
 
     AUTH_SMS_ENABLED: bool = True
     AUTH_WECHAT_ENABLED: bool = True
@@ -137,6 +145,10 @@ class Settings(BaseSettings):
             raise ValueError("生产环境 CORS_ORIGINS 禁止使用通配符")
         if not self.MYSQL_PASSWORD:
             raise ValueError("生产环境必须配置 MYSQL_PASSWORD")
+        if self.AUTH_WECHAT_ENABLED and (
+            not self.MINI_PROGRAM_GUEST_SERVICE_URL or not self.MINI_PROGRAM_PORTAL_AUTH_URL
+        ):
+            raise ValueError("生产环境启用微信认证时必须配置小程序 NCE 上游地址")
         if self.MYSQL_POOL_MIN_SIZE <= 0 or self.MYSQL_POOL_MAX_SIZE < self.MYSQL_POOL_MIN_SIZE:
             raise ValueError("MySQL 连接池参数无效")
         return self

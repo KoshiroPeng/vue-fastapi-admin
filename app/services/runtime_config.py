@@ -14,6 +14,10 @@ class RuntimeConfigSummary(BaseModel):
     nce_guest_user_group_id: str | None
     nce_base_url_configured: bool
     nce_portal_url_configured: bool
+    mini_program_guest_service_configured: bool
+    mini_program_portal_auth_configured: bool
+    mini_program_tls_verify: bool
+    mini_program_timeout_ms: int
     nce_credentials_configured: bool
     nce_site_configured: bool
     redis_configured: bool
@@ -43,6 +47,10 @@ def build_runtime_config_summary(config: Settings) -> RuntimeConfigSummary:
         nce_guest_user_group_id=config.NCE_GUEST_USER_GROUP_ID,
         nce_base_url_configured=bool(config.NCE_BASE_URL),
         nce_portal_url_configured=bool(config.NCE_PORTAL_AUTH_BASE_URL),
+        mini_program_guest_service_configured=bool(config.MINI_PROGRAM_GUEST_SERVICE_URL),
+        mini_program_portal_auth_configured=bool(config.MINI_PROGRAM_PORTAL_AUTH_URL),
+        mini_program_tls_verify=config.MINI_PROGRAM_TLS_VERIFY,
+        mini_program_timeout_ms=config.MINI_PROGRAM_TIMEOUT_MS,
         nce_credentials_configured=bool(config.NCE_USERNAME and config.NCE_PASSWORD),
         nce_site_configured=bool(config.NCE_TENANT_ID and config.NCE_SITE_ID and config.NCE_GUEST_USER_GROUP_ID),
         redis_configured=bool(config.REDIS_URL),
