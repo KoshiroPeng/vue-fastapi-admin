@@ -197,6 +197,24 @@ docker compose --env-file /etc/vue-fastapi-admin/app.env -f deploy/compose.yaml 
 
 后两个地址分别检查 Nginx 进程和完整的 Nginx、FastAPI、MySQL、Redis 链路。应用日志按容器主机名写入 `/srv/vue-fastapi-admin/logs/app`，Nginx 日志使用宿主机 `/var/log/nginx`。
 
+### 认证链路压测
+
+先确认测试环境启用了 NCE、登机牌和 OCR Mock，再从另一台测试机经 Nginx 入口执行固定到达率压测：
+
+```bash
+python scripts/auth_load_test.py \
+  --base-url http://172.16.3.156 \
+  --scenario mixed \
+  --rps 50 \
+  --concurrency 50 \
+  --duration-seconds 60 \
+  --report .tmp/auth-load-report.json
+```
+
+脚本交替执行登机牌和护照完整认证接口，校验 HTTP 状态和 `networkAuthorized=true`，并输出错误率、完成吞吐量及 P50/P95/P99 延迟。默认门槛为错误率不超过 1%、P95 不超过 1 秒、P99 不超过 2 秒，任一门槛不满足时进程返回非零退出码。每个请求使用唯一的测试 IP/MAC，避免正常单终端限流干扰容量测试。
+
+现场真实链路测试必须关闭 Mock，并使用已批准的脱敏登机牌数据和护照测试图片覆盖默认参数。压测报告不得包含真实旅客数据；若 HTTPS 测试证书未纳入系统信任链，可临时加 `--insecure`，正式验收不得使用该参数。压测工具完成不等于性能验收通过，最终结论必须以两台服务器、真实 NCE/OCR/登机牌依赖和目标网络中的实测报告为准。
+
 ## 常用命令
 
 后端常用命令：
@@ -237,6 +255,8 @@ pnpm lint
 │   ├── init.sql         MySQL 全量初始化脚本
 │   └── nginx.conf       宿主机 Nginx 单文件站点配置
 ├── logs                 本地运行日志（日志文件不提交）
+├── scripts              运维和认证压测脚本
+├── tests                后端自动化测试
 ├── web                  前端应用代码
 │   ├── build            Vite 构建配置
 │   ├── public           前端公共资源
