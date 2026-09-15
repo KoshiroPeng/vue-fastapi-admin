@@ -4,6 +4,10 @@
   "scripts": {
     "dev": "node preview-server.js --dev",
     "build": "node scripts/build-all.js",
+    "build:pr": "node scripts/build-pr.js",
     "preview": "node preview-server.js"
+  },
+  "devDependencies": {
+    "terser": "^5.51.2"
   }
 }

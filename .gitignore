@@ -30,3 +30,4 @@ web/*.local
 
 .DS_Store
 ._.DS_Store
+portal/node_modules/
