@@ -287,10 +287,11 @@ sequenceDiagram
     现场取号机->>旅客: 6. 打印上网小票
     旅客->>Portal认证页面: 7. 手机连接WiFi打开Portal页面
     旅客->>Portal认证页面: 8. 输入小票账号密码点击登录
-    Portal认证页面->>NCEPortal认证服务: 9. 提交用户名密码认证
-    NCEPortal认证服务->>NCEPortal认证服务: 10. 校验通过并自动绑定终端MAC
-    NCEPortal认证服务-->>Portal认证页面: 11. 准入放行成功
-    Portal认证页面-->>旅客: 12. 提示用户认证成功
+    Portal认证页面->>认证前置服务: 9. 提交用户名和密码
+    认证前置服务->>NCEPortal认证服务: 10. 提交用户名密码认证并查询结果
+    NCEPortal认证服务-->>认证前置服务: 11. 返回准入结果并首次绑定终端MAC
+    认证前置服务-->>Portal认证页面: 12. 返回最终准入结果
+    Portal认证页面-->>旅客: 13. 提示用户认证成功
 ```
 
 #### 3.2.2 24 小时生命周期管控与 MAC 绑定策略
@@ -320,10 +321,10 @@ sequenceDiagram
     登机牌验证系统-->>认证前置服务: 6. 返回 verified/code/validUntil
     认证前置服务->>NCE北向API: 7. verified=true 后创建短时访客账号
     NCE北向API-->>认证前置服务: 8. 返回访客创建成功
-    认证前置服务-->>Portal认证页面: 9. 返回一次性准入凭据
-    Portal认证页面->>NCEPortal认证服务: 10. 前端静默自动向 NCE 提交认证
-    NCEPortal认证服务->>NCEPortal认证服务: 11. 鉴权通过并下发放行策略
-    NCEPortal认证服务-->>Portal认证页面: 12. 准入放行完成
+    认证前置服务->>NCE北向API: 9. 提交 HACA 终端授权
+    认证前置服务->>NCE北向API: 10. 轮询 HACA 授权结果
+    NCE北向API-->>认证前置服务: 11. 返回最终准入结果
+    认证前置服务-->>Portal认证页面: 12. 返回 networkAuthorized
     Portal认证页面-->>旅客终端: 13. 页面提示认证成功
 ```
 
@@ -364,11 +365,11 @@ sequenceDiagram
     认证前置服务->>OCR服务: 3. 内存流式转发OCR识别
     OCR服务-->>认证前置服务: 4. 返回MRZ机读码与识别结果
     认证前置服务->>NCE北向API: 5. 格式校验通过后创建访客账号
-    NCE北向API-->>认证前置服务: 6. 返回访客信息
-    认证前置服务-->>Portal认证页面: 7. 返回一次性临时凭据
-    Portal认证页面->>NCEPortal认证服务: 8. 前端静默自动向NCE提交认证
-    NCEPortal认证服务->>NCEPortal认证服务: 9. 鉴权通过并授权放行
-    NCEPortal认证服务-->>Portal认证页面: 10. 准入放行完成
+    NCE北向API-->>认证前置服务: 6. 返回访客创建成功
+    认证前置服务->>NCE北向API: 7. 提交 HACA 终端授权
+    认证前置服务->>NCE北向API: 8. 轮询 HACA 授权结果
+    NCE北向API-->>认证前置服务: 9. 返回最终准入结果
+    认证前置服务-->>Portal认证页面: 10. 返回 networkAuthorized
     Portal认证页面-->>旅客终端: 11. 页面提示认证成功
 ```
 
@@ -378,28 +379,32 @@ sequenceDiagram
 
 ---
 
-### 3.5 短信认证（iMaster NCE-Campus 原生流程接入）
+### 3.5 短信认证（FastAPI 统一代理 NCE 流程）
 #### 3.5.1 业务交互时序图
-短信认证作为旅客使用率最高、稳定性要求极苛刻的通道，系统采用 **NCE-Campus 原生短信流接入模式**。由 Portal 页面直接驱动 NCE 原生短信服务与准入闭环，本前置服务不截留、不中转短信数据：
+短信认证由 Portal 统一调用 FastAPI，FastAPI 再调用 NCE 短信和 Portal 认证接口。浏览器不直接调用 NCE，也不接触 NCE 会话信息：
 
 ```mermaid
 sequenceDiagram
     autonumber
     旅客终端->>Portal认证页面: 1. 进入短信认证页面
     旅客终端->>Portal认证页面: 2. 输入手机号点击获取验证码
-    Portal认证页面->>NCEPortal认证服务: 3. 请求下发短信验证码
-    NCEPortal认证服务->>短信平台: 4. 调用短信通道发送验证码
-    短信平台-->>旅客终端: 5. 下发6位验证码到手机
-    旅客终端->>Portal认证页面: 6. 输入验证码点击登录
-    Portal认证页面->>NCEPortal认证服务: 7. 提交手机号与验证码准入认证
-    NCEPortal认证服务->>NCEPortal认证服务: 8. 校验验证码通过并授权放行
-    NCEPortal认证服务-->>Portal认证页面: 9. 认证成功放行结果
-    Portal认证页面-->>旅客终端: 10. 页面提示上线成功
+    Portal认证页面->>认证前置服务: 3. 请求获取短信验证码
+    认证前置服务->>NCEPortal认证服务: 4. 请求下发短信验证码
+    NCEPortal认证服务->>短信平台: 5. 调用短信通道发送验证码
+    短信平台-->>旅客终端: 6. 下发验证码到手机
+    旅客终端->>Portal认证页面: 7. 输入验证码点击登录
+    Portal认证页面->>认证前置服务: 8. 提交手机号与验证码
+    认证前置服务->>NCEPortal认证服务: 9. 提交认证并查询最终结果
+    NCEPortal认证服务-->>认证前置服务: 10. 返回准入结果
+    认证前置服务-->>Portal认证页面: 11. 返回最终准入结果
+    Portal认证页面-->>旅客终端: 12. 页面提示上线成功
 ```
 
-#### 3.5.2 前端定制与 NCE 兼容规范
-1. **DOM ID 与事件规范保留**：定制 Portal 前端模板时，严格保留 NCE 认证引擎所需的表单标签规范（如 `username`、`password`、`getSmscodeBtn`、`loginBtn`），确保 NCE 原生 JS 逻辑能够精准捕获事件与参数。
-2. **体验优化**：增加国内主流手机号段正则校验、获取验证码 60 秒倒计时防重复点击、国际区号支持等用户友好交互。
+#### 3.5.2 接口职责
+1. **获取验证码**：Portal 调 FastAPI 获取验证码接口，FastAPI 调 NCE `/portalauth/getSmsPassword`；响应只说明是否受理，不返回验证码。
+2. **提交认证**：Portal 将手机号和验证码提交给 FastAPI，FastAPI 调 NCE `/portalauth/login` 并通过 `/portalauth/syncPortalResult` 查询最终结果。
+3. **成功判定**：只有 NCE 明确返回终端已放行，FastAPI 才向 Portal 返回 `networkAuthorized=true`。
+4. **安全要求**：FastAPI 对手机号、IP 和 MAC 执行限流；手机号明文、验证码和 NCE 会话信息不得写日志。
 
 ---
 
@@ -560,25 +565,24 @@ INIT -> PENDING -> EXPIRED
 - 登机牌验证、护照 OCR 或微信状态回写失败时，事务状态改为 `FAILED`；
 - 超过 TTL 后自动变为 `EXPIRED`；
 - 事务状态只存 Redis，不落数据库；
-- 对前端返回状态时，不返回 NCE Token、完整 MAC、证件后四位明文或 OCR 原始报文；临时访客密码只允许在准入所需的短时事务中一次性返回。
+- 对前端返回状态时，不返回 NCE Token、完整 MAC、证件后四位明文、OCR 原始报文、临时访客密码或 HACA 会话 ID。
 
 ### 5.3 NCE 准入适配模块
-登机牌、护照、取号机最终都要通过 NCE-Campus 完成网络准入。登机牌和护照由后端创建临时访客并调用 HACA 完成终端授权；取号机只创建小票账号，旅客输入账号密码后由 NCE 原生 Portal 完成准入。
+五类认证最终都要通过 NCE-Campus 完成网络准入。Portal 统一调用 FastAPI；FastAPI 根据业务调用 NCE Portal 认证接口或 HACA 接口，并只把最终准入结果返回 Portal。
 
 #### 5.3.1 准入方式
 | 方式 | 适用场景 | 说明 |
 | :--- | :--- | :--- |
-| NCE 原生表单提交 | 短信、账号密码认证 | 保留 NCE Portal 必要 DOM、JS 和隐藏字段 |
+| FastAPI 代理 NCE Portal 认证 | 短信、取号机账号密码 | Portal 提交业务参数给 FastAPI，由 FastAPI 调 NCE 并查询最终结果 |
 | 后端 HACA 授权 | 登机牌、护照 | 服务端创建访客、提交 HACA 授权并轮询结果；只有明确成功才返回已放行 |
-| 用户手动输入小票账号 | 取号机 | 旅客根据小票输入账号密码，NCE 首次登录绑定 MAC |
+| 用户手动输入小票账号 | 取号机 | 旅客根据小票输入账号密码，FastAPI 代理认证，NCE 首次登录绑定 MAC |
 | 微信小程序放行 | 微信认证 | 第三方小程序调用 NCE Portal 放行，本系统接收状态回写并展示结果 |
 
 #### 5.3.2 需要现场确认的 NCE 参数
 - HACA 授权结果的真实状态字段、成功/处理中/失败值域；
 - HACA `thirdAuthType`、`policyName` 和节点参数的现场取值；
 - 用户名密码认证提交地址（短信、取号机）；
-- 短信验证码发送与登录所需 DOM ID；
-- Portal 页面隐藏字段；
+- 短信验证码发送、账号密码登录及结果同步所需请求字段；
 - 登录成功和失败的返回标识；
 - HACA 强制下线账号权限、响应字段和审计要求；
 - 是否支持按 MAC 或用户名查询在线状态；
@@ -801,7 +805,8 @@ Mock 要求：
   "documentLast4": "5678",
   "clientMac": "AA-BB-CC-DD-EE-FF",
   "clientIp": "10.128.34.56",
-  "ssid": "Airport-Free-WiFi"
+  "ssid": "Airport-Free-WiFi",
+  "deviceMac": "11-22-33-44-55-66"
 }
 ```
 - **Response Body (成功)**:
@@ -817,13 +822,13 @@ Mock 要求：
   }
 }
 ```
-- **业务说明**: 本接口只由 Portal 页面调用。服务端必须先完成字段格式校验、限流和防枚举检查，再调用第三方登机牌三要素验证接口；只有第三方返回 `verified=true` 时才创建 NCE 访客账号。
+- **业务说明**: 本接口提供给正在开发的正式 Portal 页面调用，当前 FastAPI 已实现，Portal 模板尚待接入。`deviceMac` 与 `deviceEsn` 至少提供一个。服务端必须先完成字段格式校验和限流，再调用第三方登机牌三要素验证接口；只有第三方返回 `verified=true` 时才创建 NCE 访客账号并执行 HACA 放行。
 
 #### 6.6.2 微信小程序认证状态回写与状态接口
 - **发起跳转 Path**: `POST /api/v1/portal/wechat/auth/start`
 - **状态回写 Path**: `POST /api/v1/portal/wechat/auth/callback`
-- **状态查询 Path**: `GET /api/v1/portal/wechat/auth/status?authTxId=xxx`
-- **接口定位**: 本组接口只负责本系统 Portal 页面跳转、短时状态展示和联调辅助。微信小程序真正完成网络准入时，按第 6.10.5 节依次完成添加访客、认证和结果同步。
+- **状态查询 Path**: `GET /api/v1/portal/wechat/auth/status?auth_tx_id=xxx`
+- **接口定位**: `start` 和 `status` 提供给正在开发的正式 Portal；`callback` 提供给第三方微信小程序或受信任回写服务，不由浏览器调用。微信小程序真正完成网络准入时，按第 6.10.5 节依次完成添加访客、认证和结果同步。
 - **状态回写 Headers**:
   - `Content-Type: application/json`
   - `X-Wx-Signature`: 第三方小程序签名
@@ -834,16 +839,14 @@ Mock 要求：
 {
   "authTxId": "tx-8f4b23d9-91a3-48ef-bf64-123456789abc",
   "result": "SUCCESS",
-  "clientMac": "AA-BB-CC-DD-EE-FF",
-  "clientIp": "10.128.34.56",
-  "message": "认证成功"
+  "nceSuccess": true
 }
 ```
 - **Status Response**:
 ```json
 {
   "code": 200,
-  "message": "查询成功",
+  "msg": "OK",
   "data": {
     "authTxId": "tx-8f4b23d9-91a3-48ef-bf64-123456789abc",
     "status": "SUCCESS",
@@ -1742,7 +1745,7 @@ INIT -> PENDING -> EXPIRED
 | :--- | :--- | :--- |
 | 第一阶段 | NCE Token、访客创建、RADIUS 日志查询 | Postman 调通，参数变量化 |
 | 第一阶段补充 | HACA 授权、结果查询、强制下线（默认关闭） | 明确成功、失败、未知状态和超时行为与现场版本一致 |
-| 第二阶段 | Portal 骨架与短信原生流程 | 手机端能通过 NCE 短信认证上线 |
+| 第二阶段 | Portal 骨架与 FastAPI 短信代理流程 | Portal 通过 FastAPI 获取验证码、提交认证并取得 NCE 最终放行结果 |
 | 第三阶段 | 护照 OCR + NCE 创建访客 | 护照识别成功后能完成 Portal 准入 |
 | 第四阶段 | 登机牌三要素验证 + NCE 创建访客 | 登机信息验证通过后能完成 Portal 准入 |
 | 第五阶段 | 微信跳转 + 小程序兼容认证 + 状态回写 + 状态查询 | 小程序完成添加访客、认证和结果同步后，本系统页面显示登录成功 |
@@ -1807,7 +1810,7 @@ Mock 压测只验证本系统、Nginx、MySQL 和 Redis 的容量基线，不代
 本详细设计方案完全匹配《深圳机场WIFI认证开发计划.xlsx》中规划的工程实施路线：
 1. **阶段一（8/31–9/4）**：详细方案设计评审与基线确立（即本文档成果）；
 2. **阶段二（9/7–9/11）**：统一 Portal 页面与 FastAPI 认证网关骨架搭建；
-3. **阶段三（9/14–9/24）**：短信（NCE 原生接入）+ 护照认证（OCR 流式对接）开发完成并封板；
+3. **阶段三（9/14–9/24）**：短信（FastAPI 代理 NCE）+ 护照认证（OCR 流式对接）开发完成并封板；
 4. **阶段四（9/28–10/16）**：短信 + 护照端到端联调、并发压测、安全合规扫描与正式灰度割接；
 5. **阶段五（10/19–10/30）**：登机牌三要素认证、微信小程序 NCE Portal 放行链路、取号机兼容接口开发；
 6. **阶段六（11/2–11/20）**：五类认证方式端到端联调、压测、安全测评与全量割接上线。
