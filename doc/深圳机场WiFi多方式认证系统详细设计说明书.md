@@ -214,9 +214,9 @@ graph TD
 为保证数据合规（满足个人信息保护法要求，杜绝旅客轨迹合规风险），系统设计了“三不原则”与“一次性内存令牌机制”：
 1. **不存数据库表**：ORM（Tortoise-ORM）模型仅保留系统管理员、角色表、菜单路由表与系统操作审计表（仅记录管理员在后台的操作，不记录旅客信息）。
 2. **内存瞬时流转，阅后即焚**：
-   - 旅客完成登机牌三要素验证或护照 OCR 识别后，服务端生成一次性短暂有效的临时密码（随机 8 位高强字符串）；微信小程序认证不走本系统临时密码链路，由第三方小程序直接调用 NCE Portal 认证 API 放行；
-   - 前置服务调用 NCE 写入访客账号后，将账号与临时密码包装在一次性认证事务凭据（`txToken`）中返回给前端；
-   - 前端拿到凭据后立即向 Portal 认证服务器发起准入，随后在前端内存中立即擦除；
+   - 旅客完成登机牌三要素验证或护照 OCR 识别后，服务端生成 NCE 临时访客账号和密码，仅在后端内存中用于创建访客及 HACA 授权；
+   - 前置服务轮询 HACA 到明确成功后，只向前端返回认证事务号、有效期和 `networkAuthorized=true`，不返回访客账号、密码或 HACA 会话 ID；
+   - 微信小程序认证不走本系统临时密码链路，由第三方小程序调用既有 NCE Portal 认证 API 放行；
    - 护照图像通过内存二进制流上传至 OCR，识别完成后立即释放内存，磁盘**不写临时文件、不做缓存落盘**。
 3. **统计数据全代理穿透**：
    - 当管理员打开后台“认证统计”或“在线终端监控”时，前端请求 FastAPI 网关；
@@ -808,14 +808,11 @@ Mock 要求：
 ```json
 {
   "code": 200,
-  "message": "登机信息验证通过并完成准入凭据生成",
+  "msg": "OK",
   "data": {
     "verified": true,
+    "networkAuthorized": true,
     "authTxId": "tx-8f4b23d9-91a3-48ef-bf64-123456789abc",
-    "flightNo": "CA1234",
-    "seatNoMasked": "16*",
-    "tempUsername": "bp_8f4b23d9",
-    "tempPassword": "P@ssw0rd8f4b",
     "validUntil": "2026-08-28T14:30:00+08:00"
   }
 }
@@ -863,17 +860,19 @@ Mock 要求：
   - `X-Client-MAC: AA-BB-CC-DD-EE-FF`
   - `X-Client-IP: 10.128.34.56`
   - `X-SSID: Airport-Free-WiFi`（可选）
+  - `X-Device-MAC` / `X-Device-ESN`：至少提供一个，用于 HACA 授权
+  - `X-AP-MAC`、`X-Node-IP`：按 Portal 入口上下文传递（可选）
 - **Request Body**：原始护照图像二进制流，最大 4MB。后端使用 `Request.stream()` 受控读取并同步执行 MIME/文件头校验，不使用 `UploadFile` 或 multipart 临时文件，从实现上避免 `SpooledTemporaryFile` 超阈值落盘。无论成功或失败，内存缓冲区均立即清空。
 - **Response Body (成功)**:
 ```json
 {
   "code": 200,
-  "message": "护照识别成功并完成准入凭据生成",
+  "msg": "OK",
   "data": {
     "verified": true,
+    "networkAuthorized": true,
+    "authTxId": "tx-7a3c23d9-91a3-48ef-bf64-123456789abc",
     "passportNoMasked": "E****1234",
-    "tempUsername": "pass_E1234",
-    "tempPassword": "P@ssw0rd99aa",
     "validUntil": "2026-09-04T22:00:00+08:00"
   }
 }

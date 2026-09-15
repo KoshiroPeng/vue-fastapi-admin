@@ -22,6 +22,9 @@ def test_portal_openapi_contains_mock_authentication_contracts() -> None:
     ]["schema"]
     assert boarding_schema["$ref"].endswith("/BoardingPassPortalResponse")
     assert passport_schema["$ref"].endswith("/PassportPortalResponse")
+    result_schema = schema["components"]["schemas"]["BoardingPassPortalResult"]
+    assert "tempUsername" not in result_schema["properties"]
+    assert "tempPassword" not in result_schema["properties"]
     passport_headers = paths["/api/v1/portal/passport/verify"]["post"]["parameters"]
     assert {item["name"] for item in passport_headers} >= {
         "X-Device-MAC",

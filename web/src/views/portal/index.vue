@@ -297,7 +297,8 @@ async function submitBoardingPass() {
   loading.value = true
   try {
     const response = await api.verifyBoardingPass({ ...boarding, ...context })
-    successMessage.value = `登机牌验证成功，临时账号 ${response.data.tempUsername} 已创建`
+    if (!response.data.networkAuthorized) throw new Error('NCE 尚未确认网络放行')
+    successMessage.value = '登机牌验证成功，网络已放行'
   } catch (error) {
     errorMessage.value = error?.message || '登机牌认证失败'
   } finally {
@@ -320,6 +321,7 @@ async function submitPassport() {
   loading.value = true
   try {
     const response = await api.verifyPassport(passportFile.value, context)
+    if (!response.data.networkAuthorized) throw new Error('NCE 尚未确认网络放行')
     successMessage.value = `护照识别成功：${response.data.passportNoMasked}`
     passportFile.value = null
   } catch (error) {

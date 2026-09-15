@@ -137,6 +137,10 @@ async def test_mock_portal_backend_supports_boarding_pass_passport_and_wechat(mo
         assert passport_response.status_code == 200
         assert boarding_response.json()["data"]["networkAuthorized"] is True
         assert passport_response.json()["data"]["networkAuthorized"] is True
+        assert "tempUsername" not in boarding_response.json()["data"]
+        assert "tempPassword" not in boarding_response.json()["data"]
+        assert "tempUsername" not in passport_response.json()["data"]
+        assert "tempPassword" not in passport_response.json()["data"]
         assert callback_response.status_code == 200
         assert status_response.json()["data"]["status"] == "SUCCESS"
         all_keys = await redis.keys(f"{prefix}:*")

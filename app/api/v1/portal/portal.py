@@ -93,8 +93,6 @@ async def verify_boarding_pass(
             "verified": True,
             "networkAuthorized": True,
             "authTxId": result.auth_tx_id,
-            "tempUsername": result.username,
-            "tempPassword": result.password.get_secret_value(),
             "validUntil": result.valid_until.isoformat(),
         }
     )
@@ -167,8 +165,6 @@ async def verify_passport(
             "networkAuthorized": True,
             "authTxId": result.auth_tx_id,
             "passportNoMasked": result.passport_number_masked,
-            "tempUsername": result.username,
-            "tempPassword": result.password.get_secret_value(),
             "validUntil": result.valid_until.isoformat(),
         }
     )

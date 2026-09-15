@@ -52,8 +52,6 @@ class BoardingPassPortalResult(BaseModel):
     verified: bool
     network_authorized: bool = Field(alias="networkAuthorized")
     auth_tx_id: str = Field(alias="authTxId")
-    temp_username: str = Field(alias="tempUsername")
-    temp_password: str = Field(alias="tempPassword")
     valid_until: datetime = Field(alias="validUntil")
 
 
