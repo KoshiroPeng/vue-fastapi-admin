@@ -16,16 +16,20 @@ class BoardingPassAuthRequest(BaseModel):
     client_ip: str
     client_mac: str
     ssid: str | None = Field(default=None, max_length=64)
+    device_mac: str | None = Field(default=None, max_length=32)
+    device_esn: str | None = Field(default=None, max_length=128)
+    ap_mac: str | None = Field(default=None, max_length=32)
+    node_ip: str | None = Field(default=None, max_length=64)
 
     @field_validator("flight_no", "seat_no", mode="before")
     @classmethod
     def normalize_uppercase(cls, value: str) -> str:
         return value.replace(" ", "").upper() if isinstance(value, str) else value
 
-    @field_validator("client_mac")
+    @field_validator("client_mac", "device_mac", "ap_mac")
     @classmethod
-    def validate_mac(cls, value: str) -> str:
-        return normalize_mac(value)
+    def validate_mac(cls, value: str | None) -> str | None:
+        return normalize_mac(value) if value else None
 
 
 class BoardingPassVerification(BaseModel):
@@ -43,6 +47,7 @@ class BoardingPassAuthResult(BaseModel):
     username: str
     password: SecretStr
     valid_until: datetime
+    authorization_session_id: str
 
 
 class BoardingPassRejected(Exception):

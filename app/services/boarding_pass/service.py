@@ -6,7 +6,12 @@ from app.services.auth_transaction import (
     AuthTransactionService,
     AuthTransactionStore,
 )
-from app.services.nce import NCEClient, NCEGuestCreateRequest
+from app.services.nce import (
+    NCEClient,
+    NCEGuestCreateRequest,
+    NCETerminalAuthorizationRequest,
+    authorize_terminal_and_wait,
+)
 
 from .client import (
     BoardingPassAuthRequest,
@@ -26,12 +31,18 @@ class BoardingPassAuthenticationService:
         pii_hash_secret: str,
         transaction_ttl_seconds: int,
         guest_valid_minutes: int,
+        haca_policy_name: str | None = None,
+        haca_poll_attempts: int = 10,
+        haca_poll_interval_ms: int = 1000,
         id_factory: Callable[[], str] | None = None,
     ) -> None:
         self._verifier = verifier
         self._nce = nce
         self._store = store
         self._guest_valid_minutes = guest_valid_minutes
+        self._haca_policy_name = haca_policy_name
+        self._haca_poll_attempts = haca_poll_attempts
+        self._haca_poll_interval_ms = haca_poll_interval_ms
         self._transactions = AuthTransactionService(
             store,
             pii_hash_secret=pii_hash_secret,
@@ -59,7 +70,26 @@ class BoardingPassAuthenticationService:
                     valid_duration_minutes=self._guest_valid_minutes,
                     max_devices=1,
                     description="BoardingPass Three-Factor Verified",
+                    terminal_mac=request.client_mac,
                 )
+            )
+            authorization = await authorize_terminal_and_wait(
+                self._nce,
+                NCETerminalAuthorizationRequest(
+                    request_id=transaction.auth_tx_id,
+                    username=guest.username,
+                    client_ip=request.client_ip,
+                    client_mac=request.client_mac,
+                    ssid=request.ssid or "Airport-Free-WiFi",
+                    device_mac=request.device_mac,
+                    device_esn=request.device_esn,
+                    ap_mac=request.ap_mac,
+                    node_ip=request.node_ip,
+                    policy_name=self._haca_policy_name,
+                    permit_seconds=self._guest_valid_minutes * 60,
+                ),
+                poll_attempts=self._haca_poll_attempts,
+                poll_interval_ms=self._haca_poll_interval_ms,
             )
         except Exception:
             await self._store.transition(transaction.auth_tx_id, AuthStatus.FAILED)
@@ -70,4 +100,5 @@ class BoardingPassAuthenticationService:
             username=guest.username,
             password=guest.password,
             valid_until=guest.valid_until,
+            authorization_session_id=authorization.session_id,
         )

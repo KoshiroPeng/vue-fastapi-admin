@@ -12,6 +12,7 @@ from app.core.init_app import (
     register_exceptions,
     register_routers,
 )
+from app.services.nce import close_nce_client
 
 try:
     from app.settings.config import settings
@@ -26,6 +27,7 @@ async def lifespan(app: FastAPI):
         await init_db()
         yield
     finally:
+        await close_nce_client()
         await Tortoise.close_connections()
         await redis_manager.close()
 

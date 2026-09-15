@@ -21,6 +21,9 @@ def get_boarding_pass_service(
         pii_hash_secret=settings.PII_HASH_SECRET or "",
         transaction_ttl_seconds=settings.AUTH_TRANSACTION_TTL_SECONDS,
         guest_valid_minutes=settings.BOARDING_PASS_GUEST_VALID_MINUTES,
+        haca_policy_name=settings.NCE_HACA_POLICY_NAME,
+        haca_poll_attempts=settings.NCE_HACA_POLL_ATTEMPTS,
+        haca_poll_interval_ms=settings.NCE_HACA_POLL_INTERVAL_MS,
     )
 
 
@@ -37,6 +40,9 @@ def get_passport_service(
         pii_hash_secret=settings.PII_HASH_SECRET or "",
         transaction_ttl_seconds=settings.AUTH_TRANSACTION_TTL_SECONDS,
         guest_valid_minutes=settings.PASSPORT_GUEST_VALID_MINUTES,
+        haca_policy_name=settings.NCE_HACA_POLICY_NAME,
+        haca_poll_attempts=settings.NCE_HACA_POLL_ATTEMPTS,
+        haca_poll_interval_ms=settings.NCE_HACA_POLL_INTERVAL_MS,
     )
 
 

@@ -6,7 +6,13 @@ from fastapi import APIRouter, Depends, Header, HTTPException, Request
 from app.core.masking import hash_ip, hash_mac
 from app.core.request_context import get_request_id
 from app.schemas.base import Success
-from app.schemas.portal import BoardingPassPortalRequest, WeChatCallbackRequest, WeChatStartRequest
+from app.schemas.portal import (
+    BoardingPassPortalRequest,
+    BoardingPassPortalResponse,
+    PassportPortalResponse,
+    WeChatCallbackRequest,
+    WeChatStartRequest,
+)
 from app.services.boarding_pass import BoardingPassAuthRequest, BoardingPassAuthenticationService, BoardingPassRejected
 from app.services.passport import PassportAuthenticationService, PassportImage, PassportOCRRejected
 from app.services.portal_factory import get_boarding_pass_service, get_passport_service, get_wechat_service
@@ -46,12 +52,22 @@ async def _limit_client(
     )
 
 
-@router.post("/boarding-pass/verify", summary="登机牌三要素验证并创建临时访客")
+def _require_haca_device_context(device_mac: str | None, device_esn: str | None) -> None:
+    if not device_mac and not device_esn:
+        raise HTTPException(status_code=400, detail="缺少 NCE 接入设备 MAC 或 ESN，请重新连接机场 WiFi")
+
+
+@router.post(
+    "/boarding-pass/verify",
+    summary="登机牌三要素验证、创建临时访客并完成 NCE 放行",
+    response_model=BoardingPassPortalResponse,
+)
 async def verify_boarding_pass(
     payload: BoardingPassPortalRequest,
     service: BoardingPassAuthenticationService = Depends(get_boarding_pass_service),
     limiter: RedisSlidingWindowRateLimiter = Depends(get_rate_limiter),
 ) -> Success:
+    _require_haca_device_context(payload.device_mac, payload.device_esn)
     await _limit_client(payload.client_ip, payload.client_mac, limiter, "boarding-pass")
     try:
         result = await service.authenticate(
@@ -63,6 +79,10 @@ async def verify_boarding_pass(
                 client_ip=payload.client_ip,
                 client_mac=payload.client_mac,
                 ssid=payload.ssid,
+                device_mac=payload.device_mac,
+                device_esn=payload.device_esn,
+                ap_mac=payload.ap_mac,
+                node_ip=payload.node_ip,
             ),
             trace_id=get_request_id() or "-",
         )
@@ -71,6 +91,7 @@ async def verify_boarding_pass(
     return Success(
         data={
             "verified": True,
+            "networkAuthorized": True,
             "authTxId": result.auth_tx_id,
             "tempUsername": result.username,
             "tempPassword": result.password.get_secret_value(),
@@ -81,7 +102,8 @@ async def verify_boarding_pass(
 
 @router.post(
     "/passport/verify",
-    summary="护照图像流识别并创建临时访客",
+    summary="护照图像流识别、创建临时访客并完成 NCE 放行",
+    response_model=PassportPortalResponse,
     openapi_extra={
         "requestBody": {
             "required": True,
@@ -97,9 +119,14 @@ async def verify_passport(
     client_ip: str = Header(alias="X-Client-IP", max_length=64),
     client_mac: str = Header(alias="X-Client-MAC", max_length=32),
     ssid: str | None = Header(default=None, alias="X-SSID", max_length=64),
+    device_mac: str | None = Header(default=None, alias="X-Device-MAC", max_length=32),
+    device_esn: str | None = Header(default=None, alias="X-Device-ESN", max_length=128),
+    ap_mac: str | None = Header(default=None, alias="X-AP-MAC", max_length=32),
+    node_ip: str | None = Header(default=None, alias="X-Node-IP", max_length=64),
     service: PassportAuthenticationService = Depends(get_passport_service),
     limiter: RedisSlidingWindowRateLimiter = Depends(get_rate_limiter),
 ) -> Success:
+    _require_haca_device_context(device_mac, device_esn)
     await _limit_client(client_ip, client_mac, limiter, "passport")
     content_type = request.headers.get("Content-Type", "").split(";", maxsplit=1)[0].lower()
     if content_type not in {"image/jpeg", "image/png"}:
@@ -124,6 +151,10 @@ async def verify_passport(
             client_ip=client_ip,
             client_mac=client_mac,
             ssid=ssid,
+            device_mac=device_mac,
+            device_esn=device_esn,
+            ap_mac=ap_mac,
+            node_ip=node_ip,
             trace_id=get_request_id() or "-",
         )
     except (ValueError, PassportOCRRejected) as exc:
@@ -133,6 +164,7 @@ async def verify_passport(
     return Success(
         data={
             "verified": True,
+            "networkAuthorized": True,
             "authTxId": result.auth_tx_id,
             "passportNoMasked": result.passport_number_masked,
             "tempUsername": result.username,

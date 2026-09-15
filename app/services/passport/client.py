@@ -35,6 +35,7 @@ class PassportAuthResult(BaseModel):
     password: SecretStr
     passport_number_masked: str
     valid_until: datetime
+    authorization_session_id: str
 
 
 class PassportOCRRejected(Exception):

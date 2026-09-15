@@ -32,10 +32,17 @@ def test_runtime_config_summary_never_exposes_secrets() -> None:
     assert summary.auth_methods["kiosk"] is True
     assert summary.auth_methods["passport"] is False
     assert summary.nce_kick_enabled is False
+    assert summary.nce_max_connections == 100
+    assert summary.nce_max_keepalive_connections == 50
+    assert summary.nce_tls_verify is True
+    assert summary.nce_ca_file_configured is False
+    assert summary.nce_haca_policy_configured is False
+    assert summary.nce_haca_poll_attempts == 10
     assert summary.mini_program_guest_service_configured is True
     assert summary.mini_program_portal_auth_configured is True
     assert summary.mini_program_tls_verify is True
     assert "nce-secret-value" not in serialized
+    assert "nce-secret-value" not in repr(config)
     assert "kiosk-secret-value" not in serialized
     assert "pii-hash-secret-value" not in serialized
     assert "mock-operator" not in serialized

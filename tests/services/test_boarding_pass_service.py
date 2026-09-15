@@ -22,6 +22,7 @@ async def test_boarding_pass_mock_creates_nce_guest_and_success_transaction() ->
         pii_hash_secret="test-pii-secret",
         transaction_ttl_seconds=300,
         guest_valid_minutes=480,
+        haca_poll_interval_ms=0,
         id_factory=lambda: "tx_boarding_001",
     )
 
@@ -34,12 +35,14 @@ async def test_boarding_pass_mock_creates_nce_guest_and_success_transaction() ->
             client_ip="10.1.2.3",
             client_mac="AA-BB-CC-DD-EE-FF",
             ssid="Airport-Free-WiFi",
+            device_mac="11-22-33-44-55-66",
         ),
         trace_id="trace-001",
     )
 
     assert result.auth_tx_id == "tx_boarding_001"
     assert result.username.startswith("bp_")
+    assert result.authorization_session_id
     assert (await store.get("tx_boarding_001")).status is AuthStatus.SUCCESS
 
 
@@ -53,6 +56,7 @@ async def test_boarding_pass_rejection_does_not_create_success() -> None:
         pii_hash_secret="test-pii-secret",
         transaction_ttl_seconds=300,
         guest_valid_minutes=480,
+        haca_poll_interval_ms=0,
         id_factory=lambda: "tx_boarding_002",
     )
 
@@ -65,6 +69,7 @@ async def test_boarding_pass_rejection_does_not_create_success() -> None:
                 document_last4="0000",
                 client_ip="10.1.2.3",
                 client_mac="AA-BB-CC-DD-EE-FF",
+                device_mac="11-22-33-44-55-66",
             ),
             trace_id="trace-002",
         )

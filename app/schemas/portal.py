@@ -1,4 +1,4 @@
-from datetime import date
+from datetime import date, datetime
 
 from pydantic import BaseModel, ConfigDict, Field, field_validator
 
@@ -11,11 +11,15 @@ class PortalClientContext(BaseModel):
     client_ip: str = Field(alias="clientIp", max_length=64)
     client_mac: str = Field(alias="clientMac", max_length=32)
     ssid: str | None = Field(default=None, max_length=64)
+    device_mac: str | None = Field(default=None, alias="deviceMac", max_length=32)
+    device_esn: str | None = Field(default=None, alias="deviceEsn", max_length=128)
+    ap_mac: str | None = Field(default=None, alias="apMac", max_length=32)
+    node_ip: str | None = Field(default=None, alias="nodeIp", max_length=64)
 
-    @field_validator("client_mac")
+    @field_validator("client_mac", "device_mac", "ap_mac")
     @classmethod
-    def validate_mac(cls, value: str) -> str:
-        return normalize_mac(value)
+    def validate_mac(cls, value: str | None) -> str | None:
+        return normalize_mac(value) if value else None
 
 
 class BoardingPassPortalRequest(PortalClientContext):
@@ -40,3 +44,30 @@ class WeChatCallbackRequest(BaseModel):
     auth_tx_id: str = Field(alias="authTxId", min_length=1, max_length=64)
     result: str = Field(pattern=r"^(SUCCESS|FAILED)$")
     nce_success: bool = Field(alias="nceSuccess")
+
+
+class BoardingPassPortalResult(BaseModel):
+    model_config = ConfigDict(populate_by_name=True)
+
+    verified: bool
+    network_authorized: bool = Field(alias="networkAuthorized")
+    auth_tx_id: str = Field(alias="authTxId")
+    temp_username: str = Field(alias="tempUsername")
+    temp_password: str = Field(alias="tempPassword")
+    valid_until: datetime = Field(alias="validUntil")
+
+
+class BoardingPassPortalResponse(BaseModel):
+    code: int = 200
+    msg: str = "OK"
+    data: BoardingPassPortalResult
+
+
+class PassportPortalResult(BoardingPassPortalResult):
+    passport_number_masked: str = Field(alias="passportNoMasked")
+
+
+class PassportPortalResponse(BaseModel):
+    code: int = 200
+    msg: str = "OK"
+    data: PassportPortalResult

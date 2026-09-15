@@ -22,3 +22,7 @@ class NCETimeoutError(NCEError):
 
 class NCEUnavailableError(NCEError):
     code = "NCE_UNAVAILABLE"
+
+
+class NCEProtocolError(NCEError):
+    code = "NCE_PROTOCOL_ERROR"

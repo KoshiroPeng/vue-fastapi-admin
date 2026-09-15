@@ -203,7 +203,7 @@ graph TD
 * **后端运行环境**：Python 3.11+，基于 ASGI 异步生态（FastAPI + Uvicorn + Pydantic v2）
 * **前端运行环境**：Node.js 18+（构建阶段），生产环境由 Nginx 1.24+ 托管静态文件
 * **系统基础数据库**：MySQL 8.0+（高可用主备），**仅存储管理员/角色/菜单权限等基础管理数据**
-* **缓存组件**：Redis 7.0+（用于分布式滑动窗口限流、NCE Token 集中共享与防重放 Nonce 缓存）
+* **缓存组件**：Redis 7.0+（用于分布式滑动窗口限流、认证事务与防重放 Nonce；NCE Token 由各 FastAPI 进程独立缓存）
 
 #### 2.2.3 软件高可用容灾与负载均衡
 1. **多 Worker 异步并发**：FastAPI 后端由 Gunicorn/Uvicorn 启动多 Worker 进程，基于异步非阻塞 I/O 处理高并发外部接口代理请求。
@@ -513,17 +513,20 @@ Portal 页面由 NCE-Campus 重定向打开，本系统必须从入口 URL 中�
 #### 5.1.1 入口解析参数
 | 参数名 | 是否必选 | 来源 | 用途 |
 | :--- | :--- | :--- | :--- |
-| `wlanuserip` | 是 | NCE Portal URL | 终端 IP，用于认证事务、限流和向 NCE 发起准入 |
-| `wlanusermac` | 是 | NCE Portal URL | 终端 MAC，用于认证事务、限流和单终端绑定 |
+| `uaddress` / `wlanuserip` | 是 | NCE Portal URL | 终端 IP；优先兼容华为 Portal 的 `uaddress`，同时接受旧参数名 |
+| `umac` / `wlanusermac` | 是 | NCE Portal URL | 终端 MAC；优先兼容华为 Portal 的 `umac`，同时接受旧参数名 |
 | `ssid` | 否 | NCE Portal URL | WiFi SSID，用于页面展示和日志摘要 |
 | `apmac` | 否 | NCE Portal URL | AP MAC，用于排障 |
+| `armac` / `accessMac` | 条件必选 | NCE Portal URL | 接入设备 MAC；与 `esn` 至少提供一个，用于 HACA 授权 |
+| `esn` | 条件必选 | NCE Portal URL | 接入设备 ESN；与接入设备 MAC 至少提供一个 |
+| `ac-ip` | 否 | NCE Portal URL | 执行 HACA 授权的 NCE 节点 IPv4 地址 |
 | `apname` | 否 | NCE Portal URL | AP 名称，用于排障 |
 | `redirectUrl` | 否 | NCE Portal URL | 认证成功后跳转地址 |
 | `siteId` | 否 | NCE Portal URL 或系统配置 | 站点上下文，缺失时使用配置项 |
 | `timestamp` | 否 | NCE Portal URL | 防止过期入口被重复使用 |
 
 #### 5.1.2 校验与降级
-- 缺少 `wlanuserip` 或 `wlanusermac` 时，页面提示“网络认证参数缺失，请重新连接 WiFi 后再试”；
+- 缺少终端 IP、终端 MAC，或同时缺少接入设备 MAC 与 ESN 时，页面提示“网络认证参数缺失，请重新连接 WiFi 后再试”；
 - MAC 地址进入日志和 Redis 前必须哈希或掩码处理；
 - 如果 URL 中携带 `redirectUrl`，后端必须校验是否为允许跳转的地址，禁止开放重定向；
 - Portal 参数只放入 Redis 短时事务状态，不写入数据库。
@@ -560,29 +563,31 @@ INIT -> PENDING -> EXPIRED
 - 对前端返回状态时，不返回 NCE Token、完整 MAC、证件后四位明文或 OCR 原始报文；临时访客密码只允许在准入所需的短时事务中一次性返回。
 
 ### 5.3 NCE 准入适配模块
-登机牌、护照、取号机最终都要通过 NCE-Campus 完成网络准入。本系统只负责创建临时访客账号和驱动 Portal 页面发起认证，不替代 NCE 的准入控制。
+登机牌、护照、取号机最终都要通过 NCE-Campus 完成网络准入。登机牌和护照由后端创建临时访客并调用 HACA 完成终端授权；取号机只创建小票账号，旅客输入账号密码后由 NCE 原生 Portal 完成准入。
 
 #### 5.3.1 准入方式
 | 方式 | 适用场景 | 说明 |
 | :--- | :--- | :--- |
 | NCE 原生表单提交 | 短信、账号密码认证 | 保留 NCE Portal 必要 DOM、JS 和隐藏字段 |
-| 前端静默提交临时账号 | 登机牌、护照 | 服务端创建访客后，前端短时拿到一次性凭据并提交给 NCE |
+| 后端 HACA 授权 | 登机牌、护照 | 服务端创建访客、提交 HACA 授权并轮询结果；只有明确成功才返回已放行 |
 | 用户手动输入小票账号 | 取号机 | 旅客根据小票输入账号密码，NCE 首次登录绑定 MAC |
 | 微信小程序放行 | 微信认证 | 第三方小程序调用 NCE Portal 放行，本系统接收状态回写并展示结果 |
 
 #### 5.3.2 需要现场确认的 NCE 参数
-- 用户名密码认证提交地址；
+- HACA 授权结果的真实状态字段、成功/处理中/失败值域；
+- HACA `thirdAuthType`、`policyName` 和节点参数的现场取值；
+- 用户名密码认证提交地址（短信、取号机）；
 - 短信验证码发送与登录所需 DOM ID；
 - Portal 页面隐藏字段；
 - 登录成功和失败的返回标识；
-- 是否支持服务端主动踢线；
+- HACA 强制下线账号权限、响应字段和审计要求；
 - 是否支持按 MAC 或用户名查询在线状态；
 - iOS CNA、Android Captive Portal 中是否允许当前 JS 提交流程。
 
 #### 5.3.3 安全要求
 - 临时访客密码不得出现在 URL；
-- 前端拿到临时密码后只保存在内存变量中；
-- 前端向 NCE 提交准入完成后立即清空临时凭据；
+- HACA 会话 ID 只在后端调用链中使用，不返回浏览器；
+- HACA 返回字段缺失或状态未知时必须继续等待并最终超时，禁止按成功处理；
 - 日志不得记录临时密码；
 - 若 NCE 准入提交失败，页面只展示统一失败提示，不暴露 NCE 内部错误。
 
@@ -606,7 +611,7 @@ INIT -> PENDING -> EXPIRED
 #### 5.5.1 客户端职责
 | 客户端 | 职责 |
 | :--- | :--- |
-| NCE Client | Token 获取、Token 刷新、访客创建、用户查询、RADIUS 日志查询 |
+| NCE Client | 长生命周期 HTTP 连接池、Token 获取与并发单次刷新、访客创建、用户/RADIUS 查询、HACA 授权结果与强制下线 |
 | Boarding Pass Verify Client | 登机牌三要素验证请求装配、签名鉴权、结果码映射、防枚举提示转换 |
 | OCR Client | 护照文件流转发、成功码识别、字段映射、MRZ 基础校验 |
 | WeChat Callback Service | 状态回写验签、Nonce 防重放、事务状态更新 |
@@ -614,7 +619,7 @@ INIT -> PENDING -> EXPIRED
 
 #### 5.5.2 统一能力
 - 统一超时；
-- 统一重试；
+- 按操作语义限制重试：只读查询允许一次瞬时故障重试，写操作超时不自动重试；
 - 统一 `traceId`；
 - 统一异常映射；
 - 统一脱敏日志；
@@ -1519,6 +1524,18 @@ web/src/
 | `MINI_PROGRAM_PORTAL_AUTH_URL` | `https://wifi5.szairport.com:8445/PortalServer/AppPortalAuth` | 第三方小程序 WiFi 认证与结果同步上游地址 |
 | `NCE_USERNAME` | 不在文档写明文 | 三方系统接入用户 |
 | `NCE_PASSWORD` | 不在文档写明文 | 三方系统接入用户密码 |
+| `NCE_GUEST_USER_GROUP_ID` | 现场分配 ID | 临时访客所属用户组 |
+| `NCE_TLS_VERIFY` | `true` | 是否校验 NCE HTTPS 证书 |
+| `NCE_CA_FILE` | 现场 CA 文件路径 | 使用私有 CA 时指定证书链 |
+| `NCE_MAX_CONNECTIONS` | `100` | 每个 FastAPI 进程的 NCE HTTP 最大连接数 |
+| `NCE_MAX_KEEPALIVE_CONNECTIONS` | `50` | 每个 FastAPI 进程的 Keep-Alive 连接数 |
+| `NCE_HACA_POLICY_NAME` | 按现场配置 | HACA 授权策略名称，可为空 |
+| `NCE_HACA_STATUS_FIELD` | `status` | HACA 授权结果状态字段名，现场确认后配置 |
+| `NCE_HACA_SUCCESS_VALUES` | `success,true,1` | 明确成功值集合；未命中不得判定成功 |
+| `NCE_HACA_PENDING_VALUES` | `pending,processing,0,false` | 处理中值集合 |
+| `NCE_HACA_FAILURE_VALUES` | `failed,failure,error,deny,denied,rejected,-1` | 明确失败值集合 |
+| `NCE_HACA_POLL_ATTEMPTS` | `10` | HACA 结果最大轮询次数 |
+| `NCE_HACA_POLL_INTERVAL_MS` | `1000` | HACA 轮询间隔毫秒数 |
 | `OCR_BASE_URL` | `http://IP:Port/xxx` | OCR 服务地址 |
 | `OCR_USERNAME` | 不在文档写明文 | OCR 白名单用户名 |
 | `BOARDING_PASS_VERIFY_BASE_URL` | 不在文档写生产地址 | 登机牌三要素验证接口地址 |
@@ -1537,6 +1554,7 @@ web/src/
 | 取号机访客有效期 | `24小时` | 环境变量 / `.env` | 默认 24 小时 |
 | 护照访客有效期 | `8小时` | 环境变量 / `.env` | 可按机场策略调整 |
 | 外部接口超时 | `3000ms/4000ms` | 环境变量 / `.env` | 不同第三方可独立配置 |
+| NCE Token 提前刷新 | `60秒` | 环境变量 / `.env` | 每进程独立缓存，以 NCE 返回过期时间为准 |
 | 限流阈值 | 按默认策略 | 环境变量 / `.env` | 多实例需保持一致 |
 
 ### 9.4 管理台配置展示原则
@@ -1554,7 +1572,6 @@ web/src/
 ### 10.1 Redis Key 规划
 | Key | TTL | 用途 | 保存内容 |
 | :--- | :--- | :--- | :--- |
-| `wifi:nce:token` | 按 NCE 有效期 | NCE Token 缓存 | `x-access-token` 和过期时间 |
 | `wifi:auth:tx:{authTxId}` | 1 至 5 分钟 | 统一认证事务 | 认证方式、状态、脱敏终端标识 |
 | `wifi:wechat:callback:{authTxId}` | 5 分钟 | 微信状态回写结果 | 回写状态、回写时间、NCE 结果码 |
 | `wifi:wechat:portal:{authTxId}` | 1 至 5 分钟 | 微信 Portal 上下文 | `state` 关联状态、`pushPageId`、脱敏终端标识、NCE 返回摘要 |
@@ -1725,6 +1742,7 @@ INIT -> PENDING -> EXPIRED
 | 阶段 | 联调内容 | 通过标准 |
 | :--- | :--- | :--- |
 | 第一阶段 | NCE Token、访客创建、RADIUS 日志查询 | Postman 调通，参数变量化 |
+| 第一阶段补充 | HACA 授权、结果查询、强制下线（默认关闭） | 明确成功、失败、未知状态和超时行为与现场版本一致 |
 | 第二阶段 | Portal 骨架与短信原生流程 | 手机端能通过 NCE 短信认证上线 |
 | 第三阶段 | 护照 OCR + NCE 创建访客 | 护照识别成功后能完成 Portal 准入 |
 | 第四阶段 | 登机牌三要素验证 + NCE 创建访客 | 登机信息验证通过后能完成 Portal 准入 |
@@ -1737,6 +1755,7 @@ INIT -> PENDING -> EXPIRED
 | :--- | :--- | :--- |
 | TC-001 | NCE Token 获取成功 | 返回 `x-access-token`，缓存可复用 |
 | TC-002 | NCE Token 过期后自动刷新 | 业务接口重试成功 |
+| TC-002A | 50 个并发请求同时遇到 Token 过期 | 单 FastAPI 进程只刷新一次 Token，其余请求复用结果 |
 | TC-003 | 创建取号机 24 小时访客 | NCE 返回创建成功，首次登录后限制单终端 |
 | TC-004 | 登机牌三要素验证通过 | 创建 NCE 访客并完成 Portal 准入 |
 | TC-005 | 登机牌三要素验证未通过 | 不创建访客，统一提示验证未通过 |
@@ -1752,6 +1771,8 @@ INIT -> PENDING -> EXPIRED
 | TC-015 | 日志脱敏检查 | 日志中无密码、Token、验证码、图片、姓名明文 |
 | TC-016 | 小程序兼容接口透传验证 | SOAP Body、Content-Type、查询参数、HTTP 状态和响应字段均未被改写 |
 | TC-017 | 微信完整放行链路验证 | SOAP 添加访客成功后取得 `sessionId`，再完成结果同步并收到 `portalAuthStatus=1` |
+| TC-018 | HACA 返回未知状态或缺少状态字段 | 保持 `PENDING` 并在轮询用尽后失败，不向前端返回已放行 |
+| TC-019 | 登机牌/护照 HACA 明确失败 | 认证事务更新为 `FAILED`，接口返回统一 NCE 错误 |
 
 ### 14.3 上线前检查清单
 - Postman 集合已变量化，不包含真实密码和长 Token；
@@ -1770,7 +1791,8 @@ INIT -> PENDING -> EXPIRED
 | NCE Portal 用户名密码认证提交地址与隐藏字段 | 短信、取号机、登机牌、护照准入 | 前端无法正确提交 Portal 准入表单 | 现场抓包确认，并固化为环境配置 |
 | NCE Portal 微信小程序 `state`、`pushPageId` 来源 | 微信小程序认证 | Postman 可达但真实业务无法放行 | 使用真实 Portal 会话和真实微信 `code` 完整联调 |
 | NCE `tenantId`、`siteId`、访客用户组 ID | 创建访客、查询日志、统计看板 | 创建到错误租户或统计口径不准 | 由 NCE 管理员提供并在测试环境验证 |
-| NCE 是否支持踢线接口 | 管理后台在线用户管理 | 踢线功能无法上线或权限过大 | 现场确认接口能力后再启用菜单 |
+| NCE HACA 状态字段和值域 | 登机牌、护照准入 | 未知状态可能导致误报成功 | 现场保存脱敏报文，配置状态映射并执行成功/失败/超时用例 |
+| NCE HACA 强制下线权限和响应 | 管理后台在线用户管理 | 踢线功能无法上线或权限过大 | 使用受限账号现场验证后再启用 `NCE_KICK_ENABLED` 和菜单 |
 | 登机牌验证结果码与护照 OCR 成功码 | 登机牌、护照认证 | 成功/失败误判，导致误创建访客 | 按第三方契约配置结果码映射并使用测试数据验证 |
 | Captive Portal 浏览器对 JS 提交的限制 | 旅客移动端体验 | iOS/Android Portal 环境无法完成自动提交 | 使用真实终端覆盖测试，必要时降级为手动提交 |
 

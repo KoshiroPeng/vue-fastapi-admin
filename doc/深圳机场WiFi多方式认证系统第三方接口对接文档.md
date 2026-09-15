@@ -2,8 +2,8 @@
 
 | 项目 | 内容 |
 | :--- | :--- |
-| 文档版本 | V1.0 |
-| 编制日期 | 2026-09-11 |
+| 文档版本 | V1.1 |
+| 编制日期 | 2026-09-15 |
 | 适用系统 | `vue-fastapi-admin` / 深圳机场 WiFi 认证前置服务 |
 | 文档状态 | 联调基线；标记为“待确认”的内容不得直接作为生产契约 |
 
@@ -30,15 +30,18 @@
 | IN-02 | **【给第三方使用】** | 第三方微信小程序 → 本系统 | `POST /api/v1/portal/wechat/auth/callback` | 已实现并完成 Mock/Redis 测试；真实小程序签名和成功证明未联调 |
 | OUT-01 | **【调用第三方】** | 本系统 → 登机牌验证系统 | `POST /api/v1/boarding-pass/verify` | 仅有设计契约、Protocol 和 Mock；真实客户端未实现 |
 | OUT-02 | **【调用第三方】** | 本系统 → 护照 OCR 服务 | `POST {OCR_BASE_URL}/xxx/doAllCardFileRecon` | 仅有设计契约、Protocol 和 Mock；厂商契约及真实客户端未实现 |
-| OUT-03 | **【调用第三方】** | 本系统 → NCE 北向 API | `POST /controller/v2/tokens` | 契约基线已整理；真实 NCE 客户端未实现 |
-| OUT-04 | **【调用第三方】** | 本系统 → NCE 北向 API | `GET /controller/campus/v2/accountservice/accessuser/users` | 契约基线已整理；真实 NCE 客户端未实现 |
-| OUT-05 | **【调用第三方】** | 本系统 → NCE 北向 API | `POST /controller/campus/v2/accountservice/accessuser/guest` | 契约基线已整理；真实 NCE 客户端未实现 |
-| OUT-06 | **【调用第三方】** | 本系统 → NCE 北向 API | `POST /controller/campus/v1/accountservice/user/radiuslog` | 契约基线已整理；真实 NCE 客户端未实现 |
+| OUT-03 | **【调用第三方】** | 本系统 → NCE 北向 API | `POST /controller/v2/tokens` | 真实 HTTP 客户端和契约测试已实现；现场待联调 |
+| OUT-04 | **【调用第三方】** | 本系统 → NCE 北向 API | `GET /controller/campus/v2/accountservice/accessuser/users` | 真实 HTTP 客户端和契约测试已实现；现场待联调 |
+| OUT-05 | **【调用第三方】** | 本系统 → NCE 北向 API | `POST /controller/campus/v2/accountservice/accessuser/guest` | 真实 HTTP 客户端和契约测试已实现；现场待联调 |
+| OUT-06 | **【调用第三方】** | 本系统 → NCE 北向 API | `POST /controller/campus/v1/accountservice/user/radiuslog` | 真实 HTTP 客户端和契约测试已实现；现场待联调 |
+| OUT-07 | **【调用第三方】** | 本系统 → NCE HACA | `POST /controller/cloud/v2/northbound/accessuser/haca/authorization` | 真实 HTTP 客户端和保守状态处理已实现；现场待联调 |
+| OUT-08 | **【调用第三方】** | 本系统 → NCE HACA | `GET /controller/cloud/v2/northbound/accessuser/haca/authorizationresult/{psessionid}` | 轮询客户端已实现；成功/失败状态字段待现场确认 |
+| OUT-09 | **【调用第三方】** | 本系统 → NCE HACA | `POST /controller/cloud/v2/northbound/accessuser/haca/cutuser` | 客户端已实现；默认关闭，现场确认权限后启用 |
 | IN-03 | **【给第三方使用】** | 第三方微信小程序 → 本系统 → NCE | `POST /secoWS/service/NewGuestManagerServices` | 已实现 SOAP/XML 原样代理；真实 NCE 待联调 |
 | IN-04 | **【给第三方使用】** | 第三方微信小程序 → 本系统 → NCE | `GET /PortalServer/AppPortalAuth?messageType=authRequest` | 已实现 Query 和 JSON 响应原样代理；真实 NCE 待联调 |
 | IN-05 | **【给第三方使用】** | 第三方微信小程序 → 本系统 → NCE | `GET /PortalServer/AppPortalAuth?messageType=syncPortalAuthResultRequest` | 已实现 Query 和 JSON 响应原样代理；真实 NCE 待联调 |
 
-> 重要说明：当前生产配置要求关闭 NCE、登机牌和 OCR Mock，但仓库中尚无对应真实适配器。OUT-01 至 OUT-06 目前是联调契约，不代表生产代码已经能够发出这些请求。
+> 重要说明：NCE OUT-03 至 OUT-09 已具备真实 HTTP 实现和离线契约测试，但尚未连接现场环境验证字段及权限。登机牌 OUT-01、护照 OCR OUT-02 仍只有 Protocol 与 Mock，生产启用前必须补齐真实客户端并完成端到端联调。
 
 ## 3. 通用约定
 
@@ -640,7 +643,9 @@ Token 禁止写入 URL、日志和浏览器。
 
 ### 8.3 当前实现状态
 
-代码目前仅定义 `NCEClient` Protocol 和 Mock。关闭 `NCE_MOCK_ENABLED` 后会直接抛出“真实 NCE 客户端尚未配置”。以下接口报文属于设计及联调基线，真实适配器、证书校验、Token 缓存、刷新和重试尚未落地。
+`HuaweiNCEHttpClient` 已实现长生命周期 `httpx.AsyncClient` 连接池。每个 FastAPI 进程复用一个客户端和一个进程内 Token 缓存，Token 提前 60 秒刷新；同一进程内的并发刷新由异步锁合并。收到 401/403 时仅刷新一次 Token 并重放一次请求；只读查询允许对瞬时网络错误、超时或 5xx 做一次有限重试，创建访客、HACA 授权和强制下线不因超时自动重试。
+
+TLS 默认校验证书，可通过 `NCE_CA_FILE` 指定现场 CA。`NCE_TLS_VERIFY=false` 仅用于受控联调，不应作为生产默认值。当前实现已经过 `httpx.MockTransport` 离线契约测试，真实 NCE 版本的响应包装、HACA 状态字段及账号权限仍需现场确认。
 
 ---
 
@@ -669,12 +674,7 @@ Token 禁止写入 URL、日志和浏览器。
 
 ### 9.2 响应
 
-Token 可能位于：
-
-1. 响应 Header `x-access-token`；或
-2. 响应 Body 的 `token` / `token_id` 字段。
-
-具体返回位置必须以现场 NCE 版本实测为准。
+当前客户端按已取得资料从响应 Body `data.token_id` 读取 Token，并从 `data.expiredDate` 读取过期时间。若现场版本把 Token 放在响应 Header 或使用其他字段，必须依据真实报文调整解析器并补充契约测试。
 
 本系统内部归一化为：
 
@@ -685,7 +685,7 @@ Token 可能位于：
 }
 ```
 
-Token 预计有效期约 1800 秒，但有效期来源、提前刷新时间及并发刷新规则必须现场确认。
+Token 有效期以 `expiredDate` 为准，默认提前 60 秒刷新；同一进程内的并发请求只触发一次刷新。多 FastAPI 进程各自维护 Token，不在 Redis 中共享，避免跨进程锁和失效广播增加复杂度。
 
 ### 9.3 异常处理
 
@@ -1022,13 +1022,126 @@ Body 字段：
 
 ---
 
-# 第三部分：第三方微信小程序兼容接口
+# 第三部分：NCE HACA 准入接口
 
-## 13. IN-03【给第三方使用】添加访客
+## 13. OUT-07【调用第三方】提交终端授权
+
+### 13.1 请求
+
+| 项目 | 内容 |
+| :--- | :--- |
+| Method | `POST` |
+| URI | `/controller/cloud/v2/northbound/accessuser/haca/authorization` |
+| 鉴权 | Header `x-access-token` |
+| Content-Type | `application/json` |
+| 自动重试 | 不对网络超时或 5xx 自动重试；401/403 刷新 Token 后仅重放一次 |
+
+```json
+{
+  "ssid": "QWlycG9ydC1GcmVlLVdpRmk=",
+  "terminalIpV4": "10.85.73.8",
+  "terminalMac": "AABBCCDDEEFF",
+  "userName": "bp_8f4b23d9",
+  "thirdAuthType": 7,
+  "deviceMac": "112233445566",
+  "deviceEsn": "device-esn",
+  "apMac": "223344556677",
+  "nodeIp": "172.16.4.107",
+  "policyName": "guest-policy",
+  "temPermitTime": 28800
+}
+```
+
+| 字段 | 类型 | 必填 | 说明 |
+| :--- | :--- | :--- | :--- |
+| `ssid` | string | 是 | SSID 的 UTF-8 Base64 |
+| `terminalIpV4` / `terminalIpV6` | string | 二选一 | 按终端 IP 版本只发送一个字段 |
+| `terminalMac` | string | 是 | 旅客终端 MAC，发送前去除分隔符 |
+| `userName` | string | 是 | 已创建的 NCE 临时访客账号 |
+| `thirdAuthType` | integer | 是 | 当前固定 `7`，现场确认含义 |
+| `deviceMac` / `deviceEsn` | string | 至少一个 | NCE 接入设备标识；Portal 入口必须提供其一 |
+| `apMac` | string | 否 | 接入 AP MAC |
+| `nodeIp` | string | 否 | 执行授权的 NCE 节点 IPv4 地址 |
+| `policyName` | string | 否 | 现场配置的授权策略名 |
+| `temPermitTime` | integer | 否 | 临时放行秒数 |
+
+### 13.2 响应
+
+```json
+{
+  "errcode": "0",
+  "errmsg": "",
+  "psessionid": "{nce-session-id}"
+}
+```
+
+客户端只在 `errcode=0` 且存在非空 `psessionid` 时进入结果轮询。提交成功不等于网络已放行，不能据此向前端返回 `networkAuthorized=true`。
+
+## 14. OUT-08【调用第三方】查询终端授权结果
+
+### 14.1 请求
+
+```http
+GET {NCE_BASE_URL}/controller/cloud/v2/northbound/accessuser/haca/authorizationresult/{psessionid}?nodeIp={node-ip}
+x-access-token: {token}
+Accept: application/json
+```
+
+`nodeIp` 无值时不发送。客户端默认最多查询 10 次、间隔 1000ms，可通过 `NCE_HACA_POLL_ATTEMPTS` 和 `NCE_HACA_POLL_INTERVAL_MS` 调整。
+
+### 14.2 响应与状态判定
+
+```json
+{
+  "errcode": "0",
+  "data": {
+    "psessionid": "{nce-session-id}",
+    "status": "success"
+  }
+}
+```
+
+HACA 的真实状态字段和值域尚未经过现场报文确认。当前通过 `NCE_HACA_STATUS_FIELD`、`NCE_HACA_SUCCESS_VALUES`、`NCE_HACA_PENDING_VALUES`、`NCE_HACA_FAILURE_VALUES` 配置映射。只有明确命中成功集合才判定成功；明确命中失败集合立即失败；字段缺失或出现未知值一律视为处理中，直到轮询超时，禁止把未知状态误报为成功。
+
+登机牌和护照业务只有在本接口明确成功后才把认证事务更新为 `SUCCESS` 并返回 `networkAuthorized=true`。`psessionid` 不返回浏览器。
+
+## 15. OUT-09【调用第三方】强制终端下线
+
+### 15.1 请求
+
+| 项目 | 内容 |
+| :--- | :--- |
+| Method | `POST` |
+| URI | `/controller/cloud/v2/northbound/accessuser/haca/cutuser` |
+| 鉴权 | Header `x-access-token` |
+| 开关 | `NCE_KICK_ENABLED=false`，默认关闭 |
+
+```json
+{
+  "thirdUserInfos": [
+    {
+      "terminalIpV4": "10.85.73.8",
+      "terminalMac": "AABBCCDDEEFF",
+      "userName": "bp_8f4b23d9",
+      "psessionid": "{nce-session-id}",
+      "deviceMac": "112233445566",
+      "nodeIp": "172.16.4.107"
+    }
+  ]
+}
+```
+
+### 15.2 响应与启用条件
+
+客户端要求 HTTP 200、`errcode=0` 且 `failure` 列表为空。现场必须先确认接口权限、审计要求和响应字段，验证完成后才能启用管理端踢线能力；超时不得自动重试，避免对已下线终端重复操作。
+
+# 第四部分：第三方微信小程序兼容接口
+
+## 16. IN-03【给第三方使用】添加访客
 
 > 本接口保留既有 SOAP WebService 契约。小程序调用本系统域名，本系统将 SOAP 报文原样转发到配置的 NCE 上游，不复用登机牌、护照的 JSON 访客创建适配器。
 
-### 13.1 请求
+### 16.1 请求
 
 | 项目 | 内容 |
 | :--- | :--- |
@@ -1051,15 +1164,15 @@ SOAP Body 中保留以下既有字段，字段名和含义不得调整：
 | `validBeginPeriod` | string | 是 | 有效期开始时间 |
 | `validPeriod` | string/integer | 是 | 有效时长 |
 
-### 13.2 响应
+### 16.2 响应
 
 本系统原样返回 NCE 的 HTTP 状态码、SOAP/XML 响应体和 `Content-Type`。既有调用方以 HTTP `statusCode == 200` 判断添加成功，不额外套用本系统 JSON 响应结构。
 
 ---
 
-## 14. IN-04【给第三方使用】发起认证
+## 17. IN-04【给第三方使用】发起认证
 
-### 14.1 请求
+### 17.1 请求
 
 | 项目 | 内容 |
 | :--- | :--- |
@@ -1074,7 +1187,7 @@ SOAP Body 中保留以下既有字段，字段名和含义不得调整：
 | `userName` | string | 是 | 访客账号 |
 | `password` | string | 是 | 访客密码；该兼容接口的访问日志必须关闭 |
 
-### 14.2 响应
+### 17.2 响应
 
 ```json
 {
@@ -1088,9 +1201,9 @@ SOAP Body 中保留以下既有字段，字段名和含义不得调整：
 
 ---
 
-## 15. IN-05【给第三方使用】同步认证结果
+## 18. IN-05【给第三方使用】同步认证结果
 
-### 15.1 请求
+### 18.1 请求
 
 | 项目 | 内容 |
 | :--- | :--- |
@@ -1104,7 +1217,7 @@ SOAP Body 中保留以下既有字段，字段名和含义不得调整：
 | `messageType` | string | 是 | 固定为 `syncPortalAuthResultRequest` |
 | `sessionId` | string | 是 | 发起认证成功后返回的会话 ID |
 
-### 15.2 响应
+### 18.2 响应
 
 ```json
 {
@@ -1128,7 +1241,7 @@ SOAP Body 中保留以下既有字段，字段名和含义不得调整：
 
 ---
 
-## 16. 尚未形成可执行契约的外部接口
+## 19. 尚未形成可执行契约的外部接口
 
 以下外部交互在设计中存在，但当前资料不足，不能编造接口地址或字段：
 
@@ -1137,14 +1250,13 @@ SOAP Body 中保留以下既有字段，字段名和含义不得调整：
 | NCE Portal 用户名密码准入 | 提交地址、Method、隐藏字段、成功/失败标识 | NCE/网络团队 |
 | NCE 原生短信认证 | 获取验证码和登录接口、DOM ID、隐藏字段、错误码 | NCE/网络团队 |
 | NCE 在线用户过滤 | 真实在线过滤 Query 名称和原始响应包装结构 | NCE 团队 |
-| NCE 主动踢线 | URI、权限边界、审计要求、请求/响应 | NCE/安全团队；未审批前不得启用 |
 | OCR 原始响应 | URL、鉴权、`typeId`、字段和完整错误码 | OCR 厂商 |
 | 登机牌验证接口 | Base URL、鉴权、完整报文、SLA、幂等期限 | 登机牌系统团队 |
 | 微信回写成功证明 | 除 `nceSuccess` 布尔值外的可验证 NCE 成功凭证 | 微信小程序/NCE 团队 |
 
-## 17. 联调验收清单
+## 20. 联调验收清单
 
-### 17.1 第三方调用本系统
+### 20.1 第三方调用本系统
 
 - [ ] 双方 Base URL、HTTPS 证书、网络和白名单确认；
 - [ ] 取号机离线签名测试向量一致；
@@ -1156,18 +1268,21 @@ SOAP Body 中保留以下既有字段，字段名和含义不得调整：
 - [ ] 日志中无密码、Token、证件摘要明文和原始业务报文；
 - [ ] 双方保存脱敏后的成功及失败报文样例。
 
-### 17.2 本系统调用第三方
+### 20.2 本系统调用第三方
 
 - [ ] 获取 NCE Token、Token 失效刷新和并发复用通过；
 - [ ] NCE 创建访客正向、业务失败、超时和响应丢失场景通过；
 - [ ] NCE 用户查询和 RADIUS 游标分页无重复、无漏项；
+- [ ] HACA 授权提交返回有效 `psessionid`，授权结果状态字段和值域与配置一致；
+- [ ] HACA 未知状态和轮询超时不会向 Portal 误报成功；
+- [ ] HACA 强制下线权限、成功响应和审计要求确认后再启用；
 - [ ] 登机牌 `0000/1001/1002/1003/1004/2001/2002/3001/3002` 场景确认；
 - [ ] OCR 成功、识别失败、无证件、拒识、超时场景确认；
 - [ ] 所有外部调用均具有明确超时、有限重试、幂等和熔断规则；
 - [ ] 真实第三方报文不会未经脱敏直接返回浏览器；
 - [ ] 完成生产证书、账号、Token 和密钥轮换方案。
 
-## 18. 实现与文档依据
+## 21. 实现与文档依据
 
 - 第三方接口边界：`doc/深圳机场WiFi多方式认证系统详细设计说明书.md:718-756`
 - 取号机设计契约：`doc/深圳机场WiFi多方式认证系统详细设计说明书.md:876-920`
@@ -1185,10 +1300,13 @@ SOAP Body 中保留以下既有字段，字段名和含义不得调整：
 - 小程序 NCE 原样代理客户端：`app/services/mini_program/client.py`
 - 风控错误语义：`app/services/risk_control/errors.py:1-34`
 - NCE 内部 Protocol：`app/services/nce/client.py:10-156`
+- NCE 真实 HTTP 客户端：`app/services/nce/http_client.py`
+- NCE HACA 轮询：`app/services/nce/authorization.py`
+- NCE 响应保守解析：`app/services/nce/response_parser.py`
 - 登机牌内部 Protocol：`app/services/boarding_pass/client.py:9-54`
 - OCR 内部 Protocol：`app/services/passport/client.py:7-46`
 
-## 19. 契约优先级
+## 22. 契约优先级
 
 发生冲突时按以下顺序裁决：
 

@@ -45,6 +45,7 @@ async def test_mock_portal_backend_supports_boarding_pass_passport_and_wechat(mo
         pii_hash_secret="test-pii-secret",
         transaction_ttl_seconds=300,
         guest_valid_minutes=480,
+        haca_poll_interval_ms=0,
     )
     passport = PassportAuthenticationService(
         ocr=MockPassportOCRClient(),
@@ -53,6 +54,7 @@ async def test_mock_portal_backend_supports_boarding_pass_passport_and_wechat(mo
         pii_hash_secret="test-pii-secret",
         transaction_ttl_seconds=300,
         guest_valid_minutes=480,
+        haca_poll_interval_ms=0,
     )
     wechat = WeChatAuthService(
         store=store,
@@ -87,6 +89,7 @@ async def test_mock_portal_backend_supports_boarding_pass_passport_and_wechat(mo
                     "clientIp": "10.1.2.3",
                     "clientMac": "AA-BB-CC-DD-EE-FF",
                     "ssid": "Airport-Free-WiFi",
+                    "deviceMac": "11-22-33-44-55-01",
                 },
             )
             passport_response = await client.post(
@@ -97,6 +100,7 @@ async def test_mock_portal_backend_supports_boarding_pass_passport_and_wechat(mo
                     "X-Client-IP": "10.1.2.4",
                     "X-Client-MAC": "AA-BB-CC-DD-EE-02",
                     "X-SSID": "Airport-Free-WiFi",
+                    "X-Device-MAC": "11-22-33-44-55-02",
                 },
             )
             start_response = await client.post(
@@ -131,6 +135,8 @@ async def test_mock_portal_backend_supports_boarding_pass_passport_and_wechat(mo
 
         assert boarding_response.status_code == 200
         assert passport_response.status_code == 200
+        assert boarding_response.json()["data"]["networkAuthorized"] is True
+        assert passport_response.json()["data"]["networkAuthorized"] is True
         assert callback_response.status_code == 200
         assert status_response.json()["data"]["status"] == "SUCCESS"
         all_keys = await redis.keys(f"{prefix}:*")

@@ -14,3 +14,18 @@ def test_portal_openapi_contains_mock_authentication_contracts() -> None:
     assert "image/jpeg" in passport_content
     assert "image/png" in passport_content
     assert "multipart/form-data" not in passport_content
+    boarding_schema = paths["/api/v1/portal/boarding-pass/verify"]["post"]["responses"]["200"]["content"][
+        "application/json"
+    ]["schema"]
+    passport_schema = paths["/api/v1/portal/passport/verify"]["post"]["responses"]["200"]["content"][
+        "application/json"
+    ]["schema"]
+    assert boarding_schema["$ref"].endswith("/BoardingPassPortalResponse")
+    assert passport_schema["$ref"].endswith("/PassportPortalResponse")
+    passport_headers = paths["/api/v1/portal/passport/verify"]["post"]["parameters"]
+    assert {item["name"] for item in passport_headers} >= {
+        "X-Device-MAC",
+        "X-Device-ESN",
+        "X-AP-MAC",
+        "X-Node-IP",
+    }

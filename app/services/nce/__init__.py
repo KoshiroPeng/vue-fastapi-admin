@@ -1,5 +1,7 @@
 from .client import (
     NCEAccessToken,
+    NCEAuthorizationResult,
+    NCEAuthorizationStatus,
     NCEClient,
     NCEGuest,
     NCEGuestCreateRequest,
@@ -11,22 +13,29 @@ from .client import (
     NCEUser,
     NCEUserPage,
     NCEUserQuery,
+    NCETerminalAuthorizationRequest,
 )
+from .authorization import authorize_terminal_and_wait
 from .errors import (
     NCEAuthenticationError,
     NCEBusinessError,
     NCEError,
+    NCEProtocolError,
     NCETimeoutError,
     NCEUnavailableError,
 )
-from .factory import get_nce_client
+from .factory import close_nce_client, get_nce_client
+from .http_client import HuaweiNCEHttpClient
 
 __all__ = [
     "NCEAccessToken",
+    "NCEAuthorizationResult",
+    "NCEAuthorizationStatus",
     "NCEAuthenticationError",
     "NCEBusinessError",
     "NCEClient",
     "NCEError",
+    "NCEProtocolError",
     "NCEGuest",
     "NCEGuestCreateRequest",
     "NCEHealth",
@@ -39,5 +48,9 @@ __all__ = [
     "NCEUser",
     "NCEUserPage",
     "NCEUserQuery",
+    "NCETerminalAuthorizationRequest",
+    "HuaweiNCEHttpClient",
+    "authorize_terminal_and_wait",
+    "close_nce_client",
     "get_nce_client",
 ]

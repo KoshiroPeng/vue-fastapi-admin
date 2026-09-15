@@ -11,6 +11,8 @@ from app.log import logger
 
 from .client import (
     NCEAccessToken,
+    NCEAuthorizationResult,
+    NCEAuthorizationStatus,
     NCEGuest,
     NCEGuestCreateRequest,
     NCEHealth,
@@ -21,6 +23,7 @@ from .client import (
     NCEUser,
     NCEUserPage,
     NCEUserQuery,
+    NCETerminalAuthorizationRequest,
 )
 from .errors import NCEAuthenticationError, NCEBusinessError, NCETimeoutError, NCEUnavailableError
 
@@ -75,6 +78,30 @@ class MockNCEClient:
             valid_until=self._clock() + timedelta(minutes=request.valid_duration_minutes),
             max_devices=request.max_devices,
         )
+
+    async def authorize_terminal(self, request: NCETerminalAuthorizationRequest) -> NCEAuthorizationResult:
+        self._raise_for_scenario("authorize_terminal")
+        session_id = hashlib.sha256(f"haca:{request.request_id}".encode("utf-8")).hexdigest()
+        return NCEAuthorizationResult(
+            session_id=session_id,
+            status=NCEAuthorizationStatus.PENDING,
+            result_code="0",
+        )
+
+    async def query_authorization_result(
+        self,
+        session_id: str,
+        node_ip: str | None = None,
+    ) -> NCEAuthorizationResult:
+        self._raise_for_scenario("query_authorization_result")
+        return NCEAuthorizationResult(
+            session_id=session_id,
+            status=NCEAuthorizationStatus.SUCCESS,
+            result_code="0",
+        )
+
+    async def disconnect_terminal(self, request: NCETerminalAuthorizationRequest, session_id: str) -> None:
+        self._raise_for_scenario("disconnect_terminal")
 
     async def query_users(self, query: NCEUserQuery) -> NCEUserPage:
         self._raise_for_scenario("query_users")

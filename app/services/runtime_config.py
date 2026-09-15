@@ -24,6 +24,15 @@ class RuntimeConfigSummary(BaseModel):
     pii_hash_secret_configured: bool
     kiosk_hmac_configured: bool
     nce_timeout_ms: int
+    nce_connect_timeout_seconds: float
+    nce_read_timeout_seconds: float
+    nce_max_connections: int
+    nce_max_keepalive_connections: int
+    nce_tls_verify: bool
+    nce_ca_file_configured: bool
+    nce_haca_policy_configured: bool
+    nce_haca_poll_attempts: int
+    nce_haca_poll_interval_ms: int
     nce_kick_enabled: bool
     auth_transaction_ttl_seconds: int
     nonce_ttl_seconds: int
@@ -57,6 +66,15 @@ def build_runtime_config_summary(config: Settings) -> RuntimeConfigSummary:
         pii_hash_secret_configured=bool(config.PII_HASH_SECRET),
         kiosk_hmac_configured=bool(config.KIOSK_HMAC_SECRET),
         nce_timeout_ms=config.NCE_TIMEOUT_MS,
+        nce_connect_timeout_seconds=config.NCE_CONNECT_TIMEOUT_SECONDS,
+        nce_read_timeout_seconds=config.NCE_READ_TIMEOUT_SECONDS,
+        nce_max_connections=config.NCE_MAX_CONNECTIONS,
+        nce_max_keepalive_connections=config.NCE_MAX_KEEPALIVE_CONNECTIONS,
+        nce_tls_verify=config.NCE_TLS_VERIFY,
+        nce_ca_file_configured=bool(config.NCE_CA_FILE),
+        nce_haca_policy_configured=bool(config.NCE_HACA_POLICY_NAME),
+        nce_haca_poll_attempts=config.NCE_HACA_POLL_ATTEMPTS,
+        nce_haca_poll_interval_ms=config.NCE_HACA_POLL_INTERVAL_MS,
         nce_kick_enabled=config.NCE_KICK_ENABLED,
         auth_transaction_ttl_seconds=config.AUTH_TRANSACTION_TTL_SECONDS,
         nonce_ttl_seconds=config.NONCE_TTL_SECONDS,

@@ -56,6 +56,10 @@ export default {
         'X-Client-IP': context.clientIp,
         'X-Client-MAC': context.clientMac,
         'X-SSID': context.ssid,
+        'X-Device-MAC': context.deviceMac,
+        'X-Device-ESN': context.deviceEsn,
+        'X-AP-MAC': context.apMac,
+        'X-Node-IP': context.nodeIp,
       },
     }),
   startWechatAuth: (data = {}) =>

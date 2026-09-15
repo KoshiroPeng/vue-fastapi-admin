@@ -131,6 +131,8 @@ chmod 600 /etc/vue-fastapi-admin/app.env
 
 第三方小程序继续使用既有契约：`POST /secoWS/service/NewGuestManagerServices` 原样转发 SOAP/XML，`GET /PortalServer/AppPortalAuth` 根据 `messageType=authRequest` 或 `messageType=syncPortalAuthResultRequest` 原样转发查询参数和 JSON 响应。上游地址分别由 `MINI_PROGRAM_GUEST_SERVICE_URL` 和 `MINI_PROGRAM_PORTAL_AUTH_URL` 配置。该链路与登机牌、护照使用的 JSON 访客创建适配器相互独立。
 
+真实 NCE 北向客户端由 `NCE_MOCK_ENABLED=false` 启用。每个 FastAPI 进程维护一个长生命周期 HTTP 连接池和一个进程内 Token 缓存；登机牌或护照验证通过后，后端依次创建临时访客、提交 HACA 授权并轮询到明确成功，才向 Portal 返回 `networkAuthorized=true`。生产环境必须配置 `NCE_BASE_URL`、`NCE_USERNAME`、`NCE_PASSWORD`、`NCE_GUEST_USER_GROUP_ID`，并按现场情况配置 CA、HACA 策略及状态值映射。具体字段见[第三方接口对接文档](doc/深圳机场WiFi多方式认证系统第三方接口对接文档.md)。
+
 `APP_BIND_IP=0.0.0.0` 允许另一台服务器上的 Nginx 访问后端端口。防火墙必须限制 `19001`、`19002` 只允许 Nginx 服务器访问。`APP_DOCKER_SUBNET` 必须与现场已有网段不冲突。
 
 ### 初始化数据库

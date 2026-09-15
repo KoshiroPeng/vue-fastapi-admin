@@ -212,12 +212,18 @@ import TheIcon from '@/components/icon/TheIcon.vue'
 const isMock = import.meta.env.VITE_PORTAL_MOCK === 'true'
 const params = new URLSearchParams(window.location.search)
 const context = reactive({
-  clientIp: params.get('wlanuserip') || (isMock ? '10.1.2.30' : ''),
-  clientMac: params.get('wlanusermac') || (isMock ? 'AA-BB-CC-DD-EE-30' : ''),
+  clientIp: params.get('uaddress') || params.get('wlanuserip') || (isMock ? '10.1.2.30' : ''),
+  clientMac: params.get('umac') || params.get('wlanusermac') || (isMock ? 'AA-BB-CC-DD-EE-30' : ''),
   ssid: params.get('ssid') || 'Airport-Free-WiFi',
+  deviceMac: params.get('armac') || params.get('accessMac') || (isMock ? 'AA-BB-CC-DD-EE-31' : ''),
+  deviceEsn: params.get('esn') || '',
+  apMac: params.get('apmac') || '',
+  nodeIp: params.get('ac-ip') || '',
 })
 const fatalError = ref(
-  !context.clientIp || !context.clientMac ? '请断开并重新连接机场 WiFi 后再试。' : ''
+  !context.clientIp || !context.clientMac || (!context.deviceMac && !context.deviceEsn)
+    ? '请断开并重新连接机场 WiFi 后再试。'
+    : ''
 )
 const selectedMethod = ref('sms')
 const loading = ref(false)

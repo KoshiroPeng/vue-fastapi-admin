@@ -36,11 +36,27 @@ class Settings(BaseSettings):
     NCE_BASE_URL: str | None = None
     NCE_PORTAL_AUTH_BASE_URL: str | None = None
     NCE_USERNAME: str | None = None
-    NCE_PASSWORD: str | None = None
+    NCE_PASSWORD: SecretStr | None = None
     NCE_TENANT_ID: str | None = None
     NCE_SITE_ID: str | None = None
     NCE_GUEST_USER_GROUP_ID: str | None = None
     NCE_TIMEOUT_MS: int = 2500
+    NCE_CONNECT_TIMEOUT_SECONDS: float = Field(default=3.0, gt=0, le=60)
+    NCE_READ_TIMEOUT_SECONDS: float = Field(default=8.0, gt=0, le=120)
+    NCE_WRITE_TIMEOUT_SECONDS: float = Field(default=5.0, gt=0, le=120)
+    NCE_POOL_TIMEOUT_SECONDS: float = Field(default=2.0, gt=0, le=60)
+    NCE_MAX_CONNECTIONS: int = Field(default=100, gt=0, le=1000)
+    NCE_MAX_KEEPALIVE_CONNECTIONS: int = Field(default=50, gt=0, le=1000)
+    NCE_TOKEN_REFRESH_SKEW_SECONDS: int = Field(default=60, ge=0, le=3600)
+    NCE_TLS_VERIFY: bool = True
+    NCE_CA_FILE: str | None = None
+    NCE_HACA_POLICY_NAME: str | None = None
+    NCE_HACA_STATUS_FIELD: str = "status"
+    NCE_HACA_SUCCESS_VALUES: list[str] = ["success", "true", "1"]
+    NCE_HACA_PENDING_VALUES: list[str] = ["pending", "processing", "0", "false"]
+    NCE_HACA_FAILURE_VALUES: list[str] = ["failed", "failure", "error", "deny", "denied", "rejected", "-1"]
+    NCE_HACA_POLL_ATTEMPTS: int = Field(default=10, gt=0, le=60)
+    NCE_HACA_POLL_INTERVAL_MS: int = Field(default=1000, ge=0, le=10000)
     NCE_KICK_ENABLED: bool = False
 
     # Legacy third-party mini-program contract. It is intentionally separate
@@ -141,6 +157,8 @@ class Settings(BaseSettings):
             raise ValueError("生产环境必须设置 DEBUG=false")
         if self.NCE_MOCK_ENABLED or self.BOARDING_PASS_MOCK_ENABLED or self.OCR_MOCK_ENABLED:
             raise ValueError("生产环境禁止启用 Mock 外部服务")
+        if not all((self.NCE_BASE_URL, self.NCE_USERNAME, self.NCE_PASSWORD, self.NCE_GUEST_USER_GROUP_ID)):
+            raise ValueError("生产环境必须配置完整的 NCE 地址、账号和访客用户组")
         if "*" in self.CORS_ORIGINS:
             raise ValueError("生产环境 CORS_ORIGINS 禁止使用通配符")
         if not self.MYSQL_PASSWORD:
@@ -151,6 +169,8 @@ class Settings(BaseSettings):
             raise ValueError("生产环境启用微信认证时必须配置小程序 NCE 上游地址")
         if self.MYSQL_POOL_MIN_SIZE <= 0 or self.MYSQL_POOL_MAX_SIZE < self.MYSQL_POOL_MIN_SIZE:
             raise ValueError("MySQL 连接池参数无效")
+        if self.NCE_MAX_KEEPALIVE_CONNECTIONS > self.NCE_MAX_CONNECTIONS:
+            raise ValueError("NCE Keep-Alive 连接数不能超过连接池总数")
         return self
 
 
